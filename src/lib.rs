@@ -24,8 +24,10 @@
 //! This specifically is the library used internally in the `awsx` binary. For further documentation
 //! on how to use the binary, please check the respective documentation.
 
+pub mod error;
 pub mod parameter;
 pub mod template;
 
+pub use error::*;
 pub use parameter::*;
 pub use template::*;

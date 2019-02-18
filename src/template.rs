@@ -22,7 +22,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
-use crate::parameter::*;
+use crate::{error::Error, parameter::*};
 
 /// Represents a CloudFormation template, based on some source file.
 ///
@@ -37,10 +37,10 @@ impl Template {
     /// Loads a template from a file.
     ///
     /// **Note:** this will load the template into memory.
-    pub fn new<S: AsRef<str>>(filename: S) -> Template {
-        let contents = load_file(filename.as_ref());
+    pub fn new<S: AsRef<str>>(filename: S) -> Result<Template, Error> {
+        let contents = load_file(filename.as_ref())?;
         let parameters = serde_yaml::from_slice::<CloudFormationTemplate>(&contents)
-            .unwrap()
+            .map_err(|error| Error::TemplateDeserializationFailed(error.into()))?
             .parameters
             .keys()
             .map(String::to_owned)
@@ -48,11 +48,11 @@ impl Template {
             .collect::<Vec<_>>()
             .into();
 
-        Template {
+        Ok(Template {
             filename: filename.as_ref().to_owned(),
             contents,
             parameters,
-        }
+        })
     }
 
     /// Return the path to the file loaded.
@@ -66,11 +66,11 @@ impl Template {
     }
 
     /// Generate and return a MD5 checksum of the file contents.
-    pub fn checksum_md5hex(&self) -> String {
+    pub fn checksum_md5hex(&self) -> Result<String, Error> {
         let mut contents_md5 = Md5::new();
         let mut bufreader = BufReader::new(self.contents.as_slice());
-        io::copy(&mut bufreader, &mut contents_md5).unwrap();
-        format!("{:x}", contents_md5.result())
+        io::copy(&mut bufreader, &mut contents_md5)?;
+        Ok(format!("{:x}", contents_md5.result()))
     }
 
     /// Create the change set input for the loaded template and a given list of parameters.
@@ -81,7 +81,7 @@ impl Template {
         &self,
         stack_name: &str,
         parameters: Parameters,
-    ) -> Result<rusoto_cloudformation::CreateChangeSetInput, ()> {
+    ) -> Result<rusoto_cloudformation::CreateChangeSetInput, Error> {
         if self.validate_parameters(&parameters) {
             Ok(rusoto_cloudformation::CreateChangeSetInput {
                 stack_name: stack_name.to_owned(),
@@ -95,7 +95,7 @@ impl Template {
                 ..Default::default()
             })
         } else {
-            Err(())
+            Err(Error::InvalidParameters)
         }
     }
 
@@ -135,11 +135,11 @@ struct TemplateParameter {
     default: Option<String>,
 }
 
-fn load_file(filename: &str) -> Vec<u8> {
-    let file = File::open(filename).unwrap();
-    let metadata = file.metadata().unwrap();
+fn load_file(filename: &str) -> Result<Vec<u8>, Error> {
+    let file = File::open(filename)?;
+    let metadata = file.metadata()?;
     let mut reader = BufReader::new(file);
     let mut contents = Vec::with_capacity(metadata.len() as usize);
-    reader.read_to_end(&mut contents).unwrap();
-    contents
+    reader.read_to_end(&mut contents)?;
+    Ok(contents)
 }
