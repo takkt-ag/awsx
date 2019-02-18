@@ -25,5 +25,7 @@
 //! on how to use the binary, please check the respective documentation.
 
 pub mod parameter;
+pub mod template;
 
 pub use parameter::*;
+pub use template::*;
