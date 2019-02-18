@@ -13,3 +13,17 @@
 // limitations under the License.
 //
 // SPDX-License-Identifier: Apache-2.0
+
+#![deny(missing_docs)]
+
+//! # awsx
+//!
+//! This library can be seen as an AWS CLI extension, providing various types and helpers that are
+//! mainly used to allow the confident automation of CloudFormation deployments.
+//!
+//! This specifically is the library used internally in the `awsx` binary. For further documentation
+//! on how to use the binary, please check the respective documentation.
+
+pub mod parameter;
+
+pub use parameter::*;

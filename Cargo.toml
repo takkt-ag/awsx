@@ -10,3 +10,6 @@ authors = [
 license = "Apache-2.0"
 
 [dependencies]
+indexmap = "1.0"
+serde = "1.0"
+serde_derive = "1.0"
