@@ -27,5 +27,6 @@
 pub mod error;
 pub mod parameter;
 pub mod provider;
+pub mod s3;
 pub mod stack;
 pub mod template;

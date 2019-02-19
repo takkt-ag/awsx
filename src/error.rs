@@ -62,6 +62,12 @@ impl From<rusoto_cloudformation::DescribeStacksError> for Error {
     }
 }
 
+impl From<rusoto_s3::PutObjectError> for Error {
+    fn from(cause: rusoto_s3::PutObjectError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
 impl From<rusoto_core::request::TlsError> for Error {
     fn from(cause: rusoto_core::request::TlsError) -> Self {
         Error::RusotoError(cause.into())
