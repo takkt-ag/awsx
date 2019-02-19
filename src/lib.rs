@@ -26,10 +26,12 @@
 
 pub mod error;
 pub mod parameter;
+pub mod provider;
 pub mod stack;
 pub mod template;
 
 pub use error::*;
 pub use parameter::*;
+pub use provider::*;
 pub use stack::*;
 pub use template::*;

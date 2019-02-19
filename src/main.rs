@@ -14,20 +14,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-mod command;
-
-use command::override_parameters;
-use futures::{
-    future::{err, ok, Either},
-    Future, Poll,
-};
-use rusoto_core::{
-    credential::{AwsCredentials, ChainProvider, ProvideAwsCredentials},
-    CredentialsError, HttpClient, Region,
-};
-use rusoto_sts::{StsAssumeRoleSessionCredentialsProvider, StsClient};
+use awsx::AwsxProvider;
+use rusoto_core::Region;
 use structopt::StructOpt;
-use uuid::Uuid;
+
+mod command;
+use command::override_parameters;
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -89,7 +81,12 @@ enum Command {
 fn main() {
     let opt = Opt::from_args();
     println!("{:#?}", opt);
-    let provider = AwsxProvider::new(&opt);
+    let provider = AwsxProvider::new(
+        opt.assume_role_arn.clone(),
+        opt.aws_region.clone().unwrap_or_default(),
+        opt.aws_access_key_id.clone(),
+        opt.aws_secret_access_key.clone(),
+    );
 
     use Command::*;
     if let Err(e) = match opt.command {
@@ -99,110 +96,4 @@ fn main() {
     } {
         eprintln!("{:#?}", e);
     };
-}
-
-struct AwsxProvider {
-    assume_role_arn: Option<String>,
-    aws_region: Region,
-    inner: AwsxInnerProvider,
-}
-
-impl AwsxProvider {
-    fn new(opt: &Opt) -> AwsxProvider {
-        AwsxProvider {
-            assume_role_arn: opt.assume_role_arn.clone(),
-            aws_region: opt.aws_region.clone().unwrap_or_default(),
-            inner: AwsxInnerProvider::new(opt),
-        }
-    }
-}
-
-impl ProvideAwsCredentials for AwsxProvider {
-    type Future = AwsxProviderFuture;
-
-    fn credentials(&self) -> Self::Future {
-        let future = if let Some(assume_role_arn) = &self.assume_role_arn {
-            let sts_client = StsClient::new_with(
-                HttpClient::new().expect("Failed to create HTTP client"),
-                self.inner.clone(),
-                self.aws_region.clone(),
-            );
-            Either::A(
-                StsAssumeRoleSessionCredentialsProvider::new(
-                    sts_client,
-                    assume_role_arn.to_owned(),
-                    format!(
-                        "{name}=={version}@{request_id}",
-                        name = env!("CARGO_PKG_NAME"),
-                        version = env!("CARGO_PKG_VERSION"),
-                        request_id = Uuid::new_v4(),
-                    ),
-                    None,
-                    None,
-                    None,
-                    None,
-                )
-                .credentials(),
-            )
-        } else {
-            Either::B(self.inner.credentials())
-        };
-
-        AwsxProviderFuture {
-            inner: Box::new(future),
-        }
-    }
-}
-
-struct AwsxProviderFuture {
-    inner: Box<Future<Item = AwsCredentials, Error = CredentialsError> + Send>,
-}
-
-impl Future for AwsxProviderFuture {
-    type Item = AwsCredentials;
-    type Error = CredentialsError;
-
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.inner.poll()
-    }
-}
-
-#[derive(Debug, Clone)]
-struct AwsxInnerProvider {
-    opt_provider: Option<AwsCredentials>,
-    chain_provider: ChainProvider,
-}
-
-impl AwsxInnerProvider {
-    fn new(opt: &Opt) -> AwsxInnerProvider {
-        let opt_provider = match (&opt.aws_access_key_id, &opt.aws_secret_access_key) {
-            (Some(access_key_id), Some(secret_access_key)) => Some(AwsCredentials::new(
-                access_key_id.as_ref(),
-                secret_access_key.as_ref(),
-                None,
-                None,
-            )),
-            _ => None,
-        };
-        AwsxInnerProvider {
-            opt_provider,
-            chain_provider: ChainProvider::new(),
-        }
-    }
-}
-
-impl ProvideAwsCredentials for AwsxInnerProvider {
-    type Future = AwsxProviderFuture;
-
-    fn credentials(&self) -> Self::Future {
-        let chain_provider = self.chain_provider.clone();
-        let future = match self.opt_provider {
-            Some(ref credentials) => ok(credentials.clone()),
-            None => err(CredentialsError::new("")),
-        }
-        .or_else({ move |_| chain_provider.credentials() });
-        AwsxProviderFuture {
-            inner: Box::new(future),
-        }
-    }
 }
