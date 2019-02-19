@@ -21,15 +21,24 @@ use failure::Fail;
 /// Representation of an error within awsx.
 #[derive(Debug, Fail)]
 pub enum Error {
+    /// Error caused by Rusoto, in proxy from AWS.
+    #[fail(display = "failed to perform AWS action")]
+    AwsError(#[fail(cause)] failure::Error),
     /// The parameters provided were invalid.
     ///
     /// This can happen if either the template or stack the parameters should be applied to do not
     /// match what parameters the template or stack actually expects.
     #[fail(display = "invalid parameters provided")]
     InvalidParameters,
+    /// The requested stack does not exist.
+    #[fail(display = "invalid stack {}", 0)]
+    InvalidStack(String),
     /// A general IO error.
     #[fail(display = "general IO error")]
     IoError(#[fail(cause)] std::io::Error),
+    /// Error caused within Rusoto.
+    #[fail(display = "failed to perform Rusoto action")]
+    RusotoError(#[fail(cause)] failure::Error),
     /// Deserializing the template failed.
     #[fail(display = "failed to deserialize the template")]
     TemplateDeserializationFailed(#[fail(cause)] failure::Error),
@@ -38,5 +47,23 @@ pub enum Error {
 impl From<std::io::Error> for Error {
     fn from(cause: std::io::Error) -> Self {
         Error::IoError(cause)
+    }
+}
+
+impl From<rusoto_cloudformation::CreateChangeSetError> for Error {
+    fn from(cause: rusoto_cloudformation::CreateChangeSetError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
+impl From<rusoto_cloudformation::DescribeStacksError> for Error {
+    fn from(cause: rusoto_cloudformation::DescribeStacksError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
+impl From<rusoto_core::request::TlsError> for Error {
+    fn from(cause: rusoto_core::request::TlsError) -> Self {
+        Error::RusotoError(cause.into())
     }
 }
