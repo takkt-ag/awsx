@@ -28,8 +28,8 @@ pub enum Error {
     ///
     /// This can happen if either the template or stack the parameters should be applied to do not
     /// match what parameters the template or stack actually expects.
-    #[fail(display = "invalid parameters provided")]
-    InvalidParameters,
+    #[fail(display = "invalid parameters provided: {}", 0)]
+    InvalidParameters(String),
     /// The requested stack does not exist.
     #[fail(display = "invalid stack {}", 0)]
     InvalidStack(String),

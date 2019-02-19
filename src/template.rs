@@ -95,7 +95,9 @@ impl Template {
                 ..Default::default()
             })
         } else {
-            Err(Error::InvalidParameters)
+            Err(Error::InvalidParameters(
+                "the template expected other parameters than were provided".to_owned(),
+            ))
         }
     }
 
