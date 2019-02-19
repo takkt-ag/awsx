@@ -14,6 +14,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+mod command;
+
+use command::override_parameters;
 use futures::{
     future::{err, ok, Either},
     Future, Poll,
@@ -66,12 +69,24 @@ pub(crate) struct Opt {
                      in a single account. If unspecified, no role will be assumed."
     )]
     pub assume_role_arn: Option<String>,
+    #[structopt(subcommand)]
+    command: Command,
+}
+
+#[derive(Debug, StructOpt)]
+enum Command {
 }
 
 fn main() {
     let opt = Opt::from_args();
     println!("{:#?}", opt);
     let provider = AwsxProvider::new(&opt);
+
+    use Command::*;
+    if let Err(e) = match opt.command {
+    } {
+        eprintln!("{:#?}", e);
+    };
 }
 
 struct AwsxProvider {
