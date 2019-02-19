@@ -207,6 +207,11 @@ impl Parameters {
         self.0.keys()
     }
 
+    /// Return `true` if the parameter by the given key exists.
+    pub fn contains_key(&self, key: &str) -> bool {
+        self.0.contains_key(key)
+    }
+
     /// Update all parameters in the current collection with the ones also available in the other
     /// collection.
     ///

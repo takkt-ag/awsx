@@ -121,7 +121,7 @@ impl Template {
     }
 
     /// Get the parameters expected by the template.
-    pub fn parameters(&self) -> &Parameters {
+    pub fn get_parameters(&self) -> &Parameters {
         &self.parameters
     }
 

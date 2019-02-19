@@ -19,7 +19,7 @@ use rusoto_core::Region;
 use structopt::StructOpt;
 
 mod command;
-use command::override_parameters;
+use command::{override_parameters, update_deployed_template};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -61,6 +61,16 @@ pub(crate) struct Opt {
                      in a single account. If unspecified, no role will be assumed."
     )]
     pub assume_role_arn: Option<String>,
+    #[structopt(
+        long = "s3-bucket-name",
+        help = "Name of the S3 bucket used for storing templates",
+        long_help = "Name of the S3 bucket used for storing templates. Any command that updates a \
+                     stack template will upload the template to S3 if this parameter is specified. \
+                     If the parameter is unspecified, the awsx will try to provide the template \
+                     within the API call to AWS, although the template size here is limited to \
+                     51,200 bytes (enforced by the AWS API)."
+    )]
+    pub s3_bucket_name: Option<String>,
     #[structopt(subcommand)]
     command: Command,
 }
@@ -76,6 +86,15 @@ enum Command {
                       that will not be automatically executed."
     )]
     OverrideParameters(override_parameters::Opt),
+    #[structopt(
+        name = "update-deployed-template",
+        about = "Update an existing stack with a new template",
+        long_about = "Update an existing stack with a new template, without updating any \
+                      parameters already defined on the stack. You can and have to supply \
+                      parameters that are newly added. NOTE: this will only create a change set \
+                      that will not be automatically executed."
+    )]
+    UpdateDeployedTemplate(update_deployed_template::Opt),
 }
 
 fn main() {
@@ -92,6 +111,9 @@ fn main() {
     if let Err(e) = match opt.command {
         OverrideParameters(ref command_opt) => {
             override_parameters::override_parameters(command_opt, &opt, provider)
+        }
+        UpdateDeployedTemplate(ref command_opt) => {
+            update_deployed_template::update_stack(command_opt, &opt, provider)
         }
     } {
         eprintln!("{:#?}", e);
