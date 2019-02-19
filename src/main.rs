@@ -75,6 +75,15 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
+    #[structopt(
+        name = "override-parameters",
+        about = "Update specified parameters on an existing stack",
+        long_about = "Update specified parameters on an existing stack, without updating the \
+                      underlying template. Only the specified parameters will be updated, with all \
+                      other parameters staying unchanged. NOTE: this will only create a change set \
+                      that will not be automatically executed."
+    )]
+    OverrideParameters(override_parameters::Opt),
 }
 
 fn main() {
@@ -84,6 +93,9 @@ fn main() {
 
     use Command::*;
     if let Err(e) = match opt.command {
+        OverrideParameters(ref command_opt) => {
+            override_parameters::override_parameters(command_opt, &opt, provider)
+        }
     } {
         eprintln!("{:#?}", e);
     };
