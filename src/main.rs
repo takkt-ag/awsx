@@ -14,7 +14,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use awsx::AwsxProvider;
+use awsx::provider::AwsxProvider;
 use rusoto_core::Region;
 use structopt::StructOpt;
 

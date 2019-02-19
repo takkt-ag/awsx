@@ -55,7 +55,7 @@ impl Parameter {
     /// This is a simple helper and is equal to instantiating the variant yourself:
     ///
     /// ```
-    /// # use awsx::Parameter;
+    /// # use awsx::parameter::Parameter;
     /// assert_eq!(
     ///     Parameter::PreviousValue {
     ///         key: String::new()
@@ -214,7 +214,7 @@ impl Parameters {
     /// collection might have defined.
     ///
     /// ```
-    /// # use awsx::{Parameter, Parameters};
+    /// # use awsx::parameter::{Parameter, Parameters};
     /// let mut parameters = Parameters::new(vec![
     ///     Parameter::WithValue {
     ///         key: "FirstParameter".to_owned(),
@@ -285,7 +285,7 @@ impl Parameters {
     /// parameters, which might not be what you want.
     ///
     /// ```
-    /// # use awsx::{Parameter, Parameters};
+    /// # use awsx::parameter::{Parameter, Parameters};
     /// let mut parameters = Parameters::new(vec![
     ///     Parameter::WithValue {
     ///         key: "FirstParameter".to_owned(),
