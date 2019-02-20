@@ -1,5 +1,105 @@
 # awsx
 
+awsx is a command-line utility providing helpful commands that the default AWS CLI does not provide.
+It does not replace the AWS CLI, rather it is meant to work in conjunction with it.
+
+## Usage
+
+### `awsx`
+
+```
+awsx 0.1.0
+KAISER+KRAFT EUROPA GmbH
+
+USAGE:
+    awsx [OPTIONS] <SUBCOMMAND>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --assume-role-arn <assume_role_arn>                Optional role to assume before executing AWS API calls
+        --aws-access-key-id <aws_access_key_id>            AWS Access Key ID used for AWS API authentication
+        --aws-region <aws_region>                          Region the AWS API calls should be performed in
+        --aws-secret-access-key <aws_secret_access_key>    AWS Secret Access Key used for AWS API authentication
+        --output-format <output_format>
+            Specify the format of the application output [possible values: human, human-readable, structured, json, yml,
+            yaml]
+        --s3-bucket-name <s3_bucket_name>                  Name of the S3 bucket used for storing templates
+
+SUBCOMMANDS:
+    help                        Prints this message or the help of the given subcommand(s)
+    identify-new-parameters     Show new template parameters not present on the stack
+    override-parameters         Update specified parameters on an existing stack
+    update-deployed-template    Update an existing stack with a new template
+```
+
+### `awsx identify-new-parameters`
+
+```
+awsx-identify-new-parameters 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Show all new parameters defined on the template, but not present on the stack. This subcommand does not create a change
+set, and performs only read-only actions.
+
+USAGE:
+    awsx identify-new-parameters --stack-name <stack_name> --template-path <template_path>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --stack-name <stack_name>          Name of the stack to update
+        --template-path <template_path>    Path to the new template
+```
+
+### `awsx override-parameters`
+
+```
+awsx-override-parameters 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Update specified parameters on an existing stack, without updating the underlying template. Only the specified
+parameters will be updated, with all other parameters staying unchanged. NOTE: this will only create a change set that
+will not be automatically executed.
+
+USAGE:
+    awsx override-parameters [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --change-set-name <change_set_name>               Name for the new change set
+    -p, --parameter-overrides <parameter_overrides>...    Parameters to override
+        --stack-name <stack_name>                         Name of the stack to update
+```
+
+### `awsx update-deployed-template`
+
+```
+awsx-update-deployed-template 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Update an existing stack with a new template, without updating any parameters already defined on the stack. You can and
+have to supply parameters that are newly added. NOTE: this will only create a change set that will not be automatically
+executed.
+
+USAGE:
+    awsx update-deployed-template [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name> --template-path <template_path>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --change-set-name <change_set_name>    Name for the new change set
+    -p, --parameters <parameters>...           New parameters required by template
+        --stack-name <stack_name>              Name of the stack to update
+        --template-path <template_path>        Path to the new template
+```
+
 ## License
 
 awsx is licensed under the Apache License, Version 2.0, (see [LICENSE](LICENSE) or <https://www.apache.org/licenses/LICENSE-2.0>).
