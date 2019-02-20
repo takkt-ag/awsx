@@ -21,7 +21,7 @@ use std::str::FromStr;
 use structopt::StructOpt;
 
 mod command;
-use command::{override_parameters, update_deployed_template};
+use command::{identify_new_parameters, override_parameters, update_deployed_template};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -91,7 +91,13 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
-    #[structopt(name = "identify-new-parameters")]
+    #[structopt(
+        name = "identify-new-parameters",
+        about = "Show new template parameters not present on the stack",
+        long_about = "Show all new parameters defined on the template, but not present on the \
+                      stack. This subcommand does not create a change set, and performs only \
+                      read-only actions."
+    )]
     IdentifyNewParameters(identify_new_parameters::Opt),
     #[structopt(
         name = "override-parameters",
@@ -154,6 +160,9 @@ fn main() {
 
     use Command::*;
     let output: Result<AwsxOutput, Error> = match opt.command {
+        IdentifyNewParameters(ref command_opt) => {
+            identify_new_parameters::identify_new_parameters(command_opt, &opt, provider)
+        }
         OverrideParameters(ref command_opt) => {
             override_parameters::override_parameters(command_opt, &opt, provider)
         }
