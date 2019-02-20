@@ -17,9 +17,10 @@
 use awsx::{error::Error, parameter::Parameter, stack::Stack};
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
+use serde_json::json;
 use structopt::StructOpt;
 
-use crate::{AwsxProvider, Opt as GlobalOpt};
+use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -41,7 +42,7 @@ pub(crate) fn override_parameters(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
-) -> Result<(), Error> {
+) -> Result<AwsxOutput, Error> {
     let cfn = CloudFormationClient::new_with(
         HttpClient::new()?,
         provider,
@@ -60,5 +61,14 @@ pub(crate) fn override_parameters(
     // We now create a change set for the stack, re-using the existing template.
     stack.create_change_set(&cfn, &opt.change_set_name, &stack_parameters)?;
 
-    Ok(())
+    Ok(AwsxOutput {
+        human_readable: format!(
+            "Change set {} creation started successfully",
+            opt.change_set_name
+        ),
+        structured: json!({
+            "success": true,
+            "change_set_name": opt.change_set_name,
+        }),
+    })
 }

@@ -14,8 +14,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use awsx::provider::AwsxProvider;
+use awsx::{error::Error, provider::AwsxProvider};
 use rusoto_core::Region;
+use serde::{Serialize, Serializer};
+use std::str::FromStr;
 use structopt::StructOpt;
 
 mod command;
@@ -62,6 +64,18 @@ pub(crate) struct Opt {
     )]
     pub assume_role_arn: Option<String>,
     #[structopt(
+        long = "output-format",
+        help = "Specify the format of the application output",
+        long_help = "Specify the format of the application output. The default, if left \
+                     unspecified, depends on whether stdout is a TTY. If it is, the output will be \
+                     human readable. If it isn't, the contents will be output in structured form, \
+                     specifically JSON.",
+        raw(
+            possible_values = r#"&["human", "human-readable", "structured", "json", "yml", "yaml"]"#
+        )
+    )]
+    pub output_format: Option<OutputFormat>,
+    #[structopt(
         long = "s3-bucket-name",
         help = "Name of the S3 bucket used for storing templates",
         long_help = "Name of the S3 bucket used for storing templates. Any command that updates a \
@@ -77,6 +91,8 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
+    #[structopt(name = "identify-new-parameters")]
+    IdentifyNewParameters(identify_new_parameters::Opt),
     #[structopt(
         name = "override-parameters",
         about = "Update specified parameters on an existing stack",
@@ -97,9 +113,38 @@ enum Command {
     UpdateDeployedTemplate(update_deployed_template::Opt),
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum OutputFormat {
+    HumanReadable,
+    Json,
+    Yaml,
+}
+
+impl Default for OutputFormat {
+    fn default() -> Self {
+        if atty::is(atty::Stream::Stdout) {
+            OutputFormat::HumanReadable
+        } else {
+            OutputFormat::Json
+        }
+    }
+}
+
+impl FromStr for OutputFormat {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "human" | "human-readable" => Ok(OutputFormat::HumanReadable),
+            "json" | "structured" => Ok(OutputFormat::Json),
+            "yml" | "yaml" => Ok(OutputFormat::Yaml),
+            _ => Err(Error::UnknownOutputFormat(s.to_owned())),
+        }
+    }
+}
+
 fn main() {
     let opt = Opt::from_args();
-    println!("{:#?}", opt);
     let provider = AwsxProvider::new(
         opt.assume_role_arn.clone(),
         opt.aws_region.clone().unwrap_or_default(),
@@ -108,14 +153,38 @@ fn main() {
     );
 
     use Command::*;
-    if let Err(e) = match opt.command {
+    let output: Result<AwsxOutput, Error> = match opt.command {
         OverrideParameters(ref command_opt) => {
             override_parameters::override_parameters(command_opt, &opt, provider)
         }
         UpdateDeployedTemplate(ref command_opt) => {
             update_deployed_template::update_stack(command_opt, &opt, provider)
         }
-    } {
-        eprintln!("{:#?}", e);
     };
+    match output {
+        Ok(output) => println!(
+            "{}",
+            match opt.output_format.unwrap_or_default() {
+                OutputFormat::HumanReadable => output.human_readable,
+                OutputFormat::Json => serde_json::to_string(&output.structured).unwrap(),
+                OutputFormat::Yaml => serde_yaml::to_string(&output.structured).unwrap(),
+            }
+        ),
+        Err(e) => eprintln!("{:#?}", e),
+    };
+}
+
+#[derive(Debug)]
+pub(crate) struct AwsxOutput {
+    human_readable: String,
+    structured: serde_json::Value,
+}
+
+impl Serialize for AwsxOutput {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        self.structured.serialize(serializer)
+    }
 }

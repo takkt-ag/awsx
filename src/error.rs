@@ -42,6 +42,9 @@ pub enum Error {
     /// Deserializing the template failed.
     #[fail(display = "failed to deserialize the template")]
     TemplateDeserializationFailed(#[fail(cause)] failure::Error),
+    /// The output format specified was unknown
+    #[fail(display = "specified output format is unknown: {}", 0)]
+    UnknownOutputFormat(String),
 }
 
 impl From<std::io::Error> for Error {
