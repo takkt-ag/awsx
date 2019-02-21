@@ -25,9 +25,11 @@ use itertools::Itertools;
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
 use serde_json::json;
+use std::fs::File;
+use std::io::BufReader;
 use structopt::StructOpt;
 
-use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
+use crate::{util::apply_excludes_includes, AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -40,12 +42,48 @@ pub(crate) struct Opt {
     #[structopt(
         short = "p",
         long = "parameters",
+        conflicts_with = "parameter_path",
         help = "New parameters required by template",
         long_help = "New parameters required by template. Specify as multiple `Key=Value` pairs, \
                      where each key has to correspond to a parameter newly added to the template, \
-                     i.e. the parameter can not be already defined on the stack."
+                     i.e. the parameter can not be already defined on the stack.\n(If you specify \
+                     this parameter, you cannot specify --parameter-path, --exclude or --include.)"
     )]
     parameters: Vec<Parameter>,
+    #[structopt(
+        long = "parameter-path",
+        help = "Path to a JSON parameter file",
+        conflicts_with = "parameters",
+        long_help = "Path to a JSON parameter file. This file should be structured the same as the \
+                     AWS CLI expects. The file can only contain parameters newly added to the \
+                     template, unless the existing parameters are defined as \
+                     `UsePreviousValue=true`.\n(If you specify this parameter, you cannot specify \
+                     --parameters.)"
+    )]
+    parameter_path: Option<String>,
+    #[structopt(
+        long = "exclude",
+        conflicts_with = "parameters",
+        requires = "parameter_path",
+        help = "Exclude parameters",
+        long_help = "Exclude parameters based on the patterns provided. All patterns will be \
+                     compiled into a regex-set, which will be used to match each parameter key. If \
+                     a parameter key matches any of the exclude-patterns, the parameter will not \
+                     be applied."
+    )]
+    excludes: Vec<String>,
+    #[structopt(
+        long = "include",
+        conflicts_with = "parameters",
+        requires = "parameter_path",
+        help = "Include parameters",
+        long_help = "Include parameters based on the patterns provided. All patterns will be \
+                     compiled into a regex-set, which will be used to match each parameter key. \
+                     Every parameter key that doesn't match any of the include-patterns will not \
+                     be applied.\n(Excludes are applied before includes, and you cannot include a \
+                     parameter that was previously excluded.)"
+    )]
+    includes: Vec<String>,
 }
 
 pub(crate) fn update_stack(
@@ -80,7 +118,23 @@ pub(crate) fn update_stack(
     // around, are simply ignored, since they do not need to be set and will simply be removed
     // once the change-set is deployed.)
     let new_parameters = template_parameters.clone() - stack_parameters;
-    let provided_parameters: Parameters = (&opt.parameters).into();
+
+    // Get the user provided parameters.
+    let provided_parameters: Parameters = if let Some(parameter_path) = &opt.parameter_path {
+        let file = File::open(parameter_path)?;
+        let reader = BufReader::new(file);
+        let parameters: Parameters = {
+            let parameters: Parameters = serde_json::from_reader(reader).unwrap();
+            parameters
+                .values()
+                .filter(|parameter| !parameter.is_previous_value())
+                .collect::<Vec<_>>()
+                .into()
+        };
+        apply_excludes_includes(parameters, &opt.excludes, &opt.includes)?
+    } else {
+        (&opt.parameters).into()
+    };
 
     // We need to ensure that the user has provided exactly the parameters that have been added.
     if !new_parameters

@@ -14,13 +14,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use awsx::{error::Error, parameter::Parameter, stack::Stack};
+use awsx::{
+    error::Error,
+    parameter::{Parameter, Parameters},
+    stack::Stack,
+};
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
 use serde_json::json;
+use std::fs::File;
+use std::io::BufReader;
 use structopt::StructOpt;
 
-use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
+use crate::{util::apply_excludes_includes, AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -31,11 +37,46 @@ pub(crate) struct Opt {
     #[structopt(
         short = "p",
         long = "parameter-overrides",
+        conflicts_with = "parameter_path",
         help = "Parameters to override",
         long_help = "Parameters to override. Specify as multiple `Key=Value` pairs, where each key \
                      has to correspond to an existing parameter on the requested stack."
     )]
     parameter_overrides: Vec<Parameter>,
+    #[structopt(
+        long = "parameter-path",
+        help = "Path to a JSON parameter file",
+        conflicts_with = "parameter_overrides",
+        long_help = "Path to a JSON parameter file. This file should be structured the same as the \
+                     AWS CLI expects. The file can only contain parameters newly added to the \
+                     template, unless the existing parameters are defined as \
+                     `UsePreviousValue=true`.\n(If you specify this parameter, you cannot specify \
+                     --parameters.)"
+    )]
+    parameter_path: Option<String>,
+    #[structopt(
+        long = "exclude",
+        conflicts_with = "parameter_overrides",
+        requires = "parameter_path",
+        help = "Exclude parameters",
+        long_help = "Exclude parameters based on the patterns provided. All patterns will be \
+                     compiled into a regex-set, which will be used to match each parameter key. If \
+                     a parameter key matches any of the exclude-patterns, the parameter will not \
+                     be applied."
+    )]
+    excludes: Vec<String>,
+    #[structopt(
+        long = "include",
+        conflicts_with = "parameter_overrides",
+        requires = "parameter_path",
+        help = "Include parameters",
+        long_help = "Include parameters based on the patterns provided. All patterns will be \
+                     compiled into a regex-set, which will be used to match each parameter key. \
+                     Every parameter key that doesn't match any of the include-patterns will not \
+                     be applied.\n(Excludes are applied before includes, and you cannot include a \
+                     parameter that was previously excluded.)"
+    )]
+    includes: Vec<String>,
 }
 
 pub(crate) fn override_parameters(
@@ -55,9 +96,27 @@ pub(crate) fn override_parameters(
     let mut stack_parameters = stack.get_parameters(&cfn)?;
 
     // We now update the retrieved parameters, overriding them as specified on the command-line.
-    stack_parameters.update(&opt.parameter_overrides);
-    println!("{:#?}", stack_parameters);
+    if let Some(parameter_path) = &opt.parameter_path {
+        let file = File::open(parameter_path)?;
+        let reader = BufReader::new(file);
+        let parameters: Parameters = {
+            let parameters: Parameters = serde_json::from_reader(reader).unwrap();
+            parameters
+                .values()
+                .filter(|parameter| !parameter.is_previous_value())
+                .collect::<Vec<_>>()
+                .into()
+        };
+        stack_parameters.update(apply_excludes_includes(
+            parameters,
+            &opt.excludes,
+            &opt.includes,
+        )?);
+    } else {
+        stack_parameters.update(&opt.parameter_overrides);
+    }
 
+    // TODO: check if stack_parameters is empty and exit early?
     // We now create a change set for the stack, re-using the existing template.
     stack.create_change_set(&cfn, &opt.change_set_name, &stack_parameters)?;
 

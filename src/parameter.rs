@@ -69,6 +69,14 @@ impl Parameter {
         Parameter::PreviousValue { key }
     }
 
+    /// Check if a parameter is defined to use the previous value.
+    pub fn is_previous_value(&self) -> bool {
+        match self {
+            Parameter::PreviousValue { .. } => true,
+            _ => false,
+        }
+    }
+
     /// Convert the parameter type as returned by Rusoto CloudFormation into our Parameter type.
     ///
     /// This conversion can fail since we don't support input parameters structured as follows:
