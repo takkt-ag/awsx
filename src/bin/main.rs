@@ -21,6 +21,8 @@ use std::str::FromStr;
 use structopt::StructOpt;
 
 mod command;
+mod util;
+
 use command::{identify_new_parameters, override_parameters, update_deployed_template};
 
 #[derive(Debug, StructOpt)]

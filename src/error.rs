@@ -36,6 +36,12 @@ pub enum Error {
     /// A general IO error.
     #[fail(display = "general IO error")]
     IoError(#[fail(cause)] std::io::Error),
+    /// Error caused while parsing a regex
+    #[fail(display = "failed to parse regex: {}", 0)]
+    RegexParseError(String),
+    /// General regex error cause while working with a regex
+    #[fail(display = "general regex error")]
+    RegexError(#[fail(cause)] failure::Error),
     /// Error caused within Rusoto.
     #[fail(display = "failed to perform Rusoto action")]
     RusotoError(#[fail(cause)] failure::Error),
@@ -74,5 +80,14 @@ impl From<rusoto_s3::PutObjectError> for Error {
 impl From<rusoto_core::request::TlsError> for Error {
     fn from(cause: rusoto_core::request::TlsError) -> Self {
         Error::RusotoError(cause.into())
+    }
+}
+
+impl From<regex::Error> for Error {
+    fn from(cause: regex::Error) -> Self {
+        match cause {
+            regex::Error::Syntax(description) => Error::RegexParseError(description),
+            _ => Error::RegexError(cause.into()),
+        }
     }
 }
