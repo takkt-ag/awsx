@@ -202,16 +202,6 @@ impl Parameters {
         )
     }
 
-    /// Return an iterator over the keys of the collection, in their order
-    pub fn keys(&self) -> impl Iterator<Item = &String> {
-        self.0.keys()
-    }
-
-    /// Return `true` if the parameter by the given key exists.
-    pub fn contains_key(&self, key: &str) -> bool {
-        self.0.contains_key(key)
-    }
-
     /// Update all parameters in the current collection with the ones also available in the other
     /// collection.
     ///
@@ -368,6 +358,17 @@ impl From<Vec<Parameter>> for Parameters {
     }
 }
 
+impl From<Vec<&Parameter>> for Parameters {
+    fn from(parameters: Vec<&Parameter>) -> Self {
+        Parameters::new(
+            parameters
+                .into_iter()
+                .map(ToOwned::to_owned)
+                .collect::<Vec<_>>(),
+        )
+    }
+}
+
 impl From<&Vec<Parameter>> for Parameters {
     fn from(parameters: &Vec<Parameter>) -> Self {
         Parameters::new(parameters.clone())
@@ -377,6 +378,14 @@ impl From<&Vec<Parameter>> for Parameters {
 impl From<&Parameters> for Vec<rusoto_cloudformation::Parameter> {
     fn from(parameters: &Parameters) -> Self {
         parameters.0.iter().map(|(_, v)| v.into()).collect()
+    }
+}
+
+impl ops::Deref for Parameters {
+    type Target = IndexMap<String, Parameter>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
 
