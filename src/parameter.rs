@@ -42,6 +42,7 @@ pub enum Parameter {
         value: String,
     },
     /// A parameter where the previous, pre-existing value on the stack should be retained.
+    #[serde(serialize_with = "serialize_parameter_previousvalue")]
     PreviousValue {
         /// Key of the CloudFormation stack or template parameter.
         #[serde(rename = "ParameterKey")]
@@ -193,6 +194,34 @@ impl FromStr for Parameter {
                 .to_owned(),
         })
     }
+}
+
+/// This specialized serializer is used for the `Parameter::PreviousValue` variant internally.
+/// Within the `PreviousValue` variant we do not track the `UsePreviousValue` variable since we
+/// specify it to be `true` when we instantiate this variant. During serialization we need to
+/// reinject this field into the resulting JSON.
+fn serialize_parameter_previousvalue<S>(key: &String, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: ser::Serializer,
+{
+    use serde::Serialize;
+
+    #[derive(Serialize)]
+    #[serde(untagged)]
+    enum Parameter<'a> {
+        PreviousValue {
+            #[serde(rename = "ParameterKey")]
+            key: &'a String,
+            #[serde(rename = "UsePreviousValue")]
+            use_previous_value: bool,
+        },
+    }
+
+    Parameter::PreviousValue {
+        key,
+        use_previous_value: true,
+    }
+    .serialize(serializer)
 }
 
 /// A collection holding one or more stack or template parameters.
@@ -457,5 +486,479 @@ impl IntoParameters for Vec<Parameter> {
 impl IntoParameters for &Vec<Parameter> {
     fn into_parameters(self) -> Parameters {
         self.into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn parameter_previous_value() {
+        let actual = Parameter::previous_value("MyKey".to_owned());
+        let expected = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn parameter_is_previous_value() {
+        let previous_value = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        let with_value = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+
+        assert!(previous_value.is_previous_value());
+        assert!(!with_value.is_previous_value());
+    }
+
+    #[test]
+    fn parameter_from_cfnparameter() {
+        let with_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            parameter_value: Some("my value".to_owned()),
+            ..Default::default()
+        };
+        let with_value_expected = Some(Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        });
+        assert_eq!(with_value_expected, Parameter::from(&with_value_actual));
+
+        let previous_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            use_previous_value: Some(true),
+            ..Default::default()
+        };
+        let previous_value_expected = Some(Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        });
+        assert_eq!(
+            previous_value_expected,
+            Parameter::from(&previous_value_actual)
+        );
+
+        let resolved_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            resolved_value: Some("resolved value".to_owned()),
+            ..Default::default()
+        };
+        let resolved_value_expected = None;
+        assert_eq!(
+            resolved_value_expected,
+            Parameter::from(&resolved_value_actual)
+        );
+
+        let no_key_actual = rusoto_cloudformation::Parameter {
+            parameter_key: None,
+            ..Default::default()
+        };
+        let no_key_expected = None;
+        assert_eq!(no_key_expected, Parameter::from(&no_key_actual));
+    }
+
+    #[test]
+    fn parameter_from_as_previous_value_cfnparameter() {
+        let with_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            parameter_value: Some("my value".to_owned()),
+            ..Default::default()
+        };
+        let with_value_expected = Some(Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        });
+        assert_eq!(
+            with_value_expected,
+            Parameter::from_as_previous_value(&with_value_actual)
+        );
+
+        let previous_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            use_previous_value: Some(true),
+            ..Default::default()
+        };
+        let previous_value_expected = Some(Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        });
+        assert_eq!(
+            previous_value_expected,
+            Parameter::from_as_previous_value(&previous_value_actual)
+        );
+
+        let resolved_value_actual = rusoto_cloudformation::Parameter {
+            parameter_key: Some("MyKey".to_owned()),
+            resolved_value: Some("resolved value".to_owned()),
+            ..Default::default()
+        };
+        let resolved_value_expected = Some(Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        });
+        assert_eq!(
+            resolved_value_expected,
+            Parameter::from_as_previous_value(&resolved_value_actual)
+        );
+
+        let no_key_actual = rusoto_cloudformation::Parameter {
+            parameter_key: None,
+            ..Default::default()
+        };
+        let no_key_expected = None;
+        assert_eq!(
+            no_key_expected,
+            Parameter::from_as_previous_value(&no_key_actual)
+        );
+    }
+
+    #[test]
+    fn parameter_into_previous_value() {
+        let with_value_actual = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        let with_value_expected = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        assert_eq!(with_value_expected, with_value_actual.into_previous_value());
+
+        let previous_value_actual = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        let previous_value_expected = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        assert_eq!(
+            previous_value_expected,
+            previous_value_actual.into_previous_value()
+        );
+    }
+
+    #[test]
+    fn parameter_key() {
+        let with_value_actual = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        let with_value_expected = "MyKey";
+        assert_eq!(with_value_expected, with_value_actual.key());
+
+        let previous_value_actual = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        let previous_value_expected = "MyKey";
+        assert_eq!(previous_value_expected, previous_value_actual.key());
+    }
+
+    #[test]
+    fn parameter_fromstr() {
+        let with_space_actual = "MyKey=my value";
+        let with_space_expected = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        assert_eq!(with_space_expected, with_space_actual.parse().unwrap());
+
+        let with_equals_actual = "MyKey=value=value";
+        let with_equals_expected = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "value=value".to_owned(),
+        };
+        assert_eq!(with_equals_expected, with_equals_actual.parse().unwrap());
+    }
+
+    #[test]
+    fn parameter_serialize() {
+        let with_value_actual = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        let with_value_expected = json!({
+            "ParameterKey": "MyKey",
+            "ParameterValue": "my value"
+        });
+
+        assert_eq!(
+            with_value_expected,
+            serde_json::to_value(with_value_actual).unwrap()
+        );
+
+        let previous_value_actual = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        let previous_value_expected = json!({
+            "ParameterKey": "MyKey",
+            "UsePreviousValue": true,
+        });
+
+        assert_eq!(
+            previous_value_expected,
+            serde_json::to_value(previous_value_actual).unwrap()
+        );
+    }
+
+    #[test]
+    fn parameter_deserialize() {
+        let with_value_actual = json!({
+            "ParameterKey": "MyKey",
+            "ParameterValue": "my value"
+        });
+        let with_value_expected = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+
+        assert_eq!(
+            with_value_expected,
+            serde_json::from_value(with_value_actual).unwrap()
+        );
+
+        let previous_value_actual = json!({
+            "ParameterKey": "MyKey",
+            "UsePreviousValue": true,
+        });
+        let previous_value_expected = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+
+        assert_eq!(
+            previous_value_expected,
+            serde_json::from_value(previous_value_actual).unwrap()
+        );
+
+        let resolved_value_actual = json!({
+            "ParameterKey": "MyKey",
+            "ResolvedValue": "ResolvedValue"
+        });
+        let resolved_value_expected = Parameter::PreviousValue {
+            key: "MyKey".to_owned(),
+        };
+        assert_eq!(
+            resolved_value_expected,
+            serde_json::from_value(resolved_value_actual).unwrap()
+        );
+
+        let no_key = json!({
+            "ParameterValue": "MissingKey"
+        });
+        assert!(serde_json::from_value::<Parameter>(no_key).is_err());
+    }
+
+    #[test]
+    fn parameters_new_empty() {
+        let empty = Parameters::new(vec![]);
+        assert!(empty.is_empty());
+        assert_eq!(empty.len(), 0);
+    }
+
+    #[test]
+    fn parameters_new_nonempty() {
+        let with_value = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        let previous_value = Parameter::PreviousValue {
+            key: "OtherKey".to_owned(),
+        };
+        let non_empty = Parameters::new(vec![with_value.clone(), previous_value.clone()]);
+        assert!(!non_empty.is_empty());
+        assert_eq!(non_empty.len(), 2);
+        assert_eq!(&with_value, non_empty.get("MyKey").unwrap());
+        assert_eq!(&previous_value, non_empty.get("OtherKey").unwrap());
+    }
+
+    #[test]
+    fn parameters_new_duplicate() {
+        let with_value = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "my value".to_owned(),
+        };
+        let duplicate_key = Parameter::WithValue {
+            key: "MyKey".to_owned(),
+            value: "different value".to_owned(),
+        };
+        let non_empty = Parameters::new(vec![with_value.clone(), duplicate_key.clone()]);
+        assert!(!non_empty.is_empty());
+        assert_eq!(non_empty.len(), 1);
+        assert_eq!(&duplicate_key, non_empty.get("MyKey").unwrap());
+    }
+
+    #[test]
+    fn parameters_update() {
+        let parameter1 = Parameter::WithValue {
+            key: "Parameter1".to_owned(),
+            value: "Value1".to_owned(),
+        };
+        let parameter2 = Parameter::PreviousValue {
+            key: "Parameter2".to_owned(),
+        };
+        let mut parameters = Parameters::new(vec![parameter1.clone(), parameter2.clone()]);
+
+        let parameter1 = Parameter::PreviousValue {
+            key: "Parameter1".to_owned(),
+        };
+        let parameter2 = Parameter::WithValue {
+            key: "Parameter2".to_owned(),
+            value: "Value2".to_owned(),
+        };
+        let parameter3 = Parameter::PreviousValue {
+            key: "Parameter3".to_owned(),
+        };
+        let new_parameters = vec![parameter1.clone(), parameter2.clone(), parameter3.clone()];
+
+        // Verify that `update` and `updated` returned the same result.
+        let parameters_updated = parameters.clone().updated(new_parameters.clone());
+        parameters.update(new_parameters);
+        assert_eq!(parameters, parameters_updated);
+
+        // Verify the contents of the updated result.
+        assert!(!parameters.is_empty());
+        assert_eq!(parameters.len(), 2);
+        assert_eq!(&parameter1, parameters.get("Parameter1").unwrap());
+        assert_eq!(&parameter2, parameters.get("Parameter2").unwrap());
+        assert!(parameters.get("Parameter3").is_none());
+    }
+
+    #[test]
+    fn parameters_merge() {
+        let parameter1 = Parameter::WithValue {
+            key: "Parameter1".to_owned(),
+            value: "Value1".to_owned(),
+        };
+        let parameter2 = Parameter::PreviousValue {
+            key: "Parameter2".to_owned(),
+        };
+        let mut parameters = Parameters::new(vec![parameter1.clone(), parameter2.clone()]);
+
+        let parameter1 = Parameter::PreviousValue {
+            key: "Parameter1".to_owned(),
+        };
+        let parameter2 = Parameter::WithValue {
+            key: "Parameter2".to_owned(),
+            value: "Value2".to_owned(),
+        };
+        let parameter3 = Parameter::PreviousValue {
+            key: "Parameter3".to_owned(),
+        };
+        let new_parameters = vec![parameter1.clone(), parameter2.clone(), parameter3.clone()];
+
+        // Verify that `update` and `updated` returned the same result.
+        let parameters_merged = parameters.clone().merged(new_parameters.clone());
+        parameters.merge(new_parameters);
+        assert_eq!(parameters, parameters_merged);
+
+        // Verify the contents of the updated result.
+        assert!(!parameters.is_empty());
+        assert_eq!(parameters.len(), 3);
+        assert_eq!(&parameter1, parameters.get("Parameter1").unwrap());
+        assert_eq!(&parameter2, parameters.get("Parameter2").unwrap());
+        assert_eq!(&parameter3, parameters.get("Parameter3").unwrap());
+    }
+
+    #[test]
+    fn parameters_sub() {
+        let parameter1 = Parameter::PreviousValue {
+            key: "Parameter1".to_owned(),
+        };
+        let parameter2 = Parameter::WithValue {
+            key: "Parameter2".to_owned(),
+            value: "Value2".to_owned(),
+        };
+        let parameter3 = Parameter::PreviousValue {
+            key: "Parameter3".to_owned(),
+        };
+        let parameter4 = Parameter::WithValue {
+            key: "Parameter4".to_owned(),
+            value: "Value4".to_owned(),
+        };
+
+        let left_parameters: Parameters =
+            vec![parameter1.clone(), parameter2.clone(), parameter3.clone()].into();
+        let right_parameters: Parameters =
+            vec![parameter2.clone(), parameter3.clone(), parameter4.clone()].into();
+
+        let parameters = left_parameters - right_parameters;
+
+        assert!(!parameters.is_empty());
+        assert_eq!(parameters.len(), 1);
+        assert_eq!(&parameter1, parameters.get("Parameter1").unwrap());
+        assert!(parameters.get("Parameter2").is_none());
+        assert!(parameters.get("Parameter3").is_none());
+        assert!(parameters.get("Parameter4").is_none());
+    }
+
+    #[test]
+    fn parameters_serialize() {
+        let parameter1 = Parameter::PreviousValue {
+            key: "Parameter1".to_owned(),
+        };
+        let parameter2 = Parameter::WithValue {
+            key: "Parameter2".to_owned(),
+            value: "Value2".to_owned(),
+        };
+        let parameter3 = Parameter::PreviousValue {
+            key: "Parameter3".to_owned(),
+        };
+
+        let expected = json!([
+            {
+                "ParameterKey": "Parameter1",
+                "UsePreviousValue": true
+            },
+            {
+                "ParameterKey": "Parameter2",
+                "ParameterValue": "Value2"
+            },
+            {
+                "ParameterKey": "Parameter3",
+                "UsePreviousValue": true
+            }
+        ]);
+        let actual = Parameters::new(vec![parameter1, parameter2, parameter3]);
+
+        assert_eq!(expected, serde_json::to_value(actual).unwrap());
+    }
+
+    #[test]
+    fn parameters_deserialize() {
+        let expected = Parameters::new(vec![
+            Parameter::PreviousValue {
+                key: "Parameter1".to_owned(),
+            },
+            Parameter::WithValue {
+                key: "Parameter2".to_owned(),
+                value: "Value2".to_owned(),
+            },
+            Parameter::PreviousValue {
+                key: "Parameter3".to_owned(),
+            },
+            Parameter::PreviousValue {
+                key: "Parameter4".to_owned(),
+            },
+        ]);
+        let actual = json!([
+            {
+                "ParameterKey": "Parameter1",
+                "UsePreviousValue": true
+            },
+            {
+                "ParameterKey": "Parameter2",
+                "ParameterValue": "Value2"
+            },
+            {
+                "ParameterKey": "Parameter3",
+                "UsePreviousValue": true
+            },
+            {
+                "ParameterKey": "Parameter4",
+                "ResolvedValue": "ResolvedValue"
+            }
+        ]);
+
+        assert_eq!(expected, serde_json::from_value(actual).unwrap());
     }
 }
