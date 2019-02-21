@@ -9,6 +9,12 @@ authors = [
 ]
 license = "Apache-2.0"
 
+autobins = false
+
+[[bin]]
+name = "awsx"
+path = "src/bin/main.rs"
+
 [dependencies]
 atty = "0.2.11"
 failure = "0.1.5"
