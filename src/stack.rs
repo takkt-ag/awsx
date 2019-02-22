@@ -87,7 +87,11 @@ impl Stack {
             stack_name: self.name.clone(),
             use_previous_template: Some(true),
             change_set_name: name.as_ref().to_owned(),
-            capabilities: None,
+            capabilities: Some(vec![
+                "CAPABILITY_IAM".to_owned(),
+                "CAPABILITY_NAMED_IAM".to_owned(),
+                "CAPABILITY_AUTO_EXPAND".to_owned(),
+            ]),
             change_set_type: Some("UPDATE".to_owned()),
             parameters: Some(parameters.into()),
             ..Default::default()

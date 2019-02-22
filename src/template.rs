@@ -92,6 +92,7 @@ impl Template {
                 change_set_name: name.to_owned(),
                 capabilities: Some(vec![
                     "CAPABILITY_IAM".to_owned(),
+                    "CAPABILITY_NAMED_IAM".to_owned(),
                     "CAPABILITY_AUTO_EXPAND".to_owned(),
                 ]),
                 parameters: Some(parameters.into()),
