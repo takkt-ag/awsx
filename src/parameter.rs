@@ -226,7 +226,7 @@ where
 
 /// A collection holding one or more stack or template parameters.
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct Parameters(IndexMap<String, Parameter>);
+pub struct Parameters(pub(crate) IndexMap<String, Parameter>);
 
 impl Parameters {
     /// Create the `Parameters` collection from `Vec<Parameter>`.

@@ -39,7 +39,8 @@ impl Stack {
 
     /// Get the current parameters for the stack.
     ///
-    /// This retrieves all parameters defined on the AWS CloudFormation stack.
+    /// This retrieves all parameters defined on the AWS CloudFormation stack, including their
+    /// current values.
     pub fn get_parameters(&self, cfn: &CloudFormation) -> Result<Parameters, Error> {
         let response = cfn
             .describe_stacks(rusoto_cloudformation::DescribeStacksInput {
@@ -58,10 +59,27 @@ impl Stack {
             .map(|parameters| {
                 parameters
                     .iter()
-                    .filter_map(|parameter| Parameter::from_as_previous_value(parameter))
+                    .filter_map(|parameter| Parameter::from(parameter))
                     .collect::<Vec<_>>()
             })
             .unwrap_or_else(|| vec![])
+            .into())
+    }
+
+    /// Get the current parameters for the stack, as previous values.
+    ///
+    /// This retrieves all parameters defined on the AWS CloudFormation stack and turns them into
+    /// the `Parameter::PreviousValue` variant, i.e. dropping all values.
+    pub fn get_parameters_as_previous_value(
+        &self,
+        cfn: &CloudFormation,
+    ) -> Result<Parameters, Error> {
+        Ok(self
+            .get_parameters(cfn)?
+            .0
+            .into_iter()
+            .map(|(_, parameter)| parameter.into_previous_value())
+            .collect::<Vec<_>>()
             .into())
     }
 

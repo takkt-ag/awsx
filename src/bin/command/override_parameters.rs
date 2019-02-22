@@ -93,7 +93,7 @@ pub(crate) fn override_parameters(
     // Retrieve the parameters currently set on the stack. This will return a list of parameters
     // where the previous value will be used in a change set.
     let stack = Stack::new(&opt.stack_name);
-    let mut stack_parameters = stack.get_parameters(&cfn)?;
+    let mut stack_parameters = stack.get_parameters_as_previous_value(&cfn)?;
 
     // We now update the retrieved parameters, overriding them as specified on the command-line.
     if let Some(parameter_path) = &opt.parameter_path {
