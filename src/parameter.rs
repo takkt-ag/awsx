@@ -17,6 +17,7 @@
 //! This module enables type-safe handling of stack and template parameters.
 
 use indexmap::IndexMap;
+use itertools::Itertools;
 use serde::{de, ser};
 use serde_derive::{Deserialize, Serialize};
 use std::ops;
@@ -386,6 +387,37 @@ impl Parameters {
         let mut this = self.0.clone();
         this.extend(other.into_parameters().0);
         Parameters(this)
+    }
+
+    /// Check if the other parameters are loosely equal to self.
+    ///
+    /// Loose equality in this case defines that when a parameter is present _with a value_ in the
+    /// current set of parameters, the parameter is equal in the other set if it either has the same
+    /// value, or if it is defined as the [`PreviousValue`] variant.
+    ///
+    /// [`PreviousValue`]: #variant.PreviousValue
+    pub fn loosely_equal(&self, other: &Parameters) -> bool {
+        // A first check for the len allows us to quickly exit, should other be different.
+        if self.len() != other.len() {
+            return false;
+        }
+
+        // The next check is to see if the keys themselves are equal, i.e. self doesn't have keys
+        // that other doesn't have and vice-versa.
+        if !self.keys().sorted().eq(other.keys().sorted()) {
+            return false;
+        }
+
+        // With the fact established that the keys are equal, we can now verify for every key in
+        // self that the corresponding key in other is either strictly equal, or is references the
+        // previous value.
+        return self.iter().all(|(key, parameter)| {
+            let other_parameter = other
+                .get(key)
+                // Since we have established that the key must exist in other, we can safely unwrap.
+                .unwrap();
+            other_parameter.is_previous_value() || parameter == other_parameter
+        });
     }
 }
 
