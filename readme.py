@@ -65,6 +65,7 @@ SUBCOMMANDS = [
     "identify-new-parameters",
     "override-parameters",
     "update-deployed-template",
+    "verify-parameter-file",
 ]
 
 

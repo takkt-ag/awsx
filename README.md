@@ -57,6 +57,7 @@ SUBCOMMANDS:
     identify-new-parameters     Show new template parameters not present on the stack
     override-parameters         Update specified parameters on an existing stack
     update-deployed-template    Update an existing stack with a new template
+    verify-parameter-file       Verify that parameters in a file match a deployed stack
 ```
 
 ### awsx identify-new-parameters
@@ -178,6 +179,34 @@ OPTIONS:
 
         --template-path <template_path>        
             Path to the new template
+```
+
+### awsx verify-parameter-file
+
+```
+awsx-verify-parameter-file 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Verify that the parameters defined in your parameters file match a currently deployed stack. If your parameter-file has
+parameters defined as `UsePreviousValue`, they will be considered equal to whatever is defined on the stack. This
+subcommand does not create a change set, and performs only read-only actions.
+
+USAGE:
+    awsx verify-parameter-file --parameter-path <parameter_path> --stack-name <stack_name>
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --parameter-path <parameter_path>    
+            Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects.
+
+        --stack-name <stack_name>            
+            Name of the stack
 ```
 
 ## License

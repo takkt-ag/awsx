@@ -23,7 +23,9 @@ use structopt::StructOpt;
 mod command;
 mod util;
 
-use command::{identify_new_parameters, override_parameters, update_deployed_template};
+use command::{
+    identify_new_parameters, override_parameters, update_deployed_template, verify_parameter_file,
+};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -119,6 +121,16 @@ enum Command {
                       that will not be automatically executed."
     )]
     UpdateDeployedTemplate(update_deployed_template::Opt),
+    #[structopt(
+        name = "verify-parameter-file",
+        about = "Verify that parameters in a file match a deployed stack",
+        long_about = "Verify that the parameters defined in your parameters file match a currently \
+                      deployed stack. If your parameter-file has parameters defined as \
+                      `UsePreviousValue`, they will be considered equal to whatever is defined on \
+                      the stack. This subcommand does not create a change set, and performs only \
+                      read-only actions."
+    )]
+    VerifyParameterFile(verify_parameter_file::Opt),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -170,6 +182,9 @@ fn main() {
         }
         UpdateDeployedTemplate(ref command_opt) => {
             update_deployed_template::update_stack(command_opt, &opt, provider)
+        }
+        VerifyParameterFile(ref command_opt) => {
+            verify_parameter_file::verify_parameter_file(command_opt, &opt, provider)
         }
     };
     match output {
