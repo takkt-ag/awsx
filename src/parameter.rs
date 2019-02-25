@@ -391,6 +391,8 @@ impl Parameters {
 
     /// Check if the other parameters are loosely equal to self.
     ///
+    /// # Loose equality
+    ///
     /// Loose equality in this case defines that when a parameter is present _with a value_ in the
     /// current set of parameters, the parameter is equal in the other set if it either has the same
     /// value, or if it is defined as the [`PreviousValue`] variant.
@@ -419,6 +421,87 @@ impl Parameters {
             other_parameter.is_previous_value() || parameter == other_parameter
         });
     }
+
+    /// Calculate the loose difference between this set of parameters and another set of parameters.
+    ///
+    /// # Returns
+    ///
+    /// Returns `None` if there are no differences, otherwise an instance of
+    /// [`ParametersDifference`], from which you can identify:
+    ///
+    /// 1. parameters only available in this set of parameters (stored in [`left`])
+    /// 2. parameters that exist in both sets but are unequal (stored in [`unequal`]) and
+    /// 3. parameters that are only available in the other set of parameters (stored in [`right`]).
+    ///
+    /// # Loose equality
+    ///
+    /// Loose equality in this case defines that when a parameter is present _with a value_ in the
+    /// current set of parameters, the parameter is equal in the other set if it either has the same
+    /// value, or if it is defined as the [`PreviousValue`] variant.
+    ///
+    /// [`ParametersDifference`]: struct.ParametersDifference.html
+    /// [`left`]: struct.ParameterDifference.html#structfield.left
+    /// [`unequal`]: struct.ParameterDifference.html#structfield.unequal
+    /// [`right`]: struct.ParameterDifference.html#structfield.right
+    /// [`PreviousValue`]: #variant.PreviousValue
+    pub fn loose_difference<'a>(&'a self, other: &'a Parameters) -> Option<ParametersDifference<'a>> {
+        let mut left: Vec<&'a Parameter> = Vec::new();
+        let mut unequal: Vec<&'a Parameter> = Vec::new();
+        let mut right: Vec<&'a Parameter> = Vec::new();
+
+        // Identify parameters available on `this` but not available on `other`.
+        left.extend(self.iter().filter_map(|(key, parameter)| {
+            if other.contains_key(key) {
+                None
+            } else {
+                Some(parameter)
+            }
+        }));
+
+        // Identify parameters which are available on both `this` and `other`, but are not loosely
+        // equal.
+        unequal.extend(self.iter().filter_map(|(key, parameter)| {
+            other
+                .get(key)
+                .map(|other_parameter| {
+                    other_parameter.is_previous_value() || parameter == other_parameter
+                })
+                .and_then(|equal| if equal { None } else { Some(parameter) })
+        }));
+
+        // Identify parameters not available on `this` but available on `other`.
+        right.extend(other.iter().filter_map(|(key, parameter)| {
+            if self.contains_key(key) {
+                None
+            } else {
+                Some(parameter)
+            }
+        }));
+
+        // Should there be no differences, return `None`.
+        if left.is_empty() && unequal.is_empty() && right.is_empty() {
+            None
+        } else {
+            Some(ParametersDifference {
+                left,
+                unequal,
+                right,
+            })
+        }
+    }
+}
+
+/// Struct to track the differences between two sets of [`Parameters`].
+///
+/// [`Parameters`]: struct.Parameters.html
+#[derive(Debug)]
+pub struct ParametersDifference<'a> {
+    /// Parameters that are only available in the *left* parameter set
+    pub left: Vec<&'a Parameter>,
+    /// Parameters that are unequal across the two parameter sets
+    pub unequal: Vec<&'a Parameter>,
+    /// Parameters that are only available in the *right* parameter set
+    pub right: Vec<&'a Parameter>,
 }
 
 impl From<Vec<Parameter>> for Parameters {
