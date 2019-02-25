@@ -66,11 +66,9 @@ pub(crate) fn verify_parameter_file(
             structured: json!({
                 "success": true
             }),
+            successful: true,
         })
     } else {
-        // TODO error here instead to have an exit code we can rely on!
-        // This will require some thought into how we will give structured or human-readable output
-        // in the error case.
         Ok(AwsxOutput {
             human_readable:
                 "The parameters in the given file DID NOT MATCH the CloudFormation stack."
@@ -78,6 +76,7 @@ pub(crate) fn verify_parameter_file(
             structured: json!({
                 "success": false
             }),
+            successful: false,
         })
     }
 }

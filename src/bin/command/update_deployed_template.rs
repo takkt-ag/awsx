@@ -170,5 +170,6 @@ pub(crate) fn update_stack(
             "success": true,
             "change_set_name": opt.change_set_name,
         }),
+        successful: true,
     })
 }

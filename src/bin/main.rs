@@ -188,15 +188,23 @@ fn main() {
         }
     };
     match output {
-        Ok(output) => println!(
-            "{}",
-            match opt.output_format.unwrap_or_default() {
+        Ok(output) => {
+            let output_string = match opt.output_format.unwrap_or_default() {
                 OutputFormat::HumanReadable => output.human_readable,
                 OutputFormat::Json => serde_json::to_string(&output.structured).unwrap(),
                 OutputFormat::Yaml => serde_yaml::to_string(&output.structured).unwrap(),
+            };
+            if output.successful {
+                println!("{}", output_string);
+            } else {
+                eprintln!("{}", output_string);
+                std::process::exit(1);
             }
-        ),
-        Err(e) => eprintln!("{:#?}", e),
+        }
+        Err(e) => {
+            eprintln!("{:#?}", e);
+            std::process::exit(1);
+        }
     };
 }
 
@@ -204,6 +212,7 @@ fn main() {
 pub(crate) struct AwsxOutput {
     human_readable: String,
     structured: serde_json::Value,
+    successful: bool,
 }
 
 impl Serialize for AwsxOutput {

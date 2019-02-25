@@ -77,5 +77,6 @@ pub(crate) fn identify_new_parameters(
     Ok(AwsxOutput {
         human_readable,
         structured,
+        successful: true,
     })
 }
