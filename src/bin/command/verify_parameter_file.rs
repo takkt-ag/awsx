@@ -59,24 +59,55 @@ pub(crate) fn verify_parameter_file(
     let stack_parameters = stack.get_parameters(&cfn)?;
 
     // Compare
-    if stack_parameters.loosely_equal(&file_parameters) {
+    let differences = stack_parameters.loose_difference(&file_parameters);
+    if let Some(differences) = differences {
+        let mut table = prettytable::Table::new();
+        table.set_format(*prettytable::format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
+        table.set_titles(row![
+            "Only in stack",
+            "Unequal between both",
+            "Only in template"
+        ]);
+        for parameter in &differences.left {
+            table.add_row(row![parameter.key(), "", ""]);
+        }
+        for parameter in &differences.unequal {
+            table.add_row(row!["", parameter.key(), ""]);
+        }
+        for parameter in &differences.right {
+            table.add_row(row!["", "", parameter.key()]);
+        }
+
+        let mut human_readable = Vec::new();
+        table.print(&mut human_readable)?;
+        let human_readable =
+            String::from_utf8(human_readable).expect("prettytable did not return UTF-8");
+
+        Ok(AwsxOutput {
+            human_readable,
+            structured: json!({
+                "success": false,
+                "parameters": {
+                    "only_on_stack": differences.left,
+                    "unequal_between_both": differences.unequal,
+                    "only_in_template": differences.right,
+                },
+            }),
+            successful: false,
+        })
+    } else {
         Ok(AwsxOutput {
             human_readable: "The parameters in the given file MATCH the CloudFormation stack."
                 .to_string(),
             structured: json!({
-                "success": true
+                "success": true,
+                "parameters": {
+                    "only_on_stack": [],
+                    "unequal_between_both": [],
+                    "only_in_template": [],
+                },
             }),
             successful: true,
-        })
-    } else {
-        Ok(AwsxOutput {
-            human_readable:
-                "The parameters in the given file DID NOT MATCH the CloudFormation stack."
-                    .to_string(),
-            structured: json!({
-                "success": false
-            }),
-            successful: false,
         })
     }
 }
