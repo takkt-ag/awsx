@@ -59,24 +59,36 @@ pub(crate) fn identify_new_parameters(
     // once the change-set is deployed.)
     let new_parameters = template_parameters.clone() - stack_parameters;
 
-    let human_readable = {
-        let parameters = new_parameters
-            .keys()
-            .map(|key| format!("- {}", key))
-            .join("\n");
-        format!(
-            "New parameters defined in the template, not set on the stack:\n{}",
-            parameters
-        )
-    };
-    let structured = json!({
-        "success": true,
-        "parameters": new_parameters.keys().collect::<Vec<_>>(),
-    });
+    if new_parameters.is_empty() {
+        Ok(AwsxOutput {
+            human_readable: "No new parameters available".to_owned(),
+            structured: json!({
+                "success": false,
+                "message": "No new parameters available",
+                "parameters": [],
+            }),
+            successful: false,
+        })
+    } else {
+        let human_readable = {
+            let parameters = new_parameters
+                .keys()
+                .map(|key| format!("- {}", key))
+                .join("\n");
+            format!(
+                "New parameters defined in the template, not set on the stack:\n{}",
+                parameters
+            )
+        };
+        let structured = json!({
+            "success": true,
+            "parameters": new_parameters.keys().collect::<Vec<_>>(),
+        });
 
-    Ok(AwsxOutput {
-        human_readable,
-        structured,
-        successful: true,
-    })
+        Ok(AwsxOutput {
+            human_readable,
+            structured,
+            successful: true,
+        })
+    }
 }

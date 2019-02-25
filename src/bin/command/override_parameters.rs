@@ -116,19 +116,30 @@ pub(crate) fn override_parameters(
         stack_parameters.update(&opt.parameter_overrides);
     }
 
-    // TODO: check if stack_parameters is empty and exit early?
-    // We now create a change set for the stack, re-using the existing template.
-    stack.create_change_set(&cfn, &opt.change_set_name, &stack_parameters)?;
+    if stack_parameters.is_empty() {
+        Ok(AwsxOutput {
+            human_readable: "No parameters specified (or all filtered), no change set created"
+                .to_owned(),
+            structured: json!({
+                "success": false,
+                "message": "No parameters specified (or all filtered), no change set created",
+            }),
+            successful: false,
+        })
+    } else {
+        stack.create_change_set(&cfn, &opt.change_set_name, &stack_parameters)?;
 
-    Ok(AwsxOutput {
-        human_readable: format!(
-            "Change set {} creation started successfully",
-            opt.change_set_name
-        ),
-        structured: json!({
-            "success": true,
-            "change_set_name": opt.change_set_name,
-        }),
-        successful: true,
-    })
+        Ok(AwsxOutput {
+            human_readable: format!(
+                "Change set {} creation started successfully",
+                opt.change_set_name
+            ),
+            structured: json!({
+                "success": true,
+                "message": "Change set creation started successfully",
+                "change_set_name": opt.change_set_name,
+            }),
+            successful: true,
+        })
+    }
 }
