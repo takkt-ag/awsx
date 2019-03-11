@@ -187,11 +187,11 @@ impl FromStr for Parameter {
         Ok(Parameter::WithValue {
             key: split
                 .next()
-                .ok_or_else(|| "Parameter needs to provided in the form `Key=Value`".to_owned())?
+                .ok_or_else(|| "Parameter needs to be provided in the form `Key=Value`".to_owned())?
                 .to_owned(),
             value: split
                 .next()
-                .ok_or_else(|| "Parameter needs to provided in the form `Key=Value`".to_owned())?
+                .ok_or_else(|| "Parameter needs to be provided in the form `Key=Value`".to_owned())?
                 .to_owned(),
         })
     }
@@ -199,7 +199,7 @@ impl FromStr for Parameter {
 
 /// This specialized serializer is used for the `Parameter::PreviousValue` variant internally.
 /// Within the `PreviousValue` variant we do not track the `UsePreviousValue` variable since we
-/// specify it to be `true` when we instantiate this variant. During serialization we need to
+/// define it to be `true` when we instantiate this variant. During serialization we need to
 /// reinject this field into the resulting JSON.
 fn serialize_parameter_previousvalue<S>(key: &String, serializer: S) -> Result<S::Ok, S::Error>
 where
@@ -397,7 +397,7 @@ impl Parameters {
     /// current set of parameters, the parameter is equal in the other set if it either has the same
     /// value, or if it is defined as the [`PreviousValue`] variant.
     ///
-    /// [`PreviousValue`]: #variant.PreviousValue
+    /// [`PreviousValue`]: enum.Parameter.html#variant.PreviousValue
     pub fn loosely_equal(&self, other: &Parameters) -> bool {
         // A first check for the len allows us to quickly exit, should other be different.
         if self.len() != other.len() {
@@ -443,8 +443,11 @@ impl Parameters {
     /// [`left`]: struct.ParameterDifference.html#structfield.left
     /// [`unequal`]: struct.ParameterDifference.html#structfield.unequal
     /// [`right`]: struct.ParameterDifference.html#structfield.right
-    /// [`PreviousValue`]: #variant.PreviousValue
-    pub fn loose_difference<'a>(&'a self, other: &'a Parameters) -> Option<ParametersDifference<'a>> {
+    /// [`PreviousValue`]: enum.Parameter.html#variant.PreviousValue
+    pub fn loose_difference<'a>(
+        &'a self,
+        other: &'a Parameters,
+    ) -> Option<ParametersDifference<'a>> {
         let mut left: Vec<&'a Parameter> = Vec::new();
         let mut unequal: Vec<&'a Parameter> = Vec::new();
         let mut right: Vec<&'a Parameter> = Vec::new();
