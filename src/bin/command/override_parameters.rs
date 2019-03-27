@@ -35,6 +35,11 @@ pub(crate) struct Opt {
     #[structopt(long = "change-set-name", help = "Name for the new change set")]
     change_set_name: String,
     #[structopt(
+        long = "role-arn",
+        help = "IAM Role that AWS CloudFormation assumes when executing the change set"
+    )]
+    role_arn: Option<String>,
+    #[structopt(
         short = "p",
         long = "parameter-overrides",
         conflicts_with = "parameter_path",
@@ -127,7 +132,12 @@ pub(crate) fn override_parameters(
             successful: false,
         })
     } else {
-        stack.create_change_set(&cfn, &opt.change_set_name, &stack_parameters)?;
+        stack.create_change_set(
+            &cfn,
+            &opt.change_set_name,
+            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+            &stack_parameters,
+        )?;
 
         Ok(AwsxOutput {
             human_readable: format!(

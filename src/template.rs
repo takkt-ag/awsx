@@ -78,12 +78,13 @@ impl Template {
     ///
     /// This function will validate that the parameter list matches what the template expects, and
     /// will return an error if this isn't the case.
-    pub fn create_change_set(
+    pub fn create_change_set<'a>(
         &self,
         cfn: &CloudFormation,
         name: &str,
         stack_name: &str,
         parameters: &Parameters,
+        role_arn: Option<&str>,
         s3_upload: Option<(&S3Uploader, &str)>,
     ) -> Result<CreateChangeSetOutput, Error> {
         if self.validate_parameters(&parameters) {
@@ -95,6 +96,7 @@ impl Template {
                     "CAPABILITY_NAMED_IAM".to_owned(),
                     "CAPABILITY_AUTO_EXPAND".to_owned(),
                 ]),
+                role_arn: role_arn.map(ToOwned::to_owned),
                 parameters: Some(parameters.into()),
                 ..Default::default()
             };

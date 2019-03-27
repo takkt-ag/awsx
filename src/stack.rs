@@ -95,22 +95,24 @@ impl Stack {
     ///
     ///   Waiting for the change set should be performed externally through the AWS CLI, using the
     ///   `aws cloudformation wait change-set-create-complete` command.
-    pub fn create_change_set<S: AsRef<str>>(
+    pub fn create_change_set(
         &self,
         cfn: &CloudFormation,
-        name: S,
+        name: &str,
+        role_arn: Option<&str>,
         parameters: &Parameters,
     ) -> Result<CreateChangeSetOutput, Error> {
         cfn.create_change_set(CreateChangeSetInput {
             stack_name: self.name.clone(),
             use_previous_template: Some(true),
-            change_set_name: name.as_ref().to_owned(),
+            change_set_name: name.to_owned(),
             capabilities: Some(vec![
                 "CAPABILITY_IAM".to_owned(),
                 "CAPABILITY_NAMED_IAM".to_owned(),
                 "CAPABILITY_AUTO_EXPAND".to_owned(),
             ]),
             change_set_type: Some("UPDATE".to_owned()),
+            role_arn: role_arn.map(ToOwned::to_owned),
             parameters: Some(parameters.into()),
             ..Default::default()
         })

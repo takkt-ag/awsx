@@ -37,6 +37,11 @@ pub(crate) struct Opt {
     stack_name: String,
     #[structopt(long = "change-set-name", help = "Name for the new change set")]
     change_set_name: String,
+    #[structopt(
+        long = "role-arn",
+        help = "IAM Role that AWS CloudFormation assumes when executing the change set"
+    )]
+    role_arn: Option<String>,
     #[structopt(long = "template-path", help = "Path to the new template")]
     template_path: String,
     #[structopt(
@@ -158,6 +163,7 @@ pub(crate) fn update_stack(
         &opt.change_set_name,
         &opt.stack_name,
         &template_parameters,
+        opt.role_arn.as_ref().map(|role_arn| &**role_arn),
         s3_upload,
     )?;
 
