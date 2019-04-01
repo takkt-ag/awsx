@@ -201,7 +201,7 @@ impl FromStr for Parameter {
 /// Within the `PreviousValue` variant we do not track the `UsePreviousValue` variable since we
 /// define it to be `true` when we instantiate this variant. During serialization we need to
 /// reinject this field into the resulting JSON.
-fn serialize_parameter_previousvalue<S>(key: &String, serializer: S) -> Result<S::Ok, S::Error>
+fn serialize_parameter_previousvalue<S>(key: &str, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: ser::Serializer,
 {
@@ -212,7 +212,7 @@ where
     enum Parameter<'a> {
         PreviousValue {
             #[serde(rename = "ParameterKey")]
-            key: &'a String,
+            key: &'a str,
             #[serde(rename = "UsePreviousValue")]
             use_previous_value: bool,
         },
@@ -413,13 +413,13 @@ impl Parameters {
         // With the fact established that the keys are equal, we can now verify for every key in
         // self that the corresponding key in other is either strictly equal, or is references the
         // previous value.
-        return self.iter().all(|(key, parameter)| {
+        self.iter().all(|(key, parameter)| {
             let other_parameter = other
                 .get(key)
                 // Since we have established that the key must exist in other, we can safely unwrap.
                 .unwrap();
             other_parameter.is_previous_value() || parameter == other_parameter
-        });
+        })
     }
 
     /// Calculate the loose difference between this set of parameters and another set of parameters.

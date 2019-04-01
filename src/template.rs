@@ -78,7 +78,7 @@ impl Template {
     ///
     /// This function will validate that the parameter list matches what the template expects, and
     /// will return an error if this isn't the case.
-    pub fn create_change_set<'a>(
+    pub fn create_change_set(
         &self,
         cfn: &CloudFormation,
         name: &str,

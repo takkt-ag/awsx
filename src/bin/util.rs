@@ -19,8 +19,8 @@ use regex::RegexSet;
 
 pub(crate) fn apply_excludes_includes(
     mut parameters: Parameters,
-    excludes: &Vec<String>,
-    includes: &Vec<String>,
+    excludes: &[String],
+    includes: &[String],
 ) -> Result<Parameters, Error> {
     if !excludes.is_empty() {
         let excludes = RegexSet::new(excludes)?;
