@@ -71,6 +71,18 @@ impl From<rusoto_cloudformation::DescribeStacksError> for Error {
     }
 }
 
+impl From<rusoto_elbv2::DescribeTagsError> for Error {
+    fn from(cause: rusoto_elbv2::DescribeTagsError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
+impl From<rusoto_elbv2::DescribeTargetGroupsError> for Error {
+    fn from(cause: rusoto_elbv2::DescribeTargetGroupsError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
 impl From<rusoto_s3::PutObjectError> for Error {
     fn from(cause: rusoto_s3::PutObjectError) -> Self {
         Error::AwsError(cause.into())

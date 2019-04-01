@@ -31,7 +31,8 @@ mod command;
 mod util;
 
 use command::{
-    identify_new_parameters, override_parameters, update_deployed_template, verify_parameter_file,
+    find_target_group, identify_new_parameters, override_parameters, update_deployed_template,
+    verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -102,6 +103,11 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
+    #[structopt(
+        name = "find-target-group",
+        about = "Find a target group based on its tags"
+    )]
+    FindTargetGroup(find_target_group::Opt),
     #[structopt(
         name = "identify-new-parameters",
         about = "Show new template parameters not present on the stack",
@@ -181,6 +187,9 @@ fn main() {
 
     use Command::*;
     let output: Result<AwsxOutput, Error> = match opt.command {
+        FindTargetGroup(ref command_opt) => {
+            find_target_group::find_target_group(command_opt, &opt, provider)
+        }
         IdentifyNewParameters(ref command_opt) => {
             identify_new_parameters::identify_new_parameters(command_opt, &opt, provider)
         }

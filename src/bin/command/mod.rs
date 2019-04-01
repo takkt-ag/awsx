@@ -14,6 +14,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+pub(crate) mod find_target_group;
 pub(crate) mod identify_new_parameters;
 pub(crate) mod override_parameters;
 pub(crate) mod update_deployed_template;
