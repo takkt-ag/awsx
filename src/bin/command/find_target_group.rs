@@ -108,10 +108,7 @@ pub(crate) fn find_target_group(
         .collect::<Result<Vec<_>, _>>()?
         .into_iter()
         .fold(Vec::new(), |mut acc, mut tag_descriptions| {
-            if let Some(tag_descriptions) = tag_descriptions
-                .tag_descriptions
-                .as_mut()
-            {
+            if let Some(tag_descriptions) = tag_descriptions.tag_descriptions.as_mut() {
                 acc.append(tag_descriptions)
             }
             acc
@@ -120,16 +117,14 @@ pub(crate) fn find_target_group(
         .into_iter()
         .filter(|tag_description| match &tag_description.tags {
             Some(resource_tags) => opt.tags.iter().all(|needle| {
-                resource_tags
-                    .iter()
-                    .any(|haystack| {
-                        haystack.key == needle.key
-                            && haystack
-                                .value
-                                .as_ref()
-                                .map(|value| value == &needle.value)
-                                .unwrap_or(false)
-                    })
+                resource_tags.iter().any(|haystack| {
+                    haystack.key == needle.key
+                        && haystack
+                            .value
+                            .as_ref()
+                            .map(|value| value == &needle.value)
+                            .unwrap_or(false)
+                })
             }),
             None => false,
         })
