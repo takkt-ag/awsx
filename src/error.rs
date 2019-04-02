@@ -59,6 +59,12 @@ impl From<std::io::Error> for Error {
     }
 }
 
+impl From<rusoto_autoscaling::DescribeAutoScalingGroupsError> for Error {
+    fn from(cause: rusoto_autoscaling::DescribeAutoScalingGroupsError) -> Self {
+        Error::AwsError(cause.into())
+    }
+}
+
 impl From<rusoto_cloudformation::CreateChangeSetError> for Error {
     fn from(cause: rusoto_cloudformation::CreateChangeSetError) -> Self {
         Error::AwsError(cause.into())
