@@ -31,8 +31,8 @@ mod command;
 mod util;
 
 use command::{
-    find_auto_scaling_group, find_target_group, identify_new_parameters, override_parameters,
-    update_deployed_template, verify_parameter_file,
+    find_amis_inuse, find_auto_scaling_group, find_target_group, identify_new_parameters,
+    override_parameters, update_deployed_template, verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -103,6 +103,19 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
+    #[structopt(
+        name = "find-amis-inuse",
+        about = "Identify all AMI-IDs that are being used",
+        long_about = "Identify all AMI-IDs that are being used within a region and account. For \
+                      this the command analyzes all AWS resources where AMI-IDs can be referenced, \
+                      and returns a complete list of the AMI-IDs in-use.",
+        after_help = "IAM permissions required:\n\
+                      - ec2:DescribeInstances\n\
+                      - ec2:DescribeLaunchTemplates\n\
+                      - ec2:DescribeLaunchTemplateVersions\n\
+                      - autoscaling:DescribeLaunchConfigurations"
+    )]
+    FindAmisInuse(find_amis_inuse::Opt),
     #[structopt(
         name = "find-auto-scaling-group",
         about = "Find an auto scaling group based on its tags"
@@ -192,6 +205,9 @@ fn main() {
 
     use Command::*;
     let output: Result<AwsxOutput, Error> = match opt.command {
+        FindAmisInuse(ref command_opt) => {
+            find_amis_inuse::find_amis_inuse(command_opt, &opt, provider)
+        }
         FindAutoScalingGroup(ref command_opt) => {
             find_auto_scaling_group::find_auto_scaling_group(command_opt, &opt, provider)
         }
