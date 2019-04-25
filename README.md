@@ -53,11 +53,98 @@ OPTIONS:
             (enforced by the AWS API).
 
 SUBCOMMANDS:
+    find-amis-inuse             Identify all AMI-IDs that are being used
+    find-auto-scaling-group     Find an auto scaling group based on its tags
+    find-target-group           Find a target group based on its tags
     help                        Prints this message or the help of the given subcommand(s)
     identify-new-parameters     Show new template parameters not present on the stack
     override-parameters         Update specified parameters on an existing stack
     update-deployed-template    Update an existing stack with a new template
     verify-parameter-file       Verify that parameters in a file match a deployed stack
+```
+
+### awsx find-amis-inuse
+
+```
+awsx-find-amis-inuse 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Identify all AMI-IDs that are being used within a region and account. For this the command analyzes all AWS resources
+where AMI-IDs can be referenced, and returns a complete list of the AMI-IDs in-use.
+
+USAGE:
+    awsx find-amis-inuse
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+IAM permissions required:
+- ec2:DescribeInstances
+- ec2:DescribeLaunchTemplates
+- ec2:DescribeLaunchTemplateVersions
+- autoscaling:DescribeLaunchConfigurations
+```
+
+### awsx find-auto-scaling-group
+
+```
+awsx-find-auto-scaling-group 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Find an auto scaling group based on its tags
+
+USAGE:
+    awsx find-auto-scaling-group [OPTIONS]
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --tags <tags>...    
+            Filter for target groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
+            key-value-pair corresponds to a tag assigned to the target groups.
+
+IAM permissions required:
+- autoscaling:DescribeAutoScalingGroups
+```
+
+### awsx find-target-group
+
+```
+awsx-find-target-group 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Find a target group based on its tags
+
+USAGE:
+    awsx find-target-group [OPTIONS]
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --load-balancer-arn <load_balancer_arn>    
+            Filter for target groups assigned to a specific load balancer
+
+        --tags <tags>...                           
+            Filter for target groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
+            key-value-pair corresponds to a tag assigned to the target groups.
+
+IAM permissions required:
+- elasticloadbalancing:DescribeTargetGroups
+- elasticloadbalancing:DescribeTags
 ```
 
 ### awsx identify-new-parameters
@@ -85,6 +172,10 @@ OPTIONS:
 
         --template-path <template_path>    
             Path to the new template
+
+
+IAM permissions required:
+- cloudformation:DescribeStacks
 ```
 
 ### awsx override-parameters
@@ -128,8 +219,16 @@ OPTIONS:
             only contain parameters newly added to the template, unless the existing parameters are defined as
             `UsePreviousValue=true`.
             (If you specify this parameter, you cannot specify --parameters.)
+        --role-arn <role_arn>
+            IAM Role that AWS CloudFormation assumes when executing the change set
+
         --stack-name <stack_name>                         
             Name of the stack to update
+
+
+IAM permissions required:
+- cloudformation:DescribeStacks
+- cloudformation:CreateChangeSet
 ```
 
 ### awsx update-deployed-template
@@ -174,11 +273,20 @@ OPTIONS:
             New parameters required by template. Specify as multiple `Key=Value` pairs, where each key has to correspond
             to a parameter newly added to the template, i.e. the parameter can not be already defined on the stack.
             (If you specify this parameter, you cannot specify --parameter-path, --exclude or --include.)
+        --role-arn <role_arn>                  
+            IAM Role that AWS CloudFormation assumes when executing the change set
+
         --stack-name <stack_name>              
             Name of the stack to update
 
         --template-path <template_path>        
             Path to the new template
+
+
+IAM permissions required:
+- cloudformation:DescribeStacks
+- cloudformation:CreateChangeSet
+- s3:PutObject
 ```
 
 ### awsx verify-parameter-file
@@ -207,6 +315,10 @@ OPTIONS:
 
         --stack-name <stack_name>            
             Name of the stack
+
+
+IAM permissions required:
+- cloudformation:DescribeStacks
 ```
 
 ## License

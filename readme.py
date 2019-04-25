@@ -62,6 +62,9 @@ awsx is a command-line utility is meant as an AWS CLI extension, providing featu
 """
 
 SUBCOMMANDS = [
+    "find-amis-inuse",
+    "find-auto-scaling-group",
+    "find-target-group",
     "identify-new-parameters",
     "override-parameters",
     "update-deployed-template",
