@@ -118,12 +118,17 @@ enum Command {
     FindAmisInuse(find_amis_inuse::Opt),
     #[structopt(
         name = "find-auto-scaling-group",
-        about = "Find an auto scaling group based on its tags"
+        about = "Find an auto scaling group based on its tags",
+        after_help = "IAM permissions required:\n\
+                      - autoscaling:DescribeAutoScalingGroups"
     )]
     FindAutoScalingGroup(find_auto_scaling_group::Opt),
     #[structopt(
         name = "find-target-group",
-        about = "Find a target group based on its tags"
+        about = "Find a target group based on its tags",
+        after_help = "IAM permissions required:\n\
+                      - elasticloadbalancing:DescribeTargetGroups\n\
+                      - elasticloadbalancing:DescribeTags"
     )]
     FindTargetGroup(find_target_group::Opt),
     #[structopt(
@@ -131,7 +136,9 @@ enum Command {
         about = "Show new template parameters not present on the stack",
         long_about = "Show all new parameters defined on the template, but not present on the \
                       stack. This subcommand does not create a change set, and performs only \
-                      read-only actions."
+                      read-only actions.",
+        after_help = "IAM permissions required:\n\
+                      - cloudformation:DescribeStacks"
     )]
     IdentifyNewParameters(identify_new_parameters::Opt),
     #[structopt(
@@ -140,7 +147,10 @@ enum Command {
         long_about = "Update specified parameters on an existing stack, without updating the \
                       underlying template. Only the specified parameters will be updated, with all \
                       other parameters staying unchanged. NOTE: this will only create a change set \
-                      that will not be automatically executed."
+                      that will not be automatically executed.",
+        after_help = "IAM permissions required:\n\
+                      - cloudformation:DescribeStacks\n\
+                      - cloudformation:CreateChangeSet"
     )]
     OverrideParameters(override_parameters::Opt),
     #[structopt(
@@ -149,7 +159,11 @@ enum Command {
         long_about = "Update an existing stack with a new template, without updating any \
                       parameters already defined on the stack. You can and have to supply \
                       parameters that are newly added. NOTE: this will only create a change set \
-                      that will not be automatically executed."
+                      that will not be automatically executed.",
+        after_help = "IAM permissions required:\n\
+                      - cloudformation:DescribeStacks\n\
+                      - cloudformation:CreateChangeSet\n\
+                      - s3:PutObject"
     )]
     UpdateDeployedTemplate(update_deployed_template::Opt),
     #[structopt(
@@ -159,7 +173,9 @@ enum Command {
                       deployed stack. If your parameter-file has parameters defined as \
                       `UsePreviousValue`, they will be considered equal to whatever is defined on \
                       the stack. This subcommand does not create a change set, and performs only \
-                      read-only actions."
+                      read-only actions.",
+        after_help = "IAM permissions required:\n\
+                      - cloudformation:DescribeStacks"
     )]
     VerifyParameterFile(verify_parameter_file::Opt),
 }
