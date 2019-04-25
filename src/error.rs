@@ -59,38 +59,11 @@ impl From<std::io::Error> for Error {
     }
 }
 
-impl From<rusoto_autoscaling::DescribeAutoScalingGroupsError> for Error {
-    fn from(cause: rusoto_autoscaling::DescribeAutoScalingGroupsError) -> Self {
-        Error::AwsError(cause.into())
-    }
-}
-
-impl From<rusoto_cloudformation::CreateChangeSetError> for Error {
-    fn from(cause: rusoto_cloudformation::CreateChangeSetError) -> Self {
-        Error::AwsError(cause.into())
-    }
-}
-
-impl From<rusoto_cloudformation::DescribeStacksError> for Error {
-    fn from(cause: rusoto_cloudformation::DescribeStacksError) -> Self {
-        Error::AwsError(cause.into())
-    }
-}
-
-impl From<rusoto_elbv2::DescribeTagsError> for Error {
-    fn from(cause: rusoto_elbv2::DescribeTagsError) -> Self {
-        Error::AwsError(cause.into())
-    }
-}
-
-impl From<rusoto_elbv2::DescribeTargetGroupsError> for Error {
-    fn from(cause: rusoto_elbv2::DescribeTargetGroupsError) -> Self {
-        Error::AwsError(cause.into())
-    }
-}
-
-impl From<rusoto_s3::PutObjectError> for Error {
-    fn from(cause: rusoto_s3::PutObjectError) -> Self {
+impl<E> From<rusoto_core::RusotoError<E>> for Error
+where
+    E: std::error::Error + std::marker::Send + std::marker::Sync + 'static,
+{
+    fn from(cause: rusoto_core::RusotoError<E>) -> Self {
         Error::AwsError(cause.into())
     }
 }
