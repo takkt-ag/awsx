@@ -147,11 +147,11 @@ pub(crate) fn update_stack(
         .sorted()
         .eq(provided_parameters.keys().sorted())
     {
-        return Err(Error::InvalidParameters(
-            "all newly required parameters have to be provided, and no old or non-existant \
-             parameters can be specified"
-                .to_owned(),
-        ));
+        return Err(Error::InvalidParameters(format!(
+            "all newly required parameters have to be provided ({}), and no old or non-existant \
+             parameters can be specified",
+            new_parameters.keys().join(", ")
+        )));
     }
 
     // Update the template parameters with the provided parameters.
