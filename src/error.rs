@@ -21,7 +21,7 @@ use failure::Fail;
 /// Representation of an error within awsx.
 #[derive(Debug, Fail)]
 pub enum Error {
-    /// Error caused by Rusoto, in proxy from AWS.
+    /// Error caused in Rusoto, in proxy from AWS.
     #[fail(display = "failed to perform AWS action")]
     AwsError(#[fail(cause)] failure::Error),
     /// The parameters provided were invalid.
@@ -42,12 +42,15 @@ pub enum Error {
     /// General regex error cause while working with a regex
     #[fail(display = "general regex error")]
     RegexError(#[fail(cause)] failure::Error),
-    /// Error caused within Rusoto.
-    #[fail(display = "failed to perform Rusoto action")]
-    RusotoError(#[fail(cause)] failure::Error),
     /// Deserializing the template failed.
     #[fail(display = "failed to deserialize the template")]
     TemplateDeserializationFailed(#[fail(cause)] failure::Error),
+    /// TLS error caused within Rusoto.
+    #[fail(display = "failed to perform Rusoto action")]
+    TlsError(#[fail(cause)] failure::Error),
+    /// An unknown error caused in Rusoto, in proxy from AWS.
+    #[fail(display = "encountered AWS error:\n{}", 0)]
+    UnknownAwsError(String),
     /// The output format specified was unknown
     #[fail(display = "specified output format is unknown: {}", 0)]
     UnknownOutputFormat(String),
@@ -64,13 +67,19 @@ where
     E: std::error::Error + std::marker::Send + std::marker::Sync + 'static,
 {
     fn from(cause: rusoto_core::RusotoError<E>) -> Self {
-        Error::AwsError(cause.into())
+        match cause {
+            rusoto_core::RusotoError::Unknown(rusoto_core::request::BufferedHttpResponse {
+                body,
+                ..
+            }) => Error::UnknownAwsError(String::from_utf8_lossy(&body).into_owned()),
+            _ => Error::AwsError(cause.into()),
+        }
     }
 }
 
 impl From<rusoto_core::request::TlsError> for Error {
     fn from(cause: rusoto_core::request::TlsError) -> Self {
-        Error::RusotoError(cause.into())
+        Error::TlsError(cause.into())
     }
 }
 
