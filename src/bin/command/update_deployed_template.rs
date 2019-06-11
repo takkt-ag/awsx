@@ -89,6 +89,16 @@ pub(crate) struct Opt {
                      parameter that was previously excluded.)"
     )]
     includes: Vec<String>,
+    #[structopt(
+        long = "force-create",
+        help = "Force change set creation",
+        long_help = "Force change set creation, even if the parameters supplied do not cover the \
+                     newly required parameters exactly. This means that if you force change set \
+                     creation, the created change set might contain parameter changes in addition \
+                     to the template changes, and it might even try to create a faulty change set \
+                     when required parameters are missing."
+    )]
+    force_create: bool,
 }
 
 pub(crate) fn update_stack(
@@ -147,11 +157,20 @@ pub(crate) fn update_stack(
         .sorted()
         .eq(provided_parameters.keys().sorted())
     {
-        return Err(Error::InvalidParameters(format!(
-            "all newly required parameters have to be provided ({}), and no old or non-existant \
-             parameters can be specified",
-            new_parameters.keys().join(", ")
-        )));
+        if opt.force_create {
+            eprintln!(
+                "WARNING: all newly required parameters ({}) might not have been supplied, or some \
+                 old or non-existent parameters were specified. The change set will be created \
+                 since it was explicitly requested!",
+                new_parameters.keys().join(", ")
+            );
+        } else {
+            return Err(Error::InvalidParameters(format!(
+                "all newly required parameters have to be provided ({}), and no old or \
+                 non-existent parameters can be specified",
+                new_parameters.keys().join(", ")
+            )));
+        }
     }
 
     // Update the template parameters with the provided parameters.
