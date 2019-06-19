@@ -87,7 +87,7 @@ pub(crate) fn find_auto_scaling_group(
         continuation_token.is_some()
     } {}
 
-    let auto_scaling_group_arn = auto_scaling_groups
+    let auto_scaling_group = auto_scaling_groups
         .into_iter()
         .filter(|auto_scaling_group| match &auto_scaling_group.tags {
             Some(resource_tags) => opt.tags.iter().all(|needle| {
@@ -106,16 +106,19 @@ pub(crate) fn find_auto_scaling_group(
             }),
             None => false,
         })
-        .filter_map(|auto_scaling_group| auto_scaling_group.auto_scaling_group_arn)
         .next();
 
-    match auto_scaling_group_arn {
-        Some(arn) => Ok(AwsxOutput {
-            human_readable: arn.clone(),
+    match auto_scaling_group {
+        Some(auto_scaling_group) => Ok(AwsxOutput {
+            human_readable: auto_scaling_group.auto_scaling_group_name.clone(),
             structured: json!({
                 "success": true,
                 "message": "Found auto-scaling group matching given filters",
-                "auto_scaling_group_arn": &arn,
+                "auto_scaling_group_arn":  auto_scaling_group
+                    .auto_scaling_group_arn
+                    .map(|arn| serde_json::Value::String(arn))
+                    .unwrap_or_else(|| serde_json::Value::Null),
+                "auto_scaling_group_name": &auto_scaling_group.auto_scaling_group_name,
             }),
             successful: true,
         }),
