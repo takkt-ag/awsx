@@ -54,6 +54,7 @@ impl FromStr for Tag {
 pub(crate) struct Opt {
     #[structopt(
         long = "tags",
+        required = true,
         help = "Filter for CloudFront distributions by their tags",
         long_help = "Filter for CloudFront distributions by their tags. Specify multiple \
                      `Key=Value` pairs, separated by spaces, where each key-value-pair corresponds \

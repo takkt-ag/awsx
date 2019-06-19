@@ -52,6 +52,7 @@ impl FromStr for Tag {
 pub(crate) struct Opt {
     #[structopt(
         long = "tags",
+        required = true,
         help = "Filter for auto-scaling groups by their tags",
         long_help = "Filter for auto-scaling groups by their tags. Specify multiple `Key=Value` \
                      pairs, separated by spaces, where each key-value-pair corresponds to a tag \
