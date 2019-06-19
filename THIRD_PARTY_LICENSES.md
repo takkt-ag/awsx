@@ -5,7 +5,7 @@ This page lists the licenses of the projects used in awsx.
 ## Overview of licenses
 
 - [Apache License 2.0](#Apache-2.0) (133)
-- [MIT License](#MIT) (63)
+- [MIT License](#MIT) (64)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (4)
 - [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (2)
 - [Creative Commons Zero v1.0 Universal](#CC0-1.0) (1)
@@ -230,9 +230,9 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [ryu 0.2.7]( https://github.com/dtolnay/ryu )
-- [structopt-derive 0.2.15]( https://github.com/TeXitoi/structopt )
-- [structopt 0.2.15]( https://github.com/TeXitoi/structopt )
+- [ryu 0.2.8]( https://github.com/dtolnay/ryu )
+- [structopt-derive 0.2.16]( https://github.com/TeXitoi/structopt )
+- [structopt 0.2.16]( https://github.com/TeXitoi/structopt )
 
 <pre>
                                  Apache License
@@ -870,7 +870,7 @@ This page lists the licenses of the projects used in awsx.
 - [foreign-types-shared 0.1.1]( https://github.com/sfackler/foreign-types )
 - [foreign-types 0.3.2]( https://github.com/sfackler/foreign-types )
 - [hex 0.3.2]( https://github.com/KokaKiwi/rust-hex )
-- [native-tls 0.2.2]( https://github.com/sfackler/rust-native-tls )
+- [native-tls 0.2.3]( https://github.com/sfackler/rust-native-tls )
 
 <pre>
                                  Apache License
@@ -1506,35 +1506,33 @@ limitations under the License.
 
 - [arc-swap 0.3.11]( https://github.com/vorner/arc-swap )
 - [arrayvec 0.4.10]( https://github.com/bluss/arrayvec )
-- [autocfg 0.1.2]( https://github.com/cuviper/autocfg )
+- [autocfg 0.1.4]( https://github.com/cuviper/autocfg )
 - [backtrace-sys 0.1.28]( https://github.com/alexcrichton/backtrace-rs )
-- [backtrace 0.3.15]( https://github.com/alexcrichton/backtrace-rs )
+- [backtrace 0.3.30]( https://github.com/rust-lang/backtrace-rs )
 - [base64 0.9.3]( https://github.com/alicemaz/rust-base64 )
-- [bitflags 1.0.4]( https://github.com/bitflags/bitflags )
-- [cc 1.0.35]( https://github.com/alexcrichton/cc-rs )
-- [cfg-if 0.1.7]( https://github.com/alexcrichton/cfg-if )
-- [core-foundation-sys 0.5.1]( https://github.com/servo/core-foundation-rs )
-- [core-foundation 0.5.1]( https://github.com/servo/core-foundation-rs )
+- [cc 1.0.37]( https://github.com/alexcrichton/cc-rs )
+- [cfg-if 0.1.9]( https://github.com/alexcrichton/cfg-if )
+- [core-foundation-sys 0.6.2]( https://github.com/servo/core-foundation-rs )
+- [core-foundation 0.6.4]( https://github.com/servo/core-foundation-rs )
 - [crossbeam-deque 0.7.1]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-epoch 0.7.1]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-queue 0.1.2]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-utils 0.6.5]( https://github.com/crossbeam-rs/crossbeam )
-- [dtoa 0.4.3]( https://github.com/dtolnay/dtoa )
+- [dtoa 0.4.4]( https://github.com/dtolnay/dtoa )
 - [either 1.5.2]( https://github.com/bluss/either )
 - [failure 0.1.5]( https://github.com/rust-lang-nursery/failure )
 - [fnv 1.0.6]( https://github.com/servo/rust-fnv )
 - [futures-cpupool 0.1.8]( https://github.com/alexcrichton/futures-rs )
-- [futures 0.1.26]( https://github.com/rust-lang-nursery/futures-rs )
+- [futures 0.1.27]( https://github.com/rust-lang-nursery/futures-rs )
 - [heck 0.3.1]( https://github.com/withoutboats/heck )
 - [httparse 1.3.3]( https://github.com/seanmonstar/httparse )
 - [hyper-tls 0.3.2]( https://github.com/hyperium/hyper-tls )
 - [idna 0.1.5]( https://github.com/servo/rust-url/ )
 - [indexmap 1.0.2]( https://github.com/bluss/indexmap )
 - [itertools 0.8.0]( https://github.com/bluss/rust-itertools )
-- [itoa 0.4.3]( https://github.com/dtolnay/itoa )
+- [itoa 0.4.4]( https://github.com/dtolnay/itoa )
 - [lazy_static 1.3.0]( https://github.com/rust-lang-nursery/lazy-static.rs )
-- [lazycell 1.2.1]( https://github.com/indiv0/lazycell )
-- [libc 0.2.51]( https://github.com/rust-lang/libc )
+- [libc 0.2.58]( https://github.com/rust-lang/libc )
 - [lock_api 0.1.5]( https://github.com/Amanieu/parking_lot )
 - [log 0.4.6]( https://github.com/rust-lang/log )
 - [mio-named-pipes 0.1.6]( https://github.com/alexcrichton/mio-named-pipes )
@@ -1543,32 +1541,33 @@ limitations under the License.
 - [miow 0.3.3]( https://github.com/alexcrichton/miow )
 - [net2 0.2.33]( https://github.com/rust-lang-nursery/net2-rs )
 - [nodrop 0.1.13]( https://github.com/bluss/arrayvec )
-- [num-integer 0.1.39]( https://github.com/rust-num/num-integer )
-- [num-traits 0.2.6]( https://github.com/rust-num/num-traits )
-- [num_cpus 1.10.0]( https://github.com/seanmonstar/num_cpus )
+- [num-integer 0.1.41]( https://github.com/rust-num/num-integer )
+- [num-traits 0.2.8]( https://github.com/rust-num/num-traits )
+- [num_cpus 1.10.1]( https://github.com/seanmonstar/num_cpus )
 - [parking_lot 0.7.1]( https://github.com/Amanieu/parking_lot )
 - [parking_lot_core 0.4.0]( https://github.com/Amanieu/parking_lot )
 - [percent-encoding 1.0.1]( https://github.com/servo/rust-url/ )
 - [pkg-config 0.3.14]( https://github.com/alexcrichton/pkg-config-rs )
-- [proc-macro2 0.4.28]( https://github.com/alexcrichton/proc-macro2 )
+- [proc-macro2 0.4.30]( https://github.com/alexcrichton/proc-macro2 )
 - [quote 0.6.12]( https://github.com/dtolnay/quote )
-- [regex-syntax 0.6.6]( https://github.com/rust-lang/regex )
-- [regex 1.1.6]( https://github.com/rust-lang/regex )
-- [rustc-demangle 0.1.14]( https://github.com/alexcrichton/rustc-demangle )
+- [regex-syntax 0.6.7]( https://github.com/rust-lang/regex )
+- [regex 1.1.7]( https://github.com/rust-lang/regex )
+- [rustc-demangle 0.1.15]( https://github.com/alexcrichton/rustc-demangle )
 - [rustc_version 0.2.3]( https://github.com/Kimundi/rustc-version-rs )
 - [scopeguard 0.3.3]( https://github.com/bluss/scopeguard )
 - [semver-parser 0.7.0]( https://github.com/steveklabnik/semver-parser )
 - [semver 0.9.0]( https://github.com/steveklabnik/semver )
-- [serde 1.0.90]( https://github.com/serde-rs/serde )
-- [serde_derive 1.0.90]( https://github.com/serde-rs/serde )
+- [serde 1.0.92]( https://github.com/serde-rs/serde )
+- [serde_derive 1.0.92]( https://github.com/serde-rs/serde )
 - [serde_json 1.0.39]( https://github.com/serde-rs/json )
-- [serde_yaml 0.8.8]( https://github.com/dtolnay/serde-yaml )
-- [signal-hook 0.1.8]( https://github.com/vorner/signal-hook )
-- [smallvec 0.6.9]( https://github.com/servo/rust-smallvec )
-- [socket2 0.3.8]( https://github.com/alexcrichton/socket2-rs )
+- [serde_yaml 0.8.9]( https://github.com/dtolnay/serde-yaml )
+- [signal-hook-registry 1.0.1]( https://github.com/vorner/signal-hook )
+- [signal-hook 0.1.9]( https://github.com/vorner/signal-hook )
+- [smallvec 0.6.10]( https://github.com/servo/rust-smallvec )
+- [socket2 0.3.9]( https://github.com/alexcrichton/socket2-rs )
 - [stable_deref_trait 1.1.1]( https://github.com/storyyeller/stable_deref_trait )
-- [syn 0.15.32]( https://github.com/dtolnay/syn )
-- [tempfile 3.0.7]( https://github.com/Stebalien/tempfile )
+- [syn 0.15.36]( https://github.com/dtolnay/syn )
+- [tempfile 3.0.8]( https://github.com/Stebalien/tempfile )
 - [term 0.5.2]( https://github.com/Stebalien/term )
 - [thread_local 0.3.6]( https://github.com/Amanieu/thread_local-rs )
 - [time 0.1.42]( https://github.com/rust-lang/time )
@@ -1576,7 +1575,7 @@ limitations under the License.
 - [ucd-util 0.1.3]( https://github.com/BurntSushi/ucd-generate )
 - [unicode-bidi 0.3.4]( https://github.com/servo/unicode-bidi )
 - [unicode-normalization 0.1.8]( https://github.com/unicode-rs/unicode-normalization )
-- [unicode-segmentation 1.2.1]( https://github.com/unicode-rs/unicode-segmentation )
+- [unicode-segmentation 1.3.0]( https://github.com/unicode-rs/unicode-segmentation )
 - [unicode-width 0.1.5]( https://github.com/unicode-rs/unicode-width )
 - [unicode-xid 0.1.0]( https://github.com/unicode-rs/unicode-xid )
 - [url 1.7.2]( https://github.com/servo/rust-url )
@@ -2232,7 +2231,7 @@ limitations under the License.
 - [rand_core 0.4.0]( https://github.com/rust-random/rand )
 - [rand_hc 0.1.0]( https://github.com/rust-random/rand )
 - [rand_isaac 0.1.1]( https://github.com/rust-random/rand )
-- [rand_jitter 0.1.3]( https://github.com/rust-random/rand )
+- [rand_jitter 0.1.4]( https://github.com/rust-random/rand )
 - [rand_os 0.1.3]( https://github.com/rust-random/rand )
 - [rand_pcg 0.1.2]( https://github.com/rust-random/rand )
 - [rand_xorshift 0.1.1]( https://github.com/rust-random/rand )
@@ -2446,6 +2445,7 @@ limitations under the License.
 
 #### Used by
 
+- [bitflags 1.1.0]( https://github.com/bitflags/bitflags )
 - [openssl-probe 0.1.2]( https://github.com/alexcrichton/openssl-probe )
 - [safemem 0.3.0]( https://github.com/abonander/safemem )
 
@@ -2869,7 +2869,7 @@ limitations under the License.
 
 #### Used by
 
-- [remove_dir_all 0.5.1]( https://github.com/Aaronepower/remove_dir_all.git )
+- [remove_dir_all 0.5.2]( https://github.com/XAMPPRocky/remove_dir_all.git )
 
 <pre>
                               Apache License
@@ -3073,9 +3073,9 @@ limitations under the License.
 - [dirs 1.0.5]( https://github.com/soc/dirs-rs )
 - [failure_derive 0.1.5]( https://github.com/withoutboats/failure_derive )
 - [md5 0.3.8]( https://github.com/stainless-steel/md5 )
-- [openssl 0.10.20]( https://github.com/sfackler/rust-openssl )
-- [security-framework-sys 0.2.3]( https://github.com/kornelski/rust-security-framework )
-- [security-framework 0.2.2]( https://github.com/kornelski/rust-security-framework )
+- [openssl 0.10.23]( https://github.com/sfackler/rust-openssl )
+- [security-framework-sys 0.3.1]( https://github.com/kornelski/rust-security-framework )
+- [security-framework 0.3.1]( https://github.com/kornelski/rust-security-framework )
 - [serde_urlencoded 0.5.5]( https://github.com/nox/serde_urlencoded )
 - [shlex 0.1.1]( https://github.com/comex/rust-shlex )
 - [typenum 1.10.0]( https://github.com/paholg/typenum )
@@ -3753,7 +3753,7 @@ THIS SOFTWARE.
 
 #### Used by
 
-- [openssl-sys 0.9.43]( https://github.com/sfackler/rust-openssl )
+- [openssl-sys 0.9.47]( https://github.com/sfackler/rust-openssl )
 
 <pre>
 Copyright (c) 2014 Alex Crichton
@@ -3788,7 +3788,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [mio 0.6.16]( https://github.com/carllerche/mio )
+- [mio 0.6.19]( https://github.com/carllerche/mio )
 
 <pre>
 Copyright (c) 2014 Carl Lerche and other MIO contributors
@@ -3852,7 +3852,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [hyper 0.12.27]( https://github.com/hyperium/hyper )
+- [hyper 0.12.30]( https://github.com/hyperium/hyper )
 
 <pre>
 Copyright (c) 2014-2018 Sean McArthur
@@ -4024,7 +4024,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [h2 0.1.18]( https://github.com/carllerche/h2 )
+- [h2 0.1.24]( https://github.com/hyperium/h2 )
 
 <pre>
 Copyright (c) 2017 h2 authors
@@ -4192,7 +4192,7 @@ DEALINGS IN THE SOFTWARE.
 #### Used by
 
 - [slab 0.4.2]( https://github.com/carllerche/slab )
-- [string 0.1.3]( https://github.com/carllerche/string )
+- [string 0.2.0]( https://github.com/carllerche/string )
 
 <pre>
 Copyright (c) 2019 Carl Lerche
@@ -4227,18 +4227,54 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
+- [http-body 0.1.0]( https://github.com/hyperium/http-body )
+
+<pre>
+Copyright (c) 2019 Hyper Contributors
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the &quot;Software&quot;), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+</pre>
+
+### <a name="MIT"></a>MIT License
+
+#### Used by
+
+- [tokio-buf 0.1.1]( https://github.com/tokio-rs/tokio )
 - [tokio-current-thread 0.1.6]( https://github.com/tokio-rs/tokio )
 - [tokio-executor 0.1.7]( https://github.com/tokio-rs/tokio )
 - [tokio-fs 0.1.6]( https://github.com/tokio-rs/tokio )
 - [tokio-io 0.1.12]( https://github.com/tokio-rs/tokio )
 - [tokio-reactor 0.1.9]( https://github.com/tokio-rs/tokio )
-- [tokio-sync 0.1.5]( https://github.com/tokio-rs/tokio )
+- [tokio-sync 0.1.6]( https://github.com/tokio-rs/tokio )
 - [tokio-tcp 0.1.3]( https://github.com/tokio-rs/tokio )
 - [tokio-threadpool 0.1.14]( https://github.com/tokio-rs/tokio )
-- [tokio-timer 0.2.10]( https://github.com/tokio-rs/tokio )
-- [tokio-trace-core 0.1.0]( https://github.com/tokio-rs/tokio )
+- [tokio-timer 0.2.11]( https://github.com/tokio-rs/tokio )
+- [tokio-trace-core 0.2.0]( https://github.com/tokio-rs/tokio )
 - [tokio-uds 0.2.5]( https://github.com/tokio-rs/tokio )
-- [tokio 0.1.19]( https://github.com/tokio-rs/tokio )
+- [tokio 0.1.21]( https://github.com/tokio-rs/tokio )
 
 <pre>
 Copyright (c) 2019 Tokio Contributors
@@ -4273,7 +4309,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [synstructure 0.10.1]( https://github.com/mystor/synstructure )
+- [synstructure 0.10.2]( https://github.com/mystor/synstructure )
 
 <pre>
 Copyright 2016 Nika Layzell
@@ -4352,16 +4388,15 @@ SOFTWARE.
 
 #### Used by
 
-- [MacTypes-sys 2.1.0]( https://github.com/burtonageo/MacTypes-sys )
 - [argon2rs 0.2.5]( https://github.com/bryant/argon2rs )
 - [kernel32-sys 0.2.2]( https://github.com/retep998/winapi-rs )
-- [rusoto_autoscaling 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_cloudformation 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_cloudfront 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_ec2 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_elbv2 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_s3 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_sts 0.38.0]( https://github.com/rusoto/rusoto )
+- [rusoto_autoscaling 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_cloudformation 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_cloudfront 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_ec2 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_elbv2 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_s3 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_sts 0.39.0]( https://github.com/rusoto/rusoto )
 - [winapi-build 0.1.1]( https://github.com/retep998/winapi-rs )
 - [ws2_32-sys 0.2.1]( https://github.com/retep998/winapi-rs )
 
@@ -4423,11 +4458,11 @@ SOFTWARE.
 #### Used by
 
 - [aho-corasick 0.7.3]( https://github.com/BurntSushi/aho-corasick )
-- [byteorder 1.3.1]( https://github.com/BurntSushi/byteorder )
+- [byteorder 1.3.2]( https://github.com/BurntSushi/byteorder )
 - [csv-core 0.1.5]( https://github.com/BurntSushi/rust-csv )
 - [csv 1.0.7]( https://github.com/BurntSushi/rust-csv )
 - [memchr 2.2.0]( https://github.com/BurntSushi/rust-memchr )
-- [utf8-ranges 1.0.2]( https://github.com/BurntSushi/utf8-ranges )
+- [utf8-ranges 1.0.3]( https://github.com/BurntSushi/utf8-ranges )
 
 <pre>
 The MIT License (MIT)
@@ -4615,7 +4650,7 @@ SOFTWARE.
 
 #### Used by
 
-- [termion 1.5.2]( https://gitlab.redox-os.org/redox-os/termion )
+- [termion 1.5.3]( https://gitlab.redox-os.org/redox-os/termion )
 
 <pre>
 The MIT License (MIT)
@@ -4678,8 +4713,8 @@ SOFTWARE.
 
 #### Used by
 
-- [rusoto_core 0.38.0]( https://github.com/rusoto/rusoto )
-- [rusoto_credential 0.17.0]( https://github.com/rusoto/rusoto )
+- [rusoto_core 0.39.0]( https://github.com/rusoto/rusoto )
+- [rusoto_credential 0.39.0]( https://github.com/rusoto/rusoto )
 
 <pre>
 The MIT License (MIT)
