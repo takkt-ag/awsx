@@ -97,7 +97,7 @@ pub(crate) fn find_cloudfront_distribution(
         continuation_token.is_some()
     } {}
 
-    let cloudfront_distribution_id = cloudfront_distributions
+    let cloudfront_distribution = cloudfront_distributions
         .into_iter()
         .map(|distribution| {
             cloudfront
@@ -105,13 +105,13 @@ pub(crate) fn find_cloudfront_distribution(
                     resource: distribution.arn.clone(),
                 })
                 .sync()
-                .map(|tags| (distribution.id, tags.tags.items))
+                .map(|tags| (distribution, tags.tags.items))
         })
         .collect::<Result<Vec<_>, _>>()?
         .into_iter()
-        .filter_map(|(distribution_id, tags)| {
+        .filter_map(|(distribution, tags)| {
             if let Some(tags) = tags {
-                Some((distribution_id, tags))
+                Some((distribution, tags))
             } else {
                 None
             }
@@ -128,16 +128,17 @@ pub(crate) fn find_cloudfront_distribution(
                 })
             })
         })
-        .map(|(distribution_id, _)| distribution_id)
+        .map(|(distribution, _)| distribution)
         .next();
 
-    match cloudfront_distribution_id {
-        Some(id) => Ok(AwsxOutput {
-            human_readable: id.clone(),
+    match cloudfront_distribution {
+        Some(cloudfront_distribution) => Ok(AwsxOutput {
+            human_readable: cloudfront_distribution.id.clone(),
             structured: json!({
                 "success": true,
                 "message": "Found CloudFront distribution matching given filters",
-                "cloudfront_distribution_id": &id,
+                "cloudfront_distribution_arn": &cloudfront_distribution.arn,
+                "cloudfront_distribution_id": &cloudfront_distribution.id,
             }),
             successful: true,
         }),
