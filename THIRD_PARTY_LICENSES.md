@@ -1507,7 +1507,7 @@ limitations under the License.
 - [arc-swap 0.3.11]( https://github.com/vorner/arc-swap )
 - [arrayvec 0.4.10]( https://github.com/bluss/arrayvec )
 - [autocfg 0.1.4]( https://github.com/cuviper/autocfg )
-- [backtrace-sys 0.1.28]( https://github.com/alexcrichton/backtrace-rs )
+- [backtrace-sys 0.1.19]( https://github.com/alexcrichton/backtrace-rs )
 - [backtrace 0.3.30]( https://github.com/rust-lang/backtrace-rs )
 - [base64 0.9.3]( https://github.com/alicemaz/rust-base64 )
 - [cc 1.0.37]( https://github.com/alexcrichton/cc-rs )
