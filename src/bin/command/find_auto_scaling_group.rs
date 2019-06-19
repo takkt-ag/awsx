@@ -52,10 +52,10 @@ impl FromStr for Tag {
 pub(crate) struct Opt {
     #[structopt(
         long = "tags",
-        help = "Filter for target groups by their tags",
-        long_help = "Filter for target groups by their tags. Specify multiple `Key=Value` pairs, \
-                     separated by spaces, where each key-value-pair corresponds to a tag assigned \
-                     to the target groups."
+        help = "Filter for auto-scaling groups by their tags",
+        long_help = "Filter for auto-scaling groups by their tags. Specify multiple `Key=Value` \
+                     pairs, separated by spaces, where each key-value-pair corresponds to a tag \
+                     assigned to the auto-scaling groups."
     )]
     tags: Vec<Tag>,
 }
@@ -113,16 +113,16 @@ pub(crate) fn find_auto_scaling_group(
             human_readable: arn.clone(),
             structured: json!({
                 "success": true,
-                "message": "Found target group matching given filters",
-                "target_group_arn": &arn,
+                "message": "Found auto-scaling group matching given filters",
+                "auto_scaling_group_arn": &arn,
             }),
             successful: true,
         }),
         None => Ok(AwsxOutput {
-            human_readable: "Unable to find target group matching given filters".to_owned(),
+            human_readable: "Unable to find auto-scaling group matching given filters".to_owned(),
             structured: json!({
                 "success": false,
-                "message": "Unable to find target group matching given filters",
+                "message": "Unable to find auto-scaling group matching given filters",
             }),
             successful: false,
         }),
