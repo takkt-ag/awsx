@@ -80,6 +80,7 @@ dependencies = [
  "regex 1.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_autoscaling 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_cloudformation 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rusoto_cloudfront 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_core 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_ec2 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_elbv2 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1063,6 +1064,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rusoto_cloudfront"
+version = "0.38.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "futures 0.1.26 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rusoto_core 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xml-rs 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "rusoto_core"
 version = "0.38.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1911,6 +1922,7 @@ dependencies = [
 "checksum remove_dir_all 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "3488ba1b9a2084d38645c4c08276a1752dcbf2c7130d74f1569681ad5d2799c5"
 "checksum rusoto_autoscaling 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c0a0953baad68456b9ec1d6beec2eba76da3e2993dc22122b73be81af1352ebd"
 "checksum rusoto_cloudformation 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6292ec304d4a3815c1ff2146c0fdc504bb7e6ef351ccf63d07931fc8bc9232f4"
+"checksum rusoto_cloudfront 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fc9db6ef11e97c1f723333d0e46f6302f9712d3bc71b57ee9b9be31a9dff230e"
 "checksum rusoto_core 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "910019559fd69b50b302152e633594bd915526f8cf81cc8903ff0e49da0b642e"
 "checksum rusoto_credential 0.17.0 (registry+https://github.com/rust-lang/crates.io-index)" = "dd12cf55695ffa64e88e4fa02b545ebd4912dacf3af044b1274683ba5d7efe21"
 "checksum rusoto_ec2 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)" = "4813365a4d877784c9a1b1c57e255f1719c529f01ae49dfde26ac6f354330a41"

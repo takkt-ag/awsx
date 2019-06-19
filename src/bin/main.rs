@@ -31,8 +31,8 @@ mod command;
 mod util;
 
 use command::{
-    find_amis_inuse, find_auto_scaling_group, find_target_group, identify_new_parameters,
-    override_parameters, update_deployed_template, verify_parameter_file,
+    find_amis_inuse, find_auto_scaling_group, find_cloudfront_distribution, find_target_group,
+    identify_new_parameters, override_parameters, update_deployed_template, verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -123,6 +123,14 @@ enum Command {
                       - autoscaling:DescribeAutoScalingGroups"
     )]
     FindAutoScalingGroup(find_auto_scaling_group::Opt),
+    #[structopt(
+        name = "find-cloudfront-distribution",
+        about = "Find a CloudFront distribution based on its tags",
+        after_help = "IAM permissions required:\n\
+                      - cloudfront:ListDistributions\n\
+                      - cloudfront:ListTagsForResource"
+    )]
+    FindCloudfrontDistribution(find_cloudfront_distribution::Opt),
     #[structopt(
         name = "find-target-group",
         about = "Find a target group based on its tags",
@@ -226,6 +234,9 @@ fn main() {
         }
         FindAutoScalingGroup(ref command_opt) => {
             find_auto_scaling_group::find_auto_scaling_group(command_opt, &opt, provider)
+        }
+        FindCloudfrontDistribution(ref command_opt) => {
+            find_cloudfront_distribution::find_cloudfront_distribution(command_opt, &opt, provider)
         }
         FindTargetGroup(ref command_opt) => {
             find_target_group::find_target_group(command_opt, &opt, provider)
