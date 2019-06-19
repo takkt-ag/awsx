@@ -53,14 +53,15 @@ OPTIONS:
             (enforced by the AWS API).
 
 SUBCOMMANDS:
-    find-amis-inuse             Identify all AMI-IDs that are being used
-    find-auto-scaling-group     Find an auto scaling group based on its tags
-    find-target-group           Find a target group based on its tags
-    help                        Prints this message or the help of the given subcommand(s)
-    identify-new-parameters     Show new template parameters not present on the stack
-    override-parameters         Update specified parameters on an existing stack
-    update-deployed-template    Update an existing stack with a new template
-    verify-parameter-file       Verify that parameters in a file match a deployed stack
+    find-amis-inuse                 Identify all AMI-IDs that are being used
+    find-auto-scaling-group         Find an auto scaling group based on its tags
+    find-cloudfront-distribution    Find a CloudFront distribution based on its tags
+    find-target-group               Find a target group based on its tags
+    help                            Prints this message or the help of the given subcommand(s)
+    identify-new-parameters         Show new template parameters not present on the stack
+    override-parameters             Update specified parameters on an existing stack
+    update-deployed-template        Update an existing stack with a new template
+    verify-parameter-file           Verify that parameters in a file match a deployed stack
 ```
 
 ### awsx find-amis-inuse
@@ -97,7 +98,7 @@ KAISER+KRAFT EUROPA GmbH
 Find an auto scaling group based on its tags
 
 USAGE:
-    awsx find-auto-scaling-group [OPTIONS]
+    awsx find-auto-scaling-group --tags <tags>...
 
 FLAGS:
     -h, --help       
@@ -109,11 +110,39 @@ FLAGS:
 
 OPTIONS:
         --tags <tags>...    
-            Filter for target groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
-            key-value-pair corresponds to a tag assigned to the target groups.
+            Filter for auto-scaling groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where
+            each key-value-pair corresponds to a tag assigned to the auto-scaling groups.
 
 IAM permissions required:
 - autoscaling:DescribeAutoScalingGroups
+```
+
+### awsx find-cloudfront-distribution
+
+```
+awsx-find-cloudfront-distribution 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Find a CloudFront distribution based on its tags
+
+USAGE:
+    awsx find-cloudfront-distribution --tags <tags>...
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --tags <tags>...    
+            Filter for CloudFront distributions by their tags. Specify multiple `Key=Value` pairs, separated by spaces,
+            where each key-value-pair corresponds to a tag assigned to the CloudFront distributions.
+
+IAM permissions required:
+- cloudfront:ListDistributions
+- cloudfront:ListTagsForResource
 ```
 
 ### awsx find-target-group
@@ -241,13 +270,18 @@ have to supply parameters that are newly added. NOTE: this will only create a ch
 executed.
 
 USAGE:
-    awsx update-deployed-template [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name> --template-path <template_path>
+    awsx update-deployed-template [FLAGS] [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name> --template-path <template_path>
 
 FLAGS:
-    -h, --help       
+        --force-create    
+            Force change set creation, even if the parameters supplied do not cover the newly required parameters
+            exactly. This means that if you force change set creation, the created change set might contain parameter
+            changes in addition to the template changes, and it might even try to create a faulty change set when
+            required parameters are missing.
+    -h, --help            
             Prints help information
 
-    -V, --version    
+    -V, --version         
             Prints version information
 
 
