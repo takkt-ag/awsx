@@ -122,8 +122,8 @@ impl AwsxInnerProvider {
     ) -> AwsxInnerProvider {
         let credentials = match (aws_access_key_id, aws_secret_access_key) {
             (Some(access_key_id), Some(secret_access_key)) => Some(AwsCredentials::new(
-                access_key_id.as_ref(),
-                secret_access_key.as_ref(),
+                access_key_id,
+                secret_access_key,
                 None,
                 None,
             )),
