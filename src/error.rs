@@ -22,7 +22,7 @@ use failure::Fail;
 #[derive(Debug, Fail)]
 pub enum Error {
     /// Error caused in Rusoto, in proxy from AWS.
-    #[fail(display = "failed to perform AWS action")]
+    #[fail(display = "failed to perform AWS action: {}", 0)]
     AwsError(#[fail(cause)] failure::Error),
     /// The parameters provided were invalid.
     ///
