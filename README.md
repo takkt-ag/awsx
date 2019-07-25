@@ -56,6 +56,7 @@ SUBCOMMANDS:
     find-amis-inuse                 Identify all AMI-IDs that are being used
     find-auto-scaling-group         Find an auto scaling group based on its tags
     find-cloudfront-distribution    Find a CloudFront distribution based on its tags
+    find-db-snapshot                Find a DB snapshot based on its tags
     find-target-group               Find a target group based on its tags
     help                            Prints this message or the help of the given subcommand(s)
     identify-new-parameters         Show new template parameters not present on the stack
@@ -143,6 +144,40 @@ OPTIONS:
 IAM permissions required:
 - cloudfront:ListDistributions
 - cloudfront:ListTagsForResource
+```
+
+### awsx find-db-snapshot
+
+```
+awsx-find-db-snapshot 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Find a DB snapshot based on its tags
+
+USAGE:
+    awsx find-db-snapshot [OPTIONS]
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --db-instance-identifier <db_instance_identifier>
+            Filter for DB snapshots assigned from a specific DB instance
+
+        --snapshot-type <snapshot_type>                      
+            Filter DB snapshots by their type
+
+        --tags <tags>...                                     
+            Filter for target groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
+            key-value-pair corresponds to a tag assigned to the DB snapshot.
+
+IAM permissions required:
+- rds:DescribeDBSnapshots
+- rds:ListTagsForResource
 ```
 
 ### awsx find-target-group

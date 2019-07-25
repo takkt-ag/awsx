@@ -5,7 +5,7 @@ This page lists the licenses of the projects used in awsx.
 ## Overview of licenses
 
 - [Apache License 2.0](#Apache-2.0) (132)
-- [MIT License](#MIT) (62)
+- [MIT License](#MIT) (63)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (4)
 - [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (2)
 - [Creative Commons Zero v1.0 Universal](#CC0-1.0) (1)
@@ -4152,6 +4152,7 @@ SOFTWARE.
 - [rusoto_cloudfront 0.40.0]( https://github.com/rusoto/rusoto )
 - [rusoto_ec2 0.40.0]( https://github.com/rusoto/rusoto )
 - [rusoto_elbv2 0.40.0]( https://github.com/rusoto/rusoto )
+- [rusoto_rds 0.40.0]( https://github.com/rusoto/rusoto )
 - [rusoto_s3 0.40.0]( https://github.com/rusoto/rusoto )
 - [rusoto_sts 0.40.0]( https://github.com/rusoto/rusoto )
 - [winapi-build 0.1.1]( https://github.com/retep998/winapi-rs )

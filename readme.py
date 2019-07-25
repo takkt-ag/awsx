@@ -65,6 +65,7 @@ SUBCOMMANDS = [
     "find-amis-inuse",
     "find-auto-scaling-group",
     "find-cloudfront-distribution",
+    "find-db-snapshot",
     "find-target-group",
     "identify-new-parameters",
     "override-parameters",
