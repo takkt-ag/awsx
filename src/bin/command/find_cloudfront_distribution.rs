@@ -87,9 +87,9 @@ pub(crate) fn find_cloudfront_distribution(
             .sync()?;
         if let Some(distribution_list) = output.distribution_list {
             continuation_token = distribution_list.next_marker;
-            distribution_list
-                .items
-                .map(|mut items| cloudfront_distributions.append(&mut items));
+            if let Some(mut items) = distribution_list.items {
+                cloudfront_distributions.append(&mut items);
+            }
         } else {
             continuation_token = None;
         }

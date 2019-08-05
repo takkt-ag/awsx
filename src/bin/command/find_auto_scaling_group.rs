@@ -87,26 +87,26 @@ pub(crate) fn find_auto_scaling_group(
         continuation_token.is_some()
     } {}
 
-    let auto_scaling_group = auto_scaling_groups
-        .into_iter()
-        .filter(|auto_scaling_group| match &auto_scaling_group.tags {
-            Some(resource_tags) => opt.tags.iter().all(|needle| {
-                resource_tags.iter().any(|haystack| {
-                    haystack
-                        .key
-                        .as_ref()
-                        .map(|key| key == &needle.key)
-                        .unwrap_or(false)
-                        && haystack
-                            .value
+    let auto_scaling_group =
+        auto_scaling_groups
+            .into_iter()
+            .find(|auto_scaling_group| match &auto_scaling_group.tags {
+                Some(resource_tags) => opt.tags.iter().all(|needle| {
+                    resource_tags.iter().any(|haystack| {
+                        haystack
+                            .key
                             .as_ref()
-                            .map(|value| value == &needle.value)
+                            .map(|key| key == &needle.key)
                             .unwrap_or(false)
-                })
-            }),
-            None => false,
-        })
-        .next();
+                            && haystack
+                                .value
+                                .as_ref()
+                                .map(|value| value == &needle.value)
+                                .unwrap_or(false)
+                    })
+                }),
+                None => false,
+            });
 
     match auto_scaling_group {
         Some(auto_scaling_group) => Ok(AwsxOutput {
@@ -116,7 +116,7 @@ pub(crate) fn find_auto_scaling_group(
                 "message": "Found auto-scaling group matching given filters",
                 "auto_scaling_group_arn":  auto_scaling_group
                     .auto_scaling_group_arn
-                    .map(|arn| serde_json::Value::String(arn))
+                    .map(serde_json::Value::String)
                     .unwrap_or_else(|| serde_json::Value::Null),
                 "auto_scaling_group_name": &auto_scaling_group.auto_scaling_group_name,
             }),
