@@ -25,12 +25,14 @@ use itertools::Itertools;
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
 use serde_json::json;
-use std::fs::File;
-use std::io::BufReader;
+use std::{convert::TryFrom, fs::File, io::BufReader};
 use structopt::StructOpt;
 
 use crate::{
-    util::{apply_excludes_includes, generate_deployment_metadata},
+    util::{
+        apply_excludes_includes, generate_deployment_metadata, verify_changes_compatible,
+        DeploymentMetadata,
+    },
     AwsxOutput, AwsxProvider, Opt as GlobalOpt,
 };
 
@@ -96,10 +98,11 @@ pub(crate) struct Opt {
         long = "force-create",
         help = "Force change set creation",
         long_help = "Force change set creation, even if the parameters supplied do not cover the \
-                     newly required parameters exactly. This means that if you force change set \
-                     creation, the created change set might contain parameter changes in addition \
-                     to the template changes, and it might even try to create a faulty change set \
-                     when required parameters are missing."
+                     newly required parameters exactly, or if the stack you are trying to deploy \
+                     is not a direct child of the already deployed stack. This means that if you \
+                     force change set creation, the created change set might contain parameter \
+                     changes in addition to the template changes, and it might overwrite changes \
+                     that are not part of the template you are trying to deploy."
     )]
     force_create: bool,
 }
@@ -181,10 +184,39 @@ pub(crate) fn update_stack(
 
     // Unless otherwise requested, we will update the deployment-metadata parameter
     if !global_opt.dont_update_deployment_metadata {
-        let metadata = generate_deployment_metadata(
-            stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?,
-            Some(&opt.template_path),
-        )?;
+        let previous_metadata_parameter =
+            stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?;
+        let previous_metadata =
+            previous_metadata_parameter
+                .clone()
+                .and_then(|previous_metadata_parameter| {
+                    DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
+                });
+        let metadata =
+            generate_deployment_metadata(previous_metadata_parameter, Some(&opt.template_path))?;
+
+        if let Some(previous_metadata) = previous_metadata {
+            // Verify that the changes are compatible
+            let changes_compatible =
+                verify_changes_compatible(&previous_metadata, &metadata, &opt.template_path)?;
+            if !changes_compatible {
+                if opt.force_create {
+                    eprintln!(
+                        "WARNING: the changes you are trying to deploy are not a direct \
+                         descendant of the currently deployed changes. The created change-set \
+                         might overwrite and thus destroy the previously deployed changes."
+                    );
+                } else {
+                    return Err(Error::InvalidTemplate(
+                        "the template provided is not a direct descendant of the currently \
+                         deployed template, creating a changeset might overwrite previously \
+                         deployed changes"
+                            .to_string(),
+                    ));
+                }
+            }
+        }
+
         template_parameters.insert(
             global_opt.deployment_metadata_parameter.clone(),
             Parameter::WithValue {

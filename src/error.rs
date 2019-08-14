@@ -36,6 +36,9 @@ pub enum Error {
     /// The requested stack does not exist.
     #[fail(display = "invalid stack {}", 0)]
     InvalidStack(String),
+    /// The template provided is not valid.
+    #[fail(display = "invalid template: {}", 0)]
+    InvalidTemplate(String),
     /// A general IO error.
     #[fail(display = "general IO error")]
     IoError(#[fail(cause)] std::io::Error),

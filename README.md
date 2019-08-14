@@ -14,39 +14,47 @@ awsx 0.1.0
 KAISER+KRAFT EUROPA GmbH
 
 USAGE:
-    awsx [OPTIONS] <SUBCOMMAND>
+    awsx [FLAGS] [OPTIONS] <SUBCOMMAND>
 
 FLAGS:
-    -h, --help       
+        --dont-update-deployment-metadata    
+            Unless specified, awsx will automatiallly update a stack-parameter containing deployment metadata with the
+            latest information for commands that update a stack. If you specify this option, awsx will not update the
+            deployment metadata.
+    -h, --help                               
             Prints help information
 
-    -V, --version    
+    -V, --version                            
             Prints version information
 
 
 OPTIONS:
-        --assume-role-arn <assume_role_arn>                
+        --assume-role-arn <assume_role_arn>
             Optional role to assume before executing AWS API calls. This can be used to execute commands in other
             accounts, or to separate the actions performable in a single account. If unspecified, no role will be
             assumed.
-        --aws-access-key-id <aws_access_key_id>            
+        --aws-access-key-id <aws_access_key_id>
             AWS Access Key ID to use when authenticating against the AWS API. If left unspecified, the default
             credential provider will be used to determine the credentials (via environment variables, instance metadata,
             container metadata or AWS profiles). You have to specify --aws-secret-access-key too if you specify this
             parameter.
-        --aws-region <aws_region>                          
+        --aws-region <aws_region>
             Region the AWS API calls should be performed in. If left unspecified, the region will be determined
             automatically, falling back to us-east-1 should it fail.
-        --aws-secret-access-key <aws_secret_access_key>    
+        --aws-secret-access-key <aws_secret_access_key>
             AWS Secret Access Key to use when authenticating against the AWS API. If left unspecified, the default
             credential provider will be used to determine the credentials (via environment variables, instance metadata,
             container metadata or AWS profiles). You have to specify --aws-access-key-id too if you specify this
             parameter.
+        --deployment-metadata-parameter <deployment_metadata_parameter>
+            Parameter of the stack in which deployment metadata will be stored. This applies to all commands that update
+            a stack. You can opt-out of metadata updates with the `--dont-update-deployment-metadata` option. [default:
+            DeploymentMetadata]
         --output-format <output_format>
             Specify the format of the application output. The default, if left unspecified, depends on whether stdout is
             a TTY. If it is, the output will be human readable. If it isn't, the contents will be output in structured
             form, specifically JSON. [possible values: human, human-readable, structured, json, yml, yaml]
-        --s3-bucket-name <s3_bucket_name>                  
+        --s3-bucket-name <s3_bucket_name>
             Name of the S3 bucket used for storing templates. Any command that updates a stack template will upload the
             template to S3 if this parameter is specified. If the parameter is unspecified, the awsx will try to provide
             the template within the API call to AWS, although the template size here is limited to 51,200 bytes
@@ -172,7 +180,7 @@ OPTIONS:
             Filter DB snapshots by their type
 
         --tags <tags>...                                     
-            Filter for target groups by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
+            Filter for DB snapshots by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
             key-value-pair corresponds to a tag assigned to the DB snapshot.
 
 IAM permissions required:
@@ -310,9 +318,10 @@ USAGE:
 FLAGS:
         --force-create    
             Force change set creation, even if the parameters supplied do not cover the newly required parameters
-            exactly. This means that if you force change set creation, the created change set might contain parameter
-            changes in addition to the template changes, and it might even try to create a faulty change set when
-            required parameters are missing.
+            exactly, or if the stack you are trying to deploy is not a direct child of the already deployed stack. This
+            means that if you force change set creation, the created change set might contain parameter changes in
+            addition to the template changes, and it might overwrite changes that are not part of the template you are
+            trying to deploy.
     -h, --help            
             Prints help information
 
