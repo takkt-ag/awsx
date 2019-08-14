@@ -24,6 +24,9 @@ pub enum Error {
     /// Error caused in Rusoto, in proxy from AWS.
     #[fail(display = "failed to perform AWS action: {}", 0)]
     AwsError(#[fail(cause)] failure::Error),
+    /// Error caused in git2
+    #[fail(display = "failed to perform git action: {}", 0)]
+    GitError(#[fail(cause)] failure::Error),
     /// The parameters provided were invalid.
     ///
     /// This can happen if either the template or stack the parameters should be applied to do not
@@ -42,6 +45,9 @@ pub enum Error {
     /// General regex error cause while working with a regex
     #[fail(display = "general regex error")]
     RegexError(#[fail(cause)] failure::Error),
+    /// Error caused in serde_json
+    #[fail(display = "failed to perform serde_json action: {}", 0)]
+    SerdeJsonError(#[fail(cause)] serde_json::Error),
     /// Deserializing the template failed.
     #[fail(display = "failed to deserialize the template")]
     TemplateDeserializationFailed(#[fail(cause)] failure::Error),
@@ -89,5 +95,17 @@ impl From<regex::Error> for Error {
             regex::Error::Syntax(description) => Error::RegexParseError(description),
             _ => Error::RegexError(cause.into()),
         }
+    }
+}
+
+impl From<git2::Error> for Error {
+    fn from(cause: git2::Error) -> Self {
+        Error::GitError(cause.into())
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(cause: serde_json::Error) -> Self {
+        Error::SerdeJsonError(cause)
     }
 }

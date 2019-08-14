@@ -14,8 +14,41 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use awsx::{error::Error, parameter::Parameters};
+use awsx::{
+    error::Error,
+    parameter::{Parameter, Parameters},
+};
+use chrono::{Local, SecondsFormat};
+use failure::format_err;
+use git2::{Config, Repository};
 use regex::RegexSet;
+use serde_derive::{Deserialize, Serialize};
+use std::convert::TryFrom;
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+pub(crate) struct DeploymentMetadata {
+    user: String,
+    when: String,
+    git: DeploymentMetadataGit,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+pub(crate) struct DeploymentMetadataGit {
+    commit: String,
+    r#ref: String,
+    dirty: bool,
+}
+
+impl TryFrom<Parameter> for DeploymentMetadata {
+    type Error = Error;
+
+    fn try_from(parameter: Parameter) -> Result<Self, Self::Error> {
+        match parameter {
+            Parameter::WithValue { value, .. } => serde_json::from_str(&value).map_err(Into::into),
+            Parameter::PreviousValue { key } => Err(Error::InvalidParameters(key)),
+        }
+    }
+}
 
 pub(crate) fn apply_excludes_includes(
     mut parameters: Parameters,
@@ -40,4 +73,42 @@ pub(crate) fn apply_excludes_includes(
     }
 
     Ok(parameters)
+}
+
+pub(crate) fn generate_deployment_metadata(
+    previous_metadata_parameter: Option<Parameter>,
+    git_discover_path: Option<&str>,
+) -> Result<String, Error> {
+    let mut metadata = previous_metadata_parameter
+        .and_then(|parameter| DeploymentMetadata::try_from(parameter).ok())
+        .unwrap_or_default();
+
+    metadata.user = Config::open_default()?.get_string("user.email")?;
+    metadata.when = Local::now().to_rfc3339_opts(SecondsFormat::Secs, true);
+
+    if let Some(git_discover_path) = git_discover_path {
+        let repo = Repository::discover(git_discover_path)?;
+        let head = repo.head()?;
+        let r#ref = head
+            .shorthand()
+            .ok_or_else(|| Error::GitError(format_err!("Failed to retrieve ref for git HEAD")))?
+            .to_owned();
+        let commit = format!(
+            "{}",
+            head.target().ok_or_else(|| Error::GitError(format_err!(
+                "Failed to retrieve commit for git HEAD"
+            )))?
+        );
+        let statuses = repo.statuses(Some(git2::StatusOptions::new().include_untracked(false)))?;
+        let dirty = !statuses.is_empty();
+
+        metadata.user = repo.config()?.get_string("user.email")?;
+        metadata.git = DeploymentMetadataGit {
+            commit,
+            r#ref,
+            dirty,
+        }
+    }
+
+    Ok(serde_json::to_string(&metadata)?)
 }
