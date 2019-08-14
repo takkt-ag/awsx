@@ -544,6 +544,12 @@ impl ops::Deref for Parameters {
     }
 }
 
+impl ops::DerefMut for Parameters {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
 impl From<Parameters> for Vec<rusoto_cloudformation::Parameter> {
     fn from(parameters: Parameters) -> Self {
         (&parameters).into()

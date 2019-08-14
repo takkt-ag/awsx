@@ -37,6 +37,17 @@ impl Stack {
         }
     }
 
+    /// Get the value of a single parameter of the stack.
+    ///
+    /// *Note:* internally this retrieves all parameters defined on the stack.
+    pub fn get_parameter(
+        &self,
+        cfn: &CloudFormation,
+        key: &str,
+    ) -> Result<Option<Parameter>, Error> {
+        Ok(self.get_parameters(cfn)?.get(key).cloned())
+    }
+
     /// Get the current parameters for the stack.
     ///
     /// This retrieves all parameters defined on the AWS CloudFormation stack, including their

@@ -98,6 +98,24 @@ pub(crate) struct Opt {
                      51,200 bytes (enforced by the AWS API)."
     )]
     pub s3_bucket_name: Option<String>,
+    #[structopt(
+        long = "dont-update-deployment-metadata",
+        help = "Do not update the stack parameter containing deployment metadata",
+        long_help = "Unless specified, awsx will automatiallly update a stack-parameter containing \
+                     deployment metadata with the latest information for commands that update a \
+                     stack. If you specify this option, awsx will not update the deployment \
+                     metadata."
+    )]
+    pub dont_update_deployment_metadata: bool,
+    #[structopt(
+        long = "deployment-metadata-parameter",
+        default_value = "DeploymentMetadata",
+        help = "Parameter in which deployment metadata will be stored",
+        long_help = "Parameter of the stack in which deployment metadata will be stored. This \
+                     applies to all commands that update a stack. You can opt-out of metadata \
+                     updates with the `--dont-update-deployment-metadata` option."
+    )]
+    pub deployment_metadata_parameter: String,
     #[structopt(subcommand)]
     command: Command,
 }

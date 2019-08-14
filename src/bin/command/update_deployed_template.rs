@@ -29,7 +29,10 @@ use std::fs::File;
 use std::io::BufReader;
 use structopt::StructOpt;
 
-use crate::{util::apply_excludes_includes, AwsxOutput, AwsxProvider, Opt as GlobalOpt};
+use crate::{
+    util::{apply_excludes_includes, generate_deployment_metadata},
+    AwsxOutput, AwsxProvider, Opt as GlobalOpt,
+};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -175,6 +178,21 @@ pub(crate) fn update_stack(
 
     // Update the template parameters with the provided parameters.
     template_parameters.update(provided_parameters);
+
+    // Unless otherwise requested, we will update the deployment-metadata parameter
+    if !global_opt.dont_update_deployment_metadata {
+        let metadata = generate_deployment_metadata(
+            stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?,
+            Some(&opt.template_path),
+        )?;
+        template_parameters.insert(
+            global_opt.deployment_metadata_parameter.clone(),
+            Parameter::WithValue {
+                key: global_opt.deployment_metadata_parameter.clone(),
+                value: metadata,
+            },
+        );
+    }
 
     // Create the change set for the new template, including the new parameters.
     template.create_change_set(
