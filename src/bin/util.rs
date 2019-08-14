@@ -20,7 +20,7 @@ use awsx::{
 };
 use chrono::{Local, SecondsFormat};
 use failure::format_err;
-use git2::{Config, Repository};
+use git2::{Config, Oid, Repository};
 use regex::RegexSet;
 use serde_derive::{Deserialize, Serialize};
 use std::{convert::TryFrom, fmt};
@@ -117,4 +117,40 @@ pub(crate) fn generate_deployment_metadata(
     }
 
     Ok(metadata)
+}
+
+pub(crate) fn verify_changes_compatible(
+    previous_metadata: &DeploymentMetadata,
+    current_metadata: &DeploymentMetadata,
+    git_discover_path: &str,
+) -> Result<bool, Error> {
+    // Find the common ancestor
+    let previous_commit_is_common_ancestor =
+        if previous_metadata.git.commit == current_metadata.git.commit {
+            true
+        } else {
+            // Retrieve previous and current commit
+            let repo = Repository::discover(git_discover_path)?;
+            let previous_commit = Oid::from_str(&previous_metadata.git.commit)?;
+            let current_commit = repo.head()?.target().ok_or_else(|| {
+                Error::GitError(format_err!("Failed to retrieve commit for git HEAD"))
+            })?;
+
+            let common_ancestor = repo.merge_base(previous_commit, current_commit)?;
+            previous_commit == common_ancestor
+        };
+
+    // In general it is true that if the previous changes were dirty, we cannot guarantee any
+    // compatibility. We make one exception: if the user stays unchanged, and the previous commit is
+    // the common ancestor, we assume that the change is just the person developing and testing.
+    if previous_metadata.git.dirty {
+        return Ok(
+            previous_metadata.user == current_metadata.user && previous_commit_is_common_ancestor
+        );
+    }
+
+    // If the previous changes were not dirty, we can now verify if the current commit is a direct
+    // descendant from the previous commit. If it isn't, the two commits are out of two separate
+    // trees and we thus cannot assume them to be compatible.
+    Ok(previous_commit_is_common_ancestor)
 }
