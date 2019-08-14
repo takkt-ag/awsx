@@ -189,7 +189,7 @@ pub(crate) fn update_stack(
             global_opt.deployment_metadata_parameter.clone(),
             Parameter::WithValue {
                 key: global_opt.deployment_metadata_parameter.clone(),
-                value: metadata,
+                value: metadata.to_string(),
             },
         );
     }

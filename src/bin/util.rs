@@ -23,20 +23,26 @@ use failure::format_err;
 use git2::{Config, Repository};
 use regex::RegexSet;
 use serde_derive::{Deserialize, Serialize};
-use std::convert::TryFrom;
+use std::{convert::TryFrom, fmt};
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub(crate) struct DeploymentMetadata {
-    user: String,
-    when: String,
-    git: DeploymentMetadataGit,
+    pub(crate) user: String,
+    pub(crate) when: String,
+    pub(crate) git: DeploymentMetadataGit,
+}
+
+impl fmt::Display for DeploymentMetadata {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", serde_json::to_string(self).unwrap_or_default())
+    }
 }
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub(crate) struct DeploymentMetadataGit {
-    commit: String,
-    r#ref: String,
-    dirty: bool,
+    pub(crate) commit: String,
+    pub(crate) r#ref: String,
+    pub(crate) dirty: bool,
 }
 
 impl TryFrom<Parameter> for DeploymentMetadata {
@@ -78,7 +84,7 @@ pub(crate) fn apply_excludes_includes(
 pub(crate) fn generate_deployment_metadata(
     previous_metadata_parameter: Option<Parameter>,
     git_discover_path: Option<&str>,
-) -> Result<String, Error> {
+) -> Result<DeploymentMetadata, Error> {
     let mut metadata = previous_metadata_parameter
         .and_then(|parameter| DeploymentMetadata::try_from(parameter).ok())
         .unwrap_or_default();
@@ -110,5 +116,5 @@ pub(crate) fn generate_deployment_metadata(
         }
     }
 
-    Ok(serde_json::to_string(&metadata)?)
+    Ok(metadata)
 }
