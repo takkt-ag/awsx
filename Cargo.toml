@@ -18,7 +18,6 @@ path = "src/bin/main.rs"
 
 [dependencies]
 atty = "0.2.13"
-backtrace-sys = "=0.1.19"
 chrono = "0.4.7"
 failure = "0.1.5"
 futures = "0.1.28"

@@ -4,10 +4,10 @@ This page lists the licenses of the projects used in awsx.
 
 ## Overview of licenses
 
-- [Apache License 2.0](#Apache-2.0) (155)
-- [MIT License](#MIT) (62)
+- [Apache License 2.0](#Apache-2.0) (148)
+- [MIT License](#MIT) (61)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (4)
-- [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (3)
+- [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (2)
 - [Creative Commons Zero v1.0 Universal](#CC0-1.0) (1)
 - [ISC License](#ISC) (1)
 
@@ -1736,7 +1736,6 @@ limitations under the License.
 - [arc-swap 0.4.2]( https://github.com/vorner/arc-swap )
 - [arrayvec 0.4.11]( https://github.com/bluss/arrayvec )
 - [autocfg 0.1.5]( https://github.com/cuviper/autocfg )
-- [backtrace-sys 0.1.19]( https://github.com/alexcrichton/backtrace-rs )
 - [backtrace 0.3.34]( https://github.com/rust-lang/backtrace-rs )
 - [base64 0.10.1]( https://github.com/alicemaz/rust-base64 )
 - [base64 0.9.3]( https://github.com/alicemaz/rust-base64 )
@@ -1745,14 +1744,10 @@ limitations under the License.
 - [cfg-if 0.1.9]( https://github.com/alexcrichton/cfg-if )
 - [core-foundation-sys 0.6.2]( https://github.com/servo/core-foundation-rs )
 - [core-foundation 0.6.4]( https://github.com/servo/core-foundation-rs )
-- [crossbeam-channel 0.3.9]( https://github.com/crossbeam-rs/crossbeam )
-- [crossbeam-deque 0.6.3]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-deque 0.7.1]( https://github.com/crossbeam-rs/crossbeam )
-- [crossbeam-epoch 0.6.1]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-epoch 0.7.2]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-queue 0.1.2]( https://github.com/crossbeam-rs/crossbeam )
 - [crossbeam-utils 0.6.6]( https://github.com/crossbeam-rs/crossbeam )
-- [crossbeam 0.5.0]( https://github.com/crossbeam-rs/crossbeam )
 - [dtoa 0.4.4]( https://github.com/dtolnay/dtoa )
 - [either 1.5.2]( https://github.com/bluss/either )
 - [failure 0.1.5]( https://github.com/rust-lang-nursery/failure )
@@ -1769,7 +1764,7 @@ limitations under the License.
 - [itertools 0.8.0]( https://github.com/bluss/rust-itertools )
 - [itoa 0.4.4]( https://github.com/dtolnay/itoa )
 - [lazy_static 1.3.0]( https://github.com/rust-lang-nursery/lazy-static.rs )
-- [libc 0.2.61]( https://github.com/rust-lang/libc )
+- [libc 0.2.62]( https://github.com/rust-lang/libc )
 - [libgit2-sys 0.8.2]( https://github.com/rust-lang/git2-rs )
 - [libz-sys 1.0.25]( https://github.com/alexcrichton/libz-sys )
 - [lock_api 0.1.5]( https://github.com/Amanieu/parking_lot )
@@ -1783,9 +1778,7 @@ limitations under the License.
 - [num-integer 0.1.41]( https://github.com/rust-num/num-integer )
 - [num-traits 0.2.8]( https://github.com/rust-num/num-traits )
 - [num_cpus 1.10.1]( https://github.com/seanmonstar/num_cpus )
-- [parking_lot 0.6.4]( https://github.com/Amanieu/parking_lot )
 - [parking_lot 0.7.1]( https://github.com/Amanieu/parking_lot )
-- [parking_lot_core 0.3.1]( https://github.com/Amanieu/parking_lot )
 - [parking_lot_core 0.4.0]( https://github.com/Amanieu/parking_lot )
 - [percent-encoding 1.0.1]( https://github.com/servo/rust-url/ )
 - [percent-encoding 2.1.0]( https://github.com/servo/rust-url/ )
@@ -1794,7 +1787,7 @@ limitations under the License.
 - [quote 0.6.13]( https://github.com/dtolnay/quote )
 - [regex-syntax 0.6.11]( https://github.com/rust-lang/regex )
 - [regex 1.2.1]( https://github.com/rust-lang/regex )
-- [rust-argon2 0.5.0]( https://github.com/sru-systems/rust-argon2 )
+- [rust-argon2 0.5.1]( https://github.com/sru-systems/rust-argon2 )
 - [rustc-demangle 0.1.16]( https://github.com/alexcrichton/rustc-demangle )
 - [rustc_version 0.2.3]( https://github.com/Kimundi/rustc-version-rs )
 - [safemem 0.3.1]( https://github.com/abonander/safemem )
@@ -2471,7 +2464,6 @@ limitations under the License.
 #### Used by
 
 - [getrandom 0.1.9]( https://github.com/rust-random/getrandom )
-- [rand 0.5.6]( https://github.com/rust-lang-nursery/rand )
 - [rand 0.6.5]( https://github.com/rust-random/rand )
 - [rand 0.7.0]( https://github.com/rust-random/rand )
 - [rand_chacha 0.1.1]( https://github.com/rust-random/rand )
@@ -3320,6 +3312,7 @@ limitations under the License.
 
 #### Used by
 
+- [backtrace-sys 0.1.31]( https://github.com/alexcrichton/backtrace-rs )
 - [dirs 1.0.5]( https://github.com/soc/dirs-rs )
 - [failure_derive 0.1.5]( https://github.com/withoutboats/failure_derive )
 - [md5 0.3.8]( https://github.com/stainless-steel/md5 )
@@ -3701,7 +3694,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #### Used by
 
 - [cloudabi 0.0.3]( https://github.com/nuxinl/cloudabi )
-- [crossbeam-channel 0.3.9]( https://github.com/crossbeam-rs/crossbeam )
 
 <pre>
 Copyright (c) &lt;year&gt; &lt;owner&gt; 
@@ -4004,7 +3996,7 @@ THIS SOFTWARE.
 
 #### Used by
 
-- [openssl-sys 0.9.48]( https://github.com/sfackler/rust-openssl )
+- [openssl-sys 0.9.49]( https://github.com/sfackler/rust-openssl )
 
 <pre>
 Copyright (c) 2014 Alex Crichton
@@ -4215,7 +4207,6 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [memoffset 0.2.1]( https://github.com/Gilnaa/memoffset )
 - [memoffset 0.5.1]( https://github.com/Gilnaa/memoffset )
 
 <pre>
