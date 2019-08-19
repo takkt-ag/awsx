@@ -22,4 +22,5 @@ pub(crate) mod find_target_group;
 pub(crate) mod identify_new_parameters;
 pub(crate) mod override_parameters;
 pub(crate) mod update_deployed_template;
+pub(crate) mod verify_changes_compatible;
 pub(crate) mod verify_parameter_file;

@@ -33,7 +33,7 @@ mod util;
 use command::{
     find_amis_inuse, find_auto_scaling_group, find_cloudfront_distribution, find_db_snapshot,
     find_target_group, identify_new_parameters, override_parameters, update_deployed_template,
-    verify_parameter_file,
+    verify_changes_compatible, verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -202,6 +202,14 @@ enum Command {
     )]
     UpdateDeployedTemplate(update_deployed_template::Opt),
     #[structopt(
+        name = "verify-changes-compatible",
+        about = "Verify that the deployed and local changes are compatible",
+        long_about = "Verify that the deployed stack is compatible with the local changes.",
+        after_help = "IAM permissions requried:\n\
+                      - cloudformation:DescribeStacks"
+    )]
+    VerifyChangesCompatible(verify_changes_compatible::Opt),
+    #[structopt(
         name = "verify-parameter-file",
         about = "Verify that parameters in a file match a deployed stack",
         long_about = "Verify that the parameters defined in your parameters file match a currently \
@@ -279,6 +287,9 @@ fn main() {
         }
         UpdateDeployedTemplate(ref command_opt) => {
             update_deployed_template::update_stack(command_opt, &opt, provider)
+        }
+        VerifyChangesCompatible(ref command_opt) => {
+            verify_changes_compatible::verify_changes_compatible(command_opt, &opt, provider)
         }
         VerifyParameterFile(ref command_opt) => {
             verify_parameter_file::verify_parameter_file(command_opt, &opt, provider)

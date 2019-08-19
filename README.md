@@ -70,6 +70,7 @@ SUBCOMMANDS:
     identify-new-parameters         Show new template parameters not present on the stack
     override-parameters             Update specified parameters on an existing stack
     update-deployed-template        Update an existing stack with a new template
+    verify-changes-compatible       Verify that the deployed and local changes are compatible
     verify-parameter-file           Verify that parameters in a file match a deployed stack
 ```
 
@@ -365,6 +366,36 @@ IAM permissions required:
 - cloudformation:DescribeStacks
 - cloudformation:CreateChangeSet
 - s3:PutObject
+```
+
+### awsx verify-changes-compatible
+
+```
+awsx-verify-changes-compatible 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Verify that the deployed stack is compatible with the local changes.
+
+USAGE:
+    awsx verify-changes-compatible [OPTIONS] --stack-name <stack_name>
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --git-path <git_path>        
+            Path to git-repository to compare against. The default is to use the current working directory.
+
+        --stack-name <stack_name>    
+            Name of the stack to compare against
+
+
+IAM permissions requried:
+- cloudformation:DescribeStacks
 ```
 
 ### awsx verify-parameter-file
