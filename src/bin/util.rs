@@ -136,8 +136,22 @@ pub(crate) fn verify_changes_compatible(
                 Error::GitError(format_err!("Failed to retrieve commit for git HEAD"))
             })?;
 
-            let common_ancestor = repo.merge_base(previous_commit, current_commit)?;
-            previous_commit == common_ancestor
+            match repo.merge_base(previous_commit, current_commit) {
+                Ok(common_ancestor) => previous_commit == common_ancestor,
+                Err(ref e)
+                    if e.code() == git2::ErrorCode::GenericError
+                        && e.class() == git2::ErrorClass::Odb =>
+                {
+                    // If either of the commits we are comparing is unknown to the repository, the
+                    // error returned will be of code `GenericError` and class `Odb` (bad object).
+                    // Rather than showing that error, which can commonly occur if either the
+                    // deployed changes are based on a commit another developer only has locally, or
+                    // if the user has rebased their own changes since the last time they deployed,
+                    // we simply return `false` here indicating that the changes are not compatible.
+                    false
+                }
+                Err(e) => return Err(e.into()),
+            }
         };
 
     // In general it is true that if the previous changes were dirty, we cannot guarantee any
