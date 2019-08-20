@@ -184,46 +184,57 @@ pub(crate) fn update_stack(
 
     // Unless otherwise requested, we will update the deployment-metadata parameter
     if !global_opt.dont_update_deployment_metadata {
-        let previous_metadata_parameter =
-            stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?;
-        let previous_metadata =
-            previous_metadata_parameter
-                .clone()
-                .and_then(|previous_metadata_parameter| {
-                    DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
-                });
-        let metadata =
-            generate_deployment_metadata(previous_metadata_parameter, Some(&opt.template_path))?;
+        if template_parameters.contains_key(&global_opt.deployment_metadata_parameter) {
+            let previous_metadata_parameter =
+                stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?;
+            let previous_metadata =
+                previous_metadata_parameter
+                    .clone()
+                    .and_then(|previous_metadata_parameter| {
+                        DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
+                    });
+            let metadata = generate_deployment_metadata(
+                previous_metadata_parameter,
+                Some(&opt.template_path),
+            )?;
 
-        if let Some(previous_metadata) = previous_metadata {
-            // Verify that the changes are compatible
-            let changes_compatible =
-                verify_changes_compatible(&previous_metadata, &metadata, &opt.template_path)?;
-            if !changes_compatible {
-                if opt.force_create {
-                    eprintln!(
-                        "WARNING: the changes you are trying to deploy are not a direct \
-                         descendant of the currently deployed changes. The created change-set \
-                         might overwrite and thus destroy the previously deployed changes."
-                    );
-                } else {
-                    return Err(Error::InvalidTemplate(
-                        "the template provided is not a direct descendant of the currently \
-                         deployed template, creating a changeset might overwrite previously \
-                         deployed changes"
-                            .to_string(),
-                    ));
+            if let Some(previous_metadata) = previous_metadata {
+                // Verify that the changes are compatible
+                let changes_compatible =
+                    verify_changes_compatible(&previous_metadata, &metadata, &opt.template_path)?;
+                if !changes_compatible {
+                    if opt.force_create {
+                        eprintln!(
+                            "WARNING: the changes you are trying to deploy are not a direct \
+                             descendant of the currently deployed changes. The created change-set \
+                             might overwrite and thus destroy the previously deployed changes."
+                        );
+                    } else {
+                        return Err(Error::InvalidTemplate(
+                            "the template provided is not a direct descendant of the currently \
+                             deployed template, creating a changeset might overwrite previously \
+                             deployed changes"
+                                .to_string(),
+                        ));
+                    }
                 }
             }
-        }
 
-        template_parameters.insert(
-            global_opt.deployment_metadata_parameter.clone(),
-            Parameter::WithValue {
-                key: global_opt.deployment_metadata_parameter.clone(),
-                value: metadata.to_string(),
-            },
-        );
+            template_parameters.insert(
+                global_opt.deployment_metadata_parameter.clone(),
+                Parameter::WithValue {
+                    key: global_opt.deployment_metadata_parameter.clone(),
+                    value: metadata.to_string(),
+                },
+            );
+        } else {
+            eprintln!(
+                "WARNING: an update to the deployment-metadata parameter '{}' was requested, but \
+                 the template that should be deployed does not have this parameter. The change-set \
+                 will be created, although without any metadata.",
+                &global_opt.deployment_metadata_parameter,
+            );
+        }
     }
 
     // Create the change set for the new template, including the new parameters.

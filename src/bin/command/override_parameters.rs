@@ -137,17 +137,26 @@ pub(crate) fn override_parameters(
     } else {
         // Unless otherwise requested, we will update the deployment-metadata parameter
         if !global_opt.dont_update_deployment_metadata {
-            let metadata = generate_deployment_metadata(
-                stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?,
-                None,
-            )?;
-            stack_parameters.insert(
-                global_opt.deployment_metadata_parameter.clone(),
-                Parameter::WithValue {
-                    key: global_opt.deployment_metadata_parameter.clone(),
-                    value: metadata.to_string(),
-                },
-            );
+            if let Some(previous_metadata_parameter) =
+                stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?
+            {
+                let metadata =
+                    generate_deployment_metadata(Some(previous_metadata_parameter), None)?;
+                stack_parameters.insert(
+                    global_opt.deployment_metadata_parameter.clone(),
+                    Parameter::WithValue {
+                        key: global_opt.deployment_metadata_parameter.clone(),
+                        value: metadata.to_string(),
+                    },
+                );
+            } else {
+                eprintln!(
+                    "WARNING: an update to the deployment-metadata parameter '{}' was requested, \
+                     but the stack does not have this parameter. The change-set will be created, \
+                     although without any metadata.",
+                    &global_opt.deployment_metadata_parameter,
+                );
+            }
         }
 
         stack.create_change_set(
