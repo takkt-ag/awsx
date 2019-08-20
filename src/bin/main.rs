@@ -83,9 +83,7 @@ pub(crate) struct Opt {
                      unspecified, depends on whether stdout is a TTY. If it is, the output will be \
                      human readable. If it isn't, the contents will be output in structured form, \
                      specifically JSON.",
-        raw(
-            possible_values = r#"&["human", "human-readable", "structured", "json", "yml", "yaml"]"#
-        )
+        possible_values(&["human", "human-readable", "structured", "json", "yml", "yaml"])
     )]
     pub output_format: Option<OutputFormat>,
     #[structopt(
