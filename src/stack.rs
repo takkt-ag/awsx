@@ -42,7 +42,7 @@ impl Stack {
     /// *Note:* internally this retrieves all parameters defined on the stack.
     pub fn get_parameter(
         &self,
-        cfn: &CloudFormation,
+        cfn: &dyn CloudFormation,
         key: &str,
     ) -> Result<Option<Parameter>, Error> {
         Ok(self.get_parameters(cfn)?.get(key).cloned())
@@ -52,7 +52,7 @@ impl Stack {
     ///
     /// This retrieves all parameters defined on the AWS CloudFormation stack, including their
     /// current values.
-    pub fn get_parameters(&self, cfn: &CloudFormation) -> Result<Parameters, Error> {
+    pub fn get_parameters(&self, cfn: &dyn CloudFormation) -> Result<Parameters, Error> {
         let response = cfn
             .describe_stacks(rusoto_cloudformation::DescribeStacksInput {
                 stack_name: Some(self.name.clone()),
@@ -83,7 +83,7 @@ impl Stack {
     /// the `Parameter::PreviousValue` variant, i.e. dropping all values.
     pub fn get_parameters_as_previous_value(
         &self,
-        cfn: &CloudFormation,
+        cfn: &dyn CloudFormation,
     ) -> Result<Parameters, Error> {
         Ok(self
             .get_parameters(cfn)?
@@ -108,7 +108,7 @@ impl Stack {
     ///   `aws cloudformation wait change-set-create-complete` command.
     pub fn create_change_set(
         &self,
-        cfn: &CloudFormation,
+        cfn: &dyn CloudFormation,
         name: &str,
         role_arn: Option<&str>,
         parameters: &Parameters,

@@ -31,7 +31,7 @@ use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {}
 
-fn amis_inuse_by_ec2(ec2: &Ec2) -> Result<HashSet<String>, Error> {
+fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
     let mut instances = Vec::new();
     let mut continuation_token: Option<String> = None;
     while {
@@ -62,7 +62,9 @@ fn amis_inuse_by_ec2(ec2: &Ec2) -> Result<HashSet<String>, Error> {
     Ok(image_ids)
 }
 
-fn amis_inuse_by_launchconfiguration(autoscaling: &Autoscaling) -> Result<HashSet<String>, Error> {
+fn amis_inuse_by_launchconfiguration(
+    autoscaling: &dyn Autoscaling,
+) -> Result<HashSet<String>, Error> {
     let mut launch_configurations = Vec::new();
     let mut continuation_token: Option<String> = None;
     while {
@@ -84,7 +86,7 @@ fn amis_inuse_by_launchconfiguration(autoscaling: &Autoscaling) -> Result<HashSe
         .collect())
 }
 
-fn amis_inuse_by_launchtemplate(ec2: &Ec2) -> Result<HashSet<String>, Error> {
+fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
     let mut launch_templates = Vec::new();
     let mut continuation_token: Option<String> = None;
     while {

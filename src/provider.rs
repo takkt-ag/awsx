@@ -97,7 +97,7 @@ impl ProvideAwsCredentials for AwsxProvider {
 
 /// The inner future used to drive the credential request to completion.
 pub struct AwsxProviderFuture {
-    inner: Box<Future<Item = AwsCredentials, Error = CredentialsError> + Send>,
+    inner: Box<dyn Future<Item = AwsCredentials, Error = CredentialsError> + Send>,
 }
 
 impl Future for AwsxProviderFuture {

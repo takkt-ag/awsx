@@ -80,7 +80,7 @@ impl Template {
     /// will return an error if this isn't the case.
     pub fn create_change_set(
         &self,
-        cfn: &CloudFormation,
+        cfn: &dyn CloudFormation,
         name: &str,
         stack_name: &str,
         parameters: &Parameters,
