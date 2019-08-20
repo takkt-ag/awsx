@@ -89,7 +89,9 @@ pub(crate) fn generate_deployment_metadata(
         .and_then(|parameter| DeploymentMetadata::try_from(parameter).ok())
         .unwrap_or_default();
 
-    metadata.user = Config::open_default()?.get_string("user.email")?;
+    metadata.user = Config::open_default()?
+        .get_string("user.email")
+        .unwrap_or_else(|_| "unknown".to_owned());
     metadata.when = Local::now().to_rfc3339_opts(SecondsFormat::Secs, true);
 
     if let Some(git_discover_path) = git_discover_path {
@@ -108,7 +110,10 @@ pub(crate) fn generate_deployment_metadata(
         let statuses = repo.statuses(Some(git2::StatusOptions::new().include_untracked(false)))?;
         let dirty = !statuses.is_empty();
 
-        metadata.user = repo.config()?.get_string("user.email")?;
+        metadata.user = repo
+            .config()?
+            .get_string("user.email")
+            .unwrap_or_else(|_| "unknown".to_owned());
         metadata.git = DeploymentMetadataGit {
             commit,
             r#ref,
