@@ -45,44 +45,48 @@ pub(crate) struct Opt {
     #[structopt(
         short = "p",
         long = "parameter-overrides",
-        conflicts_with = "parameter_path",
         help = "Parameters to override",
-        long_help = "Parameters to override. Specify as multiple `Key=Value` pairs, where each key \
-                     has to correspond to an existing parameter on the requested stack."
+        long_help = "Parameters to override. Specify as multiple space-separated `Key=Value` \
+                     pairs, where each key has to correspond to an existing parameter on the \
+                     requested stack.\n(If you specify this parameter and --parameter-path, \
+                     parameters provided here will override parameters provided via the parameter \
+                     file.)"
     )]
     parameter_overrides: Vec<Parameter>,
     #[structopt(
         long = "parameter-path",
         help = "Path to a JSON parameter file",
-        conflicts_with = "parameter_overrides",
         long_help = "Path to a JSON parameter file. This file should be structured the same as the \
                      AWS CLI expects. The file can only contain parameters newly added to the \
                      template, unless the existing parameters are defined as \
-                     `UsePreviousValue=true`.\n(If you specify this parameter, you cannot specify \
-                     --parameters.)"
+                     `UsePreviousValue=true`.\n(If you specify this parameter and \
+                     --parameter-overrides, parameters specified through --parameters will \
+                     override parameters provided via the parameter file.)"
     )]
     parameter_path: Option<String>,
     #[structopt(
         long = "exclude",
-        conflicts_with = "parameter_overrides",
         requires = "parameter_path",
         help = "Exclude parameters",
         long_help = "Exclude parameters based on the patterns provided. All patterns will be \
                      compiled into a regex-set, which will be used to match each parameter key. If \
                      a parameter key matches any of the exclude-patterns, the parameter will not \
-                     be applied."
+                     be applied.\n(Excludes only apply to parameters passed in via \
+                     --parameter-path. Parameters provided via --parameter-overrides will not be \
+                     affected by this.)"
     )]
     excludes: Vec<String>,
     #[structopt(
         long = "include",
-        conflicts_with = "parameter_overrides",
         requires = "parameter_path",
         help = "Include parameters",
         long_help = "Include parameters based on the patterns provided. All patterns will be \
                      compiled into a regex-set, which will be used to match each parameter key. \
                      Every parameter key that doesn't match any of the include-patterns will not \
                      be applied.\n(Excludes are applied before includes, and you cannot include a \
-                     parameter that was previously excluded.)"
+                     parameter that was previously excluded. Includes only apply to parameters \
+                     passed in via --parameter-path. Parameters provided via --parameter-overrides \
+                     will not be affected by this.)"
     )]
     includes: Vec<String>,
 }
@@ -120,9 +124,8 @@ pub(crate) fn override_parameters(
             &opt.excludes,
             &opt.includes,
         )?);
-    } else {
-        stack_parameters.update(&opt.parameter_overrides);
     }
+    stack_parameters.update(&opt.parameter_overrides);
 
     if stack_parameters.is_empty() {
         Ok(AwsxOutput {

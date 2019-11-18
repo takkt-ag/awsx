@@ -99,7 +99,7 @@ pub(crate) struct Opt {
     #[structopt(
         long = "dont-update-deployment-metadata",
         help = "Do not update the stack parameter containing deployment metadata",
-        long_help = "Unless specified, awsx will automatiallly update a stack-parameter containing \
+        long_help = "Unless specified, awsx will automatically update a stack-parameter containing \
                      deployment metadata with the latest information for commands that update a \
                      stack. If you specify this option, awsx will not update the deployment \
                      metadata."
