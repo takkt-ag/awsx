@@ -66,7 +66,7 @@ pub(crate) struct Opt {
     parameter_path: Option<String>,
     #[structopt(
         long = "exclude",
-        requires = "parameter_path",
+        requires = "parameter-path",
         help = "Exclude parameters",
         long_help = "Exclude parameters based on the patterns provided. All patterns will be \
                      compiled into a regex-set, which will be used to match each parameter key. If \
@@ -78,7 +78,7 @@ pub(crate) struct Opt {
     excludes: Vec<String>,
     #[structopt(
         long = "include",
-        requires = "parameter_path",
+        requires = "parameter-path",
         help = "Include parameters",
         long_help = "Include parameters based on the patterns provided. All patterns will be \
                      compiled into a regex-set, which will be used to match each parameter key. \

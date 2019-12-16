@@ -54,7 +54,7 @@ pub(crate) struct Opt {
                      credentials (via environment variables, instance metadata, container metadata \
                      or AWS profiles). You have to specify --aws-secret-access-key too if you \
                      specify this parameter.",
-        requires = "aws_secret_access_key"
+        requires = "aws-secret-access-key"
     )]
     pub aws_access_key_id: Option<String>,
     #[structopt(
@@ -65,7 +65,7 @@ pub(crate) struct Opt {
                      credentials (via environment variables, instance metadata, container metadata \
                      or AWS profiles). You have to specify --aws-access-key-id too if you specify \
                      this parameter.",
-        requires = "aws_access_key_id"
+        requires = "aws-access-key-id"
     )]
     pub aws_secret_access_key: Option<String>,
     #[structopt(
