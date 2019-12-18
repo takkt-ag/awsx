@@ -31,9 +31,9 @@ mod command;
 mod util;
 
 use command::{
-    find_amis_inuse, find_auto_scaling_group, find_cloudfront_distribution, find_db_snapshot,
-    find_target_group, identify_new_parameters, override_parameters, update_deployed_template,
-    verify_changes_compatible, verify_parameter_file,
+    create_stack, find_amis_inuse, find_auto_scaling_group, find_cloudfront_distribution,
+    find_db_snapshot, find_target_group, identify_new_parameters, override_parameters,
+    update_deployed_template, verify_changes_compatible, verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -121,6 +121,16 @@ pub(crate) struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
+    #[structopt(
+        name = "create-stack",
+        author,
+        about = "Create a new stack with given parameters",
+        after_help = "IAM permissions required:\n\
+                      - cloudformation:DescribeStacks\n\
+                      - cloudformation:CreateChangeSet\n\
+                      - s3:PutObject"
+    )]
+    CreateStack(create_stack::Opt),
     #[structopt(
         name = "find-amis-inuse",
         author,
@@ -273,6 +283,7 @@ fn main() {
 
     use Command::*;
     let output: Result<AwsxOutput, Error> = match opt.command {
+        CreateStack(ref command_opt) => create_stack::create_stack(command_opt, &opt, provider),
         FindAmisInuse(ref command_opt) => {
             find_amis_inuse::find_amis_inuse(command_opt, &opt, provider)
         }

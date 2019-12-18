@@ -14,6 +14,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+pub(crate) mod create_stack;
 pub(crate) mod find_amis_inuse;
 pub(crate) mod find_auto_scaling_group;
 pub(crate) mod find_cloudfront_distribution;

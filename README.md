@@ -61,6 +61,7 @@ OPTIONS:
             (enforced by the AWS API).
 
 SUBCOMMANDS:
+    create-stack                    Create a new stack with given parameters
     find-amis-inuse                 Identify all AMI-IDs that are being used
     find-auto-scaling-group         Find an auto scaling group based on its tags
     find-cloudfront-distribution    Find a CloudFront distribution based on its tags
@@ -72,6 +73,58 @@ SUBCOMMANDS:
     update-deployed-template        Update an existing stack with a new template
     verify-changes-compatible       Verify that the deployed and local changes are compatible
     verify-parameter-file           Verify that parameters in a file match a deployed stack
+```
+
+### awsx create-stack
+
+```
+awsx-create-stack 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Create a new stack with given parameters
+
+USAGE:
+    awsx create-stack [FLAGS] [OPTIONS] --change-set-name <change-set-name> --stack-name <stack-name> --template-path <template-path>
+
+FLAGS:
+        --force-create    
+            Force change set creation, even if the parameters supplied do not cover all required parameters exactly, or
+            if the stack you are trying to deploy. This means that if you force change set creation, the created change
+            set might be invalid.
+    -h, --help            
+            Prints help information
+
+    -V, --version         
+            Prints version information
+
+
+OPTIONS:
+        --change-set-name <change-set-name>    
+            Name for the new change set
+
+        --parameter-path <parameter-path>      
+            Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects. The file
+            shuold contain all parameters required by the template (parameters with defaults can be skipped).
+            (If you specify this parameter and --parameter-overrides, parameters specified through --parameters will
+            override parameters provided via the parameter file.)
+    -p, --parameters <parameters>...           
+            Parameters required by template. Specify as multiple `Key=Value` pairs, where each key has to correspond to
+            a parameter newly added to the template, i.e. the parameter can not be already defined on the stack.
+            (If you specify this parameter and --parameter-path, parameters provided here will override parameters
+            provided via the parameter file.)
+        --role-arn <role-arn>                  
+            IAM Role that AWS CloudFormation assumes when executing the change set
+
+        --stack-name <stack-name>              
+            Name of the stack to create
+
+        --template-path <template-path>        
+            Path to the new template
+
+
+IAM permissions required:
+- cloudformation:DescribeStacks
+- cloudformation:CreateChangeSet
+- s3:PutObject
 ```
 
 ### awsx find-amis-inuse
