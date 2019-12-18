@@ -18,7 +18,7 @@ USAGE:
 
 FLAGS:
         --dont-update-deployment-metadata    
-            Unless specified, awsx will automatiallly update a stack-parameter containing deployment metadata with the
+            Unless specified, awsx will automatically update a stack-parameter containing deployment metadata with the
             latest information for commands that update a stack. If you specify this option, awsx will not update the
             deployment metadata.
     -h, --help                               
@@ -29,32 +29,32 @@ FLAGS:
 
 
 OPTIONS:
-        --assume-role-arn <assume_role_arn>
+        --assume-role-arn <assume-role-arn>
             Optional role to assume before executing AWS API calls. This can be used to execute commands in other
             accounts, or to separate the actions performable in a single account. If unspecified, no role will be
             assumed.
-        --aws-access-key-id <aws_access_key_id>
+        --aws-access-key-id <aws-access-key-id>
             AWS Access Key ID to use when authenticating against the AWS API. If left unspecified, the default
             credential provider will be used to determine the credentials (via environment variables, instance metadata,
             container metadata or AWS profiles). You have to specify --aws-secret-access-key too if you specify this
             parameter.
-        --aws-region <aws_region>
+        --aws-region <aws-region>
             Region the AWS API calls should be performed in. If left unspecified, the region will be determined
             automatically, falling back to us-east-1 should it fail.
-        --aws-secret-access-key <aws_secret_access_key>
+        --aws-secret-access-key <aws-secret-access-key>
             AWS Secret Access Key to use when authenticating against the AWS API. If left unspecified, the default
             credential provider will be used to determine the credentials (via environment variables, instance metadata,
             container metadata or AWS profiles). You have to specify --aws-access-key-id too if you specify this
             parameter.
-        --deployment-metadata-parameter <deployment_metadata_parameter>
+        --deployment-metadata-parameter <deployment-metadata-parameter>
             Parameter of the stack in which deployment metadata will be stored. This applies to all commands that update
             a stack. You can opt-out of metadata updates with the `--dont-update-deployment-metadata` option. [default:
             DeploymentMetadata]
-        --output-format <output_format>
+        --output-format <output-format>
             Specify the format of the application output. The default, if left unspecified, depends on whether stdout is
             a TTY. If it is, the output will be human readable. If it isn't, the contents will be output in structured
             form, specifically JSON. [possible values: human, human-readable, structured, json, yml, yaml]
-        --s3-bucket-name <s3_bucket_name>
+        --s3-bucket-name <s3-bucket-name>
             Name of the S3 bucket used for storing templates. Any command that updates a stack template will upload the
             template to S3 if this parameter is specified. If the parameter is unspecified, the awsx will try to provide
             the template within the API call to AWS, although the template size here is limited to 51,200 bytes
@@ -174,10 +174,10 @@ FLAGS:
 
 
 OPTIONS:
-        --db-instance-identifier <db_instance_identifier>
+        --db-instance-identifier <db-instance-identifier>
             Filter for DB snapshots assigned from a specific DB instance
 
-        --snapshot-type <snapshot_type>                      
+        --snapshot-type <snapshot-type>                      
             Filter DB snapshots by their type
 
         --tags <tags>...                                     
@@ -208,7 +208,7 @@ FLAGS:
 
 
 OPTIONS:
-        --load-balancer-arn <load_balancer_arn>    
+        --load-balancer-arn <load-balancer-arn>    
             Filter for target groups assigned to a specific load balancer
 
         --tags <tags>...                           
@@ -229,7 +229,7 @@ Show all new parameters defined on the template, but not present on the stack. T
 set, and performs only read-only actions.
 
 USAGE:
-    awsx identify-new-parameters --stack-name <stack_name> --template-path <template_path>
+    awsx identify-new-parameters --stack-name <stack-name> --template-path <template-path>
 
 FLAGS:
     -h, --help       
@@ -240,10 +240,10 @@ FLAGS:
 
 
 OPTIONS:
-        --stack-name <stack_name>          
+        --stack-name <stack-name>          
             Name of the stack to update
 
-        --template-path <template_path>    
+        --template-path <template-path>    
             Path to the new template
 
 
@@ -261,7 +261,7 @@ parameters will be updated, with all other parameters staying unchanged. NOTE: t
 will not be automatically executed.
 
 USAGE:
-    awsx override-parameters [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name>
+    awsx override-parameters [OPTIONS] --change-set-name <change-set-name> --stack-name <stack-name>
 
 FLAGS:
     -h, --help       
@@ -272,30 +272,37 @@ FLAGS:
 
 
 OPTIONS:
-        --change-set-name <change_set_name>               
+        --change-set-name <change-set-name>               
             Name for the new change set
 
         --exclude <excludes>...                           
             Exclude parameters based on the patterns provided. All patterns will be compiled into a regex-set, which
             will be used to match each parameter key. If a parameter key matches any of the exclude-patterns, the
             parameter will not be applied.
+            (Excludes only apply to parameters passed in via --parameter-path. Parameters provided via --parameter-
+            overrides will not be affected by this.)
         --include <includes>...                           
             Include parameters based on the patterns provided. All patterns will be compiled into a regex-set, which
             will be used to match each parameter key. Every parameter key that doesn't match any of the include-patterns
             will not be applied.
-            (Excludes are applied before includes, and you cannot include a parameter that was previously excluded.)
-    -p, --parameter-overrides <parameter_overrides>...    
-            Parameters to override. Specify as multiple `Key=Value` pairs, where each key has to correspond to an
-            existing parameter on the requested stack.
-        --parameter-path <parameter_path>                 
+            (Excludes are applied before includes, and you cannot include a parameter that was previously excluded.
+            Includes only apply to parameters passed in via --parameter-path. Parameters provided via --parameter-
+            overrides will not be affected by this.)
+    -p, --parameter-overrides <parameter-overrides>...    
+            Parameters to override. Specify as multiple space-separated `Key=Value` pairs, where each key has to
+            correspond to an existing parameter on the requested stack.
+            (If you specify this parameter and --parameter-path, parameters provided here will override parameters
+            provided via the parameter file.)
+        --parameter-path <parameter-path>                 
             Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects. The file can
             only contain parameters newly added to the template, unless the existing parameters are defined as
             `UsePreviousValue=true`.
-            (If you specify this parameter, you cannot specify --parameters.)
-        --role-arn <role_arn>
+            (If you specify this parameter and --parameter-overrides, parameters specified through --parameters will
+            override parameters provided via the parameter file.)
+        --role-arn <role-arn>
             IAM Role that AWS CloudFormation assumes when executing the change set
 
-        --stack-name <stack_name>                         
+        --stack-name <stack-name>                         
             Name of the stack to update
 
 
@@ -314,7 +321,7 @@ have to supply parameters that are newly added. NOTE: this will only create a ch
 executed.
 
 USAGE:
-    awsx update-deployed-template [FLAGS] [OPTIONS] --change-set-name <change_set_name> --stack-name <stack_name> --template-path <template_path>
+    awsx update-deployed-template [FLAGS] [OPTIONS] --change-set-name <change-set-name> --stack-name <stack-name> --template-path <template-path>
 
 FLAGS:
         --force-create    
@@ -331,7 +338,7 @@ FLAGS:
 
 
 OPTIONS:
-        --change-set-name <change_set_name>    
+        --change-set-name <change-set-name>    
             Name for the new change set
 
         --exclude <excludes>...                
@@ -343,7 +350,7 @@ OPTIONS:
             will be used to match each parameter key. Every parameter key that doesn't match any of the include-patterns
             will not be applied.
             (Excludes are applied before includes, and you cannot include a parameter that was previously excluded.)
-        --parameter-path <parameter_path>      
+        --parameter-path <parameter-path>      
             Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects. The file can
             only contain parameters newly added to the template, unless the existing parameters are defined as
             `UsePreviousValue=true`.
@@ -352,13 +359,13 @@ OPTIONS:
             New parameters required by template. Specify as multiple `Key=Value` pairs, where each key has to correspond
             to a parameter newly added to the template, i.e. the parameter can not be already defined on the stack.
             (If you specify this parameter, you cannot specify --parameter-path, --exclude or --include.)
-        --role-arn <role_arn>                  
+        --role-arn <role-arn>                  
             IAM Role that AWS CloudFormation assumes when executing the change set
 
-        --stack-name <stack_name>              
+        --stack-name <stack-name>              
             Name of the stack to update
 
-        --template-path <template_path>        
+        --template-path <template-path>        
             Path to the new template
 
 
@@ -376,7 +383,7 @@ KAISER+KRAFT EUROPA GmbH
 Verify that the deployed stack is compatible with the local changes.
 
 USAGE:
-    awsx verify-changes-compatible [OPTIONS] --stack-name <stack_name>
+    awsx verify-changes-compatible [OPTIONS] --stack-name <stack-name>
 
 FLAGS:
     -h, --help       
@@ -387,10 +394,10 @@ FLAGS:
 
 
 OPTIONS:
-        --git-path <git_path>        
+        --git-path <git-path>        
             Path to git-repository to compare against. The default is to use the current working directory.
 
-        --stack-name <stack_name>    
+        --stack-name <stack-name>    
             Name of the stack to compare against
 
 
@@ -408,7 +415,7 @@ parameters defined as `UsePreviousValue`, they will be considered equal to whate
 subcommand does not create a change set, and performs only read-only actions.
 
 USAGE:
-    awsx verify-parameter-file --parameter-path <parameter_path> --stack-name <stack_name>
+    awsx verify-parameter-file --parameter-path <parameter-path> --stack-name <stack-name>
 
 FLAGS:
     -h, --help       
@@ -419,10 +426,10 @@ FLAGS:
 
 
 OPTIONS:
-        --parameter-path <parameter_path>    
+        --parameter-path <parameter-path>    
             Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects.
 
-        --stack-name <stack_name>            
+        --stack-name <stack-name>            
             Name of the stack
 
 

@@ -37,6 +37,7 @@ use command::{
 };
 
 #[derive(Debug, StructOpt)]
+#[structopt(author)]
 pub(crate) struct Opt {
     #[structopt(
         long = "aws-region",
@@ -122,6 +123,7 @@ pub(crate) struct Opt {
 enum Command {
     #[structopt(
         name = "find-amis-inuse",
+        author,
         about = "Identify all AMI-IDs that are being used",
         long_about = "Identify all AMI-IDs that are being used within a region and account. For \
                       this the command analyzes all AWS resources where AMI-IDs can be referenced, \
@@ -135,6 +137,7 @@ enum Command {
     FindAmisInuse(find_amis_inuse::Opt),
     #[structopt(
         name = "find-auto-scaling-group",
+        author,
         about = "Find an auto scaling group based on its tags",
         after_help = "IAM permissions required:\n\
                       - autoscaling:DescribeAutoScalingGroups"
@@ -142,6 +145,7 @@ enum Command {
     FindAutoScalingGroup(find_auto_scaling_group::Opt),
     #[structopt(
         name = "find-cloudfront-distribution",
+        author,
         about = "Find a CloudFront distribution based on its tags",
         after_help = "IAM permissions required:\n\
                       - cloudfront:ListDistributions\n\
@@ -150,6 +154,7 @@ enum Command {
     FindCloudfrontDistribution(find_cloudfront_distribution::Opt),
     #[structopt(
         name = "find-db-snapshot",
+        author,
         about = "Find a DB snapshot based on its tags",
         after_help = "IAM permissions required:\n\
                       - rds:DescribeDBSnapshots\n\
@@ -158,6 +163,7 @@ enum Command {
     FindDBSnapshot(find_db_snapshot::Opt),
     #[structopt(
         name = "find-target-group",
+        author,
         about = "Find a target group based on its tags",
         after_help = "IAM permissions required:\n\
                       - elasticloadbalancing:DescribeTargetGroups\n\
@@ -166,6 +172,7 @@ enum Command {
     FindTargetGroup(find_target_group::Opt),
     #[structopt(
         name = "identify-new-parameters",
+        author,
         about = "Show new template parameters not present on the stack",
         long_about = "Show all new parameters defined on the template, but not present on the \
                       stack. This subcommand does not create a change set, and performs only \
@@ -176,6 +183,7 @@ enum Command {
     IdentifyNewParameters(identify_new_parameters::Opt),
     #[structopt(
         name = "override-parameters",
+        author,
         about = "Update specified parameters on an existing stack",
         long_about = "Update specified parameters on an existing stack, without updating the \
                       underlying template. Only the specified parameters will be updated, with all \
@@ -188,6 +196,7 @@ enum Command {
     OverrideParameters(override_parameters::Opt),
     #[structopt(
         name = "update-deployed-template",
+        author,
         about = "Update an existing stack with a new template",
         long_about = "Update an existing stack with a new template, without updating any \
                       parameters already defined on the stack. You can and have to supply \
@@ -201,6 +210,7 @@ enum Command {
     UpdateDeployedTemplate(update_deployed_template::Opt),
     #[structopt(
         name = "verify-changes-compatible",
+        author,
         about = "Verify that the deployed and local changes are compatible",
         long_about = "Verify that the deployed stack is compatible with the local changes.",
         after_help = "IAM permissions requried:\n\
@@ -209,6 +219,7 @@ enum Command {
     VerifyChangesCompatible(verify_changes_compatible::Opt),
     #[structopt(
         name = "verify-parameter-file",
+        author,
         about = "Verify that parameters in a file match a deployed stack",
         long_about = "Verify that the parameters defined in your parameters file match a currently \
                       deployed stack. If your parameter-file has parameters defined as \
