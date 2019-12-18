@@ -43,9 +43,17 @@ impl Template {
         let parameters = serde_yaml::from_slice::<CloudFormationTemplate>(&contents)
             .map_err(|error| Error::TemplateDeserializationFailed(error.into()))?
             .parameters
-            .keys()
-            .map(String::to_owned)
-            .map(Parameter::previous_value)
+            .into_iter()
+            .map(|(name, parameter)| {
+                if let Some(default) = parameter.default {
+                    Parameter::WithValue {
+                        key: name.clone(),
+                        value: default,
+                    }
+                } else {
+                    Parameter::PreviousValue { key: name.clone() }
+                }
+            })
             .collect::<Vec<_>>()
             .into();
 
@@ -126,6 +134,17 @@ impl Template {
     /// Get the parameters expected by the template.
     pub fn get_parameters(&self) -> &Parameters {
         &self.parameters
+    }
+
+    /// Get the parameters of type `Parameter::PreviousValue`.
+    ///
+    /// **Note:** this will recreate the parameter collection.
+    pub fn get_parameters_as_previous_value(&self) -> Parameters {
+        self.parameters
+            .iter()
+            .map(|(_, parameter)| parameter.clone().into_previous_value())
+            .collect::<Vec<_>>()
+            .into()
     }
 
     /// Upload the current template to S3.

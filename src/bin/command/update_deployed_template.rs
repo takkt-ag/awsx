@@ -131,7 +131,7 @@ pub(crate) fn update_stack(
 
     // Retrieve the parameters defined on the template, as well as the current parameters defined on
     // the stack.
-    let mut template_parameters = template.get_parameters().to_owned();
+    let mut template_parameters = template.get_parameters_as_previous_value();
     let stack_parameters = stack.get_parameters_as_previous_value(&cfn)?;
 
     // Identify newly added parameters, which are parameters defined on the template, but not on the
