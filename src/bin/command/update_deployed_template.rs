@@ -245,6 +245,7 @@ pub(crate) fn update_stack(
         &template_parameters,
         opt.role_arn.as_ref().map(|role_arn| &**role_arn),
         s3_upload,
+        false,
     )?;
 
     Ok(AwsxOutput {

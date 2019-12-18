@@ -85,7 +85,8 @@ impl Template {
     /// Create the change set input for the loaded template and a given list of parameters.
     ///
     /// This function will validate that the parameter list matches what the template expects, and
-    /// will return an error if this isn't the case.
+    /// will return an error if this isn't the case. If the stack doesn't exist but should be
+    /// created, set `create_stack` to `true`.
     pub fn create_change_set(
         &self,
         cfn: &dyn CloudFormation,
@@ -94,6 +95,7 @@ impl Template {
         parameters: &Parameters,
         role_arn: Option<&str>,
         s3_upload: Option<(&S3Uploader, &str)>,
+        create_stack: bool,
     ) -> Result<CreateChangeSetOutput, Error> {
         if self.validate_parameters(&parameters) {
             let mut create_change_set_input = CreateChangeSetInput {
@@ -104,6 +106,11 @@ impl Template {
                     "CAPABILITY_NAMED_IAM".to_owned(),
                     "CAPABILITY_AUTO_EXPAND".to_owned(),
                 ]),
+                change_set_type: if create_stack {
+                    Some("CREATE".to_owned())
+                } else {
+                    Some("UPDATE".to_owned())
+                },
                 role_arn: role_arn.map(ToOwned::to_owned),
                 parameters: Some(parameters.into()),
                 ..Default::default()
