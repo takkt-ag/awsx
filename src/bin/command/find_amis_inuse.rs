@@ -31,7 +31,7 @@ use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {}
 
-fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
+async fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
     let mut instances = Vec::new();
     let mut continuation_token: Option<String> = None;
     while {
@@ -40,7 +40,7 @@ fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
                 next_token: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.next_token;
         instances.extend(
             output
@@ -62,7 +62,7 @@ fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
     Ok(image_ids)
 }
 
-fn amis_inuse_by_launchconfiguration(
+async fn amis_inuse_by_launchconfiguration(
     autoscaling: &dyn Autoscaling,
 ) -> Result<HashSet<String>, Error> {
     let mut launch_configurations = Vec::new();
@@ -73,7 +73,7 @@ fn amis_inuse_by_launchconfiguration(
                 next_token: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.next_token;
         launch_configurations.append(&mut output.launch_configurations);
 
@@ -86,7 +86,7 @@ fn amis_inuse_by_launchconfiguration(
         .collect())
 }
 
-fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
+async fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
     let mut launch_templates = Vec::new();
     let mut continuation_token: Option<String> = None;
     while {
@@ -99,7 +99,7 @@ fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error>
                 next_token: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.next_token;
         launch_templates.extend(
             output
@@ -122,7 +122,7 @@ fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error>
                     next_token: continuation_token.clone(),
                     ..Default::default()
                 })
-                .sync()?;
+                .await?;
             continuation_token = output.next_token;
             launch_template_versions
                 .extend(output.launch_template_versions.unwrap_or_else(|| vec![]));
@@ -140,7 +140,7 @@ fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, Error>
     Ok(image_ids)
 }
 
-pub(crate) fn find_amis_inuse(
+pub(crate) async fn find_amis_inuse(
     _opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -157,9 +157,9 @@ pub(crate) fn find_amis_inuse(
     );
 
     let mut amis_inuse: HashSet<String> = HashSet::new();
-    amis_inuse.extend(amis_inuse_by_ec2(&ec2)?);
-    amis_inuse.extend(amis_inuse_by_launchconfiguration(&autoscaling)?);
-    amis_inuse.extend(amis_inuse_by_launchtemplate(&ec2)?);
+    amis_inuse.extend(amis_inuse_by_ec2(&ec2).await?);
+    amis_inuse.extend(amis_inuse_by_launchconfiguration(&autoscaling).await?);
+    amis_inuse.extend(amis_inuse_by_launchtemplate(&ec2).await?);
 
     Ok(AwsxOutput {
         human_readable: format!(

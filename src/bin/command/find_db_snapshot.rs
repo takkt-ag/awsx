@@ -16,6 +16,7 @@
 
 use std::str::FromStr;
 
+use futures::stream::{self, StreamExt};
 use rusoto_core::HttpClient;
 use rusoto_rds::{
     DBSnapshot, DescribeDBSnapshotsMessage, ListTagsForResourceMessage, Rds, RdsClient,
@@ -71,7 +72,7 @@ pub(crate) struct Opt {
     tags: Vec<Tag>,
 }
 
-pub(crate) fn find_db_snapshot(
+pub(crate) async fn find_db_snapshot(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -92,7 +93,7 @@ pub(crate) fn find_db_snapshot(
                 marker: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.marker;
         if let Some(new_db_snapshots) = output.db_snapshots.as_mut() {
             db_snapshots.append(new_db_snapshots)
@@ -101,30 +102,31 @@ pub(crate) fn find_db_snapshot(
         continuation_token.is_some()
     } {}
 
-    let enriched_db_snapshots: Vec<(DBSnapshot, Vec<rusoto_rds::Tag>)> = db_snapshots
-        .into_iter()
-        .filter_map(|db_snapshot| {
-            if let Some(db_snapshot_arn) = &db_snapshot.db_snapshot_arn {
-                let tags = rds
-                    .list_tags_for_resource(ListTagsForResourceMessage {
-                        resource_name: db_snapshot_arn.clone(),
-                        ..Default::default()
-                    })
-                    .sync();
-                if let Ok(tags) = tags {
-                    if let Some(tag_list) = tags.tag_list {
-                        Some((db_snapshot, tag_list))
+    let enriched_db_snapshots: Vec<(DBSnapshot, Vec<rusoto_rds::Tag>)> =
+        stream::iter(db_snapshots.into_iter())
+            .filter_map(|db_snapshot| async {
+                if let Some(db_snapshot_arn) = &db_snapshot.db_snapshot_arn {
+                    let tags = rds
+                        .list_tags_for_resource(ListTagsForResourceMessage {
+                            resource_name: db_snapshot_arn.clone(),
+                            ..Default::default()
+                        })
+                        .await;
+                    if let Ok(tags) = tags {
+                        if let Some(tag_list) = tags.tag_list {
+                            Some((db_snapshot, tag_list))
+                        } else {
+                            None
+                        }
                     } else {
                         None
                     }
                 } else {
                     None
                 }
-            } else {
-                None
-            }
-        })
-        .collect::<Vec<_>>();
+            })
+            .collect::<Vec<_>>()
+            .await;
 
     let db_snapshot_arn = enriched_db_snapshots
         .into_iter()

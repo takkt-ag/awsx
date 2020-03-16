@@ -40,25 +40,25 @@ impl Stack {
     /// Get the value of a single parameter of the stack.
     ///
     /// *Note:* internally this retrieves all parameters defined on the stack.
-    pub fn get_parameter(
+    pub async fn get_parameter(
         &self,
         cfn: &dyn CloudFormation,
         key: &str,
     ) -> Result<Option<Parameter>, Error> {
-        Ok(self.get_parameters(cfn)?.get(key).cloned())
+        Ok(self.get_parameters(cfn).await?.get(key).cloned())
     }
 
     /// Get the current parameters for the stack.
     ///
     /// This retrieves all parameters defined on the AWS CloudFormation stack, including their
     /// current values.
-    pub fn get_parameters(&self, cfn: &dyn CloudFormation) -> Result<Parameters, Error> {
+    pub async fn get_parameters(&self, cfn: &dyn CloudFormation) -> Result<Parameters, Error> {
         let response = cfn
             .describe_stacks(rusoto_cloudformation::DescribeStacksInput {
                 stack_name: Some(self.name.clone()),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         let stack = response
             .stacks
             .and_then(|stacks| stacks.get(0).cloned())
@@ -81,12 +81,13 @@ impl Stack {
     ///
     /// This retrieves all parameters defined on the AWS CloudFormation stack and turns them into
     /// the `Parameter::PreviousValue` variant, i.e. dropping all values.
-    pub fn get_parameters_as_previous_value(
+    pub async fn get_parameters_as_previous_value(
         &self,
         cfn: &dyn CloudFormation,
     ) -> Result<Parameters, Error> {
         Ok(self
-            .get_parameters(cfn)?
+            .get_parameters(cfn)
+            .await?
             .0
             .into_iter()
             .map(|(_, parameter)| parameter.into_previous_value())
@@ -106,7 +107,7 @@ impl Stack {
     ///
     ///   Waiting for the change set should be performed externally through the AWS CLI, using the
     ///   `aws cloudformation wait change-set-create-complete` command.
-    pub fn create_change_set(
+    pub async fn create_change_set(
         &self,
         cfn: &dyn CloudFormation,
         name: &str,
@@ -127,7 +128,7 @@ impl Stack {
             parameters: Some(parameters.into()),
             ..Default::default()
         })
-        .sync()
+        .await
         .map_err(Into::into)
     }
 }

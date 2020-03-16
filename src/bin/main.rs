@@ -272,47 +272,52 @@ impl FromStr for OutputFormat {
     }
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let opt = Opt::from_args();
     let provider = AwsxProvider::new(
         opt.assume_role_arn.clone(),
         opt.aws_region.clone().unwrap_or_default(),
         opt.aws_access_key_id.clone(),
         opt.aws_secret_access_key.clone(),
-    );
+    )
+    .expect("failed to create awsx credential provider");
 
     use Command::*;
     let output: Result<AwsxOutput, Error> = match opt.command {
-        CreateStack(ref command_opt) => create_stack::create_stack(command_opt, &opt, provider),
+        CreateStack(ref command_opt) => {
+            create_stack::create_stack(command_opt, &opt, provider).await
+        }
         FindAmisInuse(ref command_opt) => {
-            find_amis_inuse::find_amis_inuse(command_opt, &opt, provider)
+            find_amis_inuse::find_amis_inuse(command_opt, &opt, provider).await
         }
         FindAutoScalingGroup(ref command_opt) => {
-            find_auto_scaling_group::find_auto_scaling_group(command_opt, &opt, provider)
+            find_auto_scaling_group::find_auto_scaling_group(command_opt, &opt, provider).await
         }
         FindCloudfrontDistribution(ref command_opt) => {
             find_cloudfront_distribution::find_cloudfront_distribution(command_opt, &opt, provider)
+                .await
         }
         FindDBSnapshot(ref command_opt) => {
-            find_db_snapshot::find_db_snapshot(command_opt, &opt, provider)
+            find_db_snapshot::find_db_snapshot(command_opt, &opt, provider).await
         }
         FindTargetGroup(ref command_opt) => {
-            find_target_group::find_target_group(command_opt, &opt, provider)
+            find_target_group::find_target_group(command_opt, &opt, provider).await
         }
         IdentifyNewParameters(ref command_opt) => {
-            identify_new_parameters::identify_new_parameters(command_opt, &opt, provider)
+            identify_new_parameters::identify_new_parameters(command_opt, &opt, provider).await
         }
         OverrideParameters(ref command_opt) => {
-            override_parameters::override_parameters(command_opt, &opt, provider)
+            override_parameters::override_parameters(command_opt, &opt, provider).await
         }
         UpdateDeployedTemplate(ref command_opt) => {
-            update_deployed_template::update_stack(command_opt, &opt, provider)
+            update_deployed_template::update_stack(command_opt, &opt, provider).await
         }
         VerifyChangesCompatible(ref command_opt) => {
-            verify_changes_compatible::verify_changes_compatible(command_opt, &opt, provider)
+            verify_changes_compatible::verify_changes_compatible(command_opt, &opt, provider).await
         }
         VerifyParameterFile(ref command_opt) => {
-            verify_parameter_file::verify_parameter_file(command_opt, &opt, provider)
+            verify_parameter_file::verify_parameter_file(command_opt, &opt, provider).await
         }
     };
     match output {

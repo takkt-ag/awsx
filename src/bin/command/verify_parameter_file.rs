@@ -37,7 +37,7 @@ pub(crate) struct Opt {
     parameter_path: String,
 }
 
-pub(crate) fn verify_parameter_file(
+pub(crate) async fn verify_parameter_file(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -56,7 +56,7 @@ pub(crate) fn verify_parameter_file(
 
     // Retrieve stack parameters
     let stack = Stack::new(&opt.stack_name);
-    let stack_parameters = stack.get_parameters(&cfn)?;
+    let stack_parameters = stack.get_parameters(&cfn).await?;
 
     // Compare
     let differences = stack_parameters.loose_difference(&file_parameters);

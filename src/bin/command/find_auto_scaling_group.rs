@@ -61,7 +61,7 @@ pub(crate) struct Opt {
     tags: Vec<Tag>,
 }
 
-pub(crate) fn find_auto_scaling_group(
+pub(crate) async fn find_auto_scaling_group(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -80,7 +80,7 @@ pub(crate) fn find_auto_scaling_group(
                 next_token: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.next_token;
         auto_scaling_groups.append(&mut output.auto_scaling_groups);
 

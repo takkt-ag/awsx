@@ -16,13 +16,10 @@
 
 //! A Rusoto/AWS credential provider, with integrated support for role assumption.
 
-use futures::{
-    future::{err, ok, Either},
-    Future, Poll,
-};
-use rusoto_core::{
-    credential::{AwsCredentials, ChainProvider, ProvideAwsCredentials},
-    CredentialsError, HttpClient, Region,
+use async_trait::async_trait;
+use rusoto_core::{HttpClient, Region};
+use rusoto_credential::{
+    AwsCredentials, CredentialsError, DefaultCredentialsProvider, ProvideAwsCredentials,
 };
 use rusoto_sts::{StsAssumeRoleSessionCredentialsProvider, StsClient};
 use uuid::Uuid;
@@ -35,7 +32,7 @@ use uuid::Uuid;
 ///
 /// In addition, if a role was supplied, the provider will assume the role with the initially
 /// discovered credentials, returning the new STS credentials instead.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct AwsxProvider {
     assume_role_arn: Option<String>,
     aws_region: Region,
@@ -49,77 +46,57 @@ impl AwsxProvider {
         aws_region: Region,
         aws_access_key_id: Option<String>,
         aws_secret_access_key: Option<String>,
-    ) -> AwsxProvider {
-        AwsxProvider {
+    ) -> Result<AwsxProvider, CredentialsError> {
+        Ok(AwsxProvider {
             assume_role_arn,
             aws_region,
-            inner: AwsxInnerProvider::new(aws_access_key_id, aws_secret_access_key),
-        }
+            inner: AwsxInnerProvider::new(aws_access_key_id, aws_secret_access_key)?,
+        })
     }
 }
 
+#[async_trait]
 impl ProvideAwsCredentials for AwsxProvider {
-    type Future = AwsxProviderFuture;
-
-    fn credentials(&self) -> Self::Future {
-        let future = if let Some(assume_role_arn) = &self.assume_role_arn {
+    async fn credentials(&self) -> Result<AwsCredentials, CredentialsError> {
+        return if let Some(assume_role_arn) = &self.assume_role_arn {
             let sts_client = StsClient::new_with(
                 HttpClient::new().expect("Failed to create HTTP client"),
                 self.inner.clone(),
                 self.aws_region.clone(),
             );
-            Either::A(
-                StsAssumeRoleSessionCredentialsProvider::new(
-                    sts_client,
-                    assume_role_arn.to_owned(),
-                    format!(
-                        "{name}=={version}@{request_id}",
-                        name = env!("CARGO_PKG_NAME"),
-                        version = env!("CARGO_PKG_VERSION"),
-                        request_id = Uuid::new_v4(),
-                    ),
-                    None,
-                    None,
-                    None,
-                    None,
-                )
-                .credentials(),
+            StsAssumeRoleSessionCredentialsProvider::new(
+                sts_client,
+                assume_role_arn.to_owned(),
+                format!(
+                    "{name}=={version}@{request_id}",
+                    name = env!("CARGO_PKG_NAME"),
+                    version = env!("CARGO_PKG_VERSION"),
+                    request_id = Uuid::new_v4(),
+                ),
+                None,
+                None,
+                None,
+                None,
             )
+            .credentials()
+            .await
         } else {
-            Either::B(self.inner.credentials())
+            self.inner.credentials().await
         };
-
-        AwsxProviderFuture {
-            inner: Box::new(future),
-        }
     }
 }
 
-/// The inner future used to drive the credential request to completion.
-pub struct AwsxProviderFuture {
-    inner: Box<dyn Future<Item = AwsCredentials, Error = CredentialsError> + Send>,
-}
-
-impl Future for AwsxProviderFuture {
-    type Item = AwsCredentials;
-    type Error = CredentialsError;
-
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.inner.poll()
-    }
-}
-
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 struct AwsxInnerProvider {
     credentials: Option<AwsCredentials>,
-    chain_provider: ChainProvider,
+    default_credentials_provider: DefaultCredentialsProvider,
 }
 
 impl AwsxInnerProvider {
     fn new(
         aws_access_key_id: Option<String>,
         aws_secret_access_key: Option<String>,
-    ) -> AwsxInnerProvider {
+    ) -> Result<AwsxInnerProvider, CredentialsError> {
         let credentials = match (aws_access_key_id, aws_secret_access_key) {
             (Some(access_key_id), Some(secret_access_key)) => Some(AwsCredentials::new(
                 access_key_id,
@@ -129,25 +106,24 @@ impl AwsxInnerProvider {
             )),
             _ => None,
         };
-        AwsxInnerProvider {
+        Ok(AwsxInnerProvider {
             credentials,
-            chain_provider: ChainProvider::new(),
-        }
+            default_credentials_provider: DefaultCredentialsProvider::new()?,
+        })
     }
 }
 
+#[async_trait]
 impl ProvideAwsCredentials for AwsxInnerProvider {
-    type Future = AwsxProviderFuture;
-
-    fn credentials(&self) -> Self::Future {
-        let chain_provider = self.chain_provider.clone();
-        let future = match self.credentials {
-            Some(ref credentials) => ok(credentials.clone()),
-            None => err(CredentialsError::new("")),
-        }
-        .or_else({ move |_| chain_provider.credentials() });
-        AwsxProviderFuture {
-            inner: Box::new(future),
+    async fn credentials(&self) -> Result<AwsCredentials, CredentialsError> {
+        match self.credentials {
+            Some(ref credentials) => Ok(credentials.clone()),
+            _ => {
+                DefaultCredentialsProvider::new()
+                    .unwrap()
+                    .credentials()
+                    .await
+            }
         }
     }
 }

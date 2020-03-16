@@ -87,7 +87,7 @@ impl Template {
     /// This function will validate that the parameter list matches what the template expects, and
     /// will return an error if this isn't the case. If the stack doesn't exist but should be
     /// created, set `create_stack` to `true`.
-    pub fn create_change_set(
+    pub async fn create_change_set(
         &self,
         cfn: &dyn CloudFormation,
         name: &str,
@@ -119,7 +119,7 @@ impl Template {
             // Upload the template if the S3 configuration was provided, use the template as-is
             // otherwise.
             if let Some((s3_uploader, bucket_name)) = s3_upload {
-                let url = self.upload_to_s3(s3_uploader, bucket_name)?;
+                let url = self.upload_to_s3(s3_uploader, bucket_name).await?;
                 create_change_set_input.template_url = Some(url);
             } else {
                 create_change_set_input.template_body = Some(
@@ -129,7 +129,7 @@ impl Template {
             }
 
             cfn.create_change_set(create_change_set_input)
-                .sync()
+                .await
                 .map_err(Into::into)
         } else {
             Err(Error::InvalidParameters(
@@ -165,9 +165,11 @@ impl Template {
     ///
     /// This behaviour is identical to the AWS CLI, which means the deduplication works across both
     /// tools.
-    pub fn upload_to_s3(&self, s3: &S3Uploader, bucket_name: &str) -> Result<String, Error> {
+    pub async fn upload_to_s3(&self, s3: &S3Uploader, bucket_name: &str) -> Result<String, Error> {
         let key = format!("{}.template", self.checksum_md5hex()?);
-        let url = s3.upload(bucket_name, &key, self.contents.clone().into())?;
+        let url = s3
+            .upload(bucket_name, &key, self.contents.clone().into())
+            .await?;
         Ok(url)
     }
 

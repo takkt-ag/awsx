@@ -15,6 +15,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use awsx::error::Error;
+use futures::stream::{FuturesOrdered, TryStreamExt};
 use rusoto_cloudfront::{
     CloudFront, CloudFrontClient, ListDistributionsRequest, ListTagsForResourceRequest,
 };
@@ -63,7 +64,7 @@ pub(crate) struct Opt {
     tags: Vec<Tag>,
 }
 
-pub(crate) fn find_cloudfront_distribution(
+pub(crate) async fn find_cloudfront_distribution(
     opt: &Opt,
     _global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -84,7 +85,7 @@ pub(crate) fn find_cloudfront_distribution(
                 marker: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         if let Some(distribution_list) = output.distribution_list {
             continuation_token = distribution_list.next_marker;
             if let Some(mut items) = distribution_list.items {
@@ -99,15 +100,17 @@ pub(crate) fn find_cloudfront_distribution(
 
     let cloudfront_distribution = cloudfront_distributions
         .into_iter()
-        .map(|distribution| {
+        .map(|distribution| async {
             cloudfront
                 .list_tags_for_resource(ListTagsForResourceRequest {
                     resource: distribution.arn.clone(),
                 })
-                .sync()
+                .await
                 .map(|tags| (distribution, tags.tags.items))
         })
-        .collect::<Result<Vec<_>, _>>()?
+        .collect::<FuturesOrdered<_>>()
+        .try_collect::<Vec<_>>()
+        .await?
         .into_iter()
         .filter_map(|(distribution, tags)| {
             if let Some(tags) = tags {

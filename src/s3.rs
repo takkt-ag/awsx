@@ -42,7 +42,7 @@ impl S3Uploader {
     /// Upload a given body to S3.
     ///
     /// The return value is the path-like URL to the S3 object.
-    pub fn upload(
+    pub async fn upload(
         &self,
         bucket_name: &str,
         key: &str,
@@ -56,7 +56,7 @@ impl S3Uploader {
                 server_side_encryption: Some("AES256".to_owned()),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         Ok(format!(
             "https://s3{region}.amazonaws.com/{bucket_name}/{key}",
             region = if self.region != Region::UsEast1 {

@@ -15,6 +15,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use awsx::error::Error;
+use futures::stream::{FuturesOrdered, TryStreamExt};
 use rusoto_core::HttpClient;
 use rusoto_elbv2::{DescribeTagsInput, DescribeTargetGroupsInput, Elb, ElbClient, TagDescription};
 use serde_json::json;
@@ -65,7 +66,7 @@ pub(crate) struct Opt {
     tags: Vec<Tag>,
 }
 
-pub(crate) fn find_target_group(
+pub(crate) async fn find_target_group(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -85,7 +86,7 @@ pub(crate) fn find_target_group(
                 marker: continuation_token.clone(),
                 ..Default::default()
             })
-            .sync()?;
+            .await?;
         continuation_token = output.next_marker;
         if let Some(new_target_groups) = output.target_groups.as_mut() {
             target_groups.append(new_target_groups)
@@ -99,13 +100,16 @@ pub(crate) fn find_target_group(
         .filter_map(|target_group| target_group.target_group_arn)
         .collect::<Vec<_>>()
         .chunks(20)
-        .map(|arns| {
+        .map(|arns| arns.to_vec())
+        .map(|arns| async {
             elb.describe_tags(DescribeTagsInput {
-                resource_arns: arns.to_vec(),
+                resource_arns: arns,
             })
-            .sync()
+            .await
         })
-        .collect::<Result<Vec<_>, _>>()?
+        .collect::<FuturesOrdered<_>>()
+        .try_collect::<Vec<_>>()
+        .await?
         .into_iter()
         .fold(Vec::new(), |mut acc, mut tag_descriptions| {
             if let Some(tag_descriptions) = tag_descriptions.tag_descriptions.as_mut() {

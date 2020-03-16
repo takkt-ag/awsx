@@ -4,7 +4,7 @@ This page lists the licenses of the projects used in awsx.
 
 ## Overview of licenses
 
-- [Apache License 2.0](#Apache-2.0) (156)
+- [Apache License 2.0](#Apache-2.0) (155)
 - [MIT License](#MIT) (50)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (5)
 - [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (1)
@@ -2591,7 +2591,6 @@ limitations under the License.
 - [either 1.5.3]( https://github.com/bluss/either )
 - [failure 0.1.7]( https://github.com/rust-lang-nursery/failure )
 - [fnv 1.0.6]( https://github.com/servo/rust-fnv )
-- [futures 0.1.29]( https://github.com/rust-lang-nursery/futures-rs )
 - [git2 0.13.0]( https://github.com/rust-lang/git2-rs )
 - [heck 0.3.1]( https://github.com/withoutboats/heck )
 - [hermit-abi 0.1.8]( https://github.com/hermitcore/rusty-hermit )

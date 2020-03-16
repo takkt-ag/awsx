@@ -39,7 +39,7 @@ pub(crate) struct Opt {
     git_path: Option<String>,
 }
 
-pub(crate) fn verify_changes_compatible(
+pub(crate) async fn verify_changes_compatible(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -53,8 +53,9 @@ pub(crate) fn verify_changes_compatible(
 
     // Retrieve previous deployment metadata
     let stack = Stack::new(&opt.stack_name);
-    let previous_metadata_parameter =
-        stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?;
+    let previous_metadata_parameter = stack
+        .get_parameter(&cfn, &global_opt.deployment_metadata_parameter)
+        .await?;
     let previous_metadata = previous_metadata_parameter.and_then(|previous_metadata_parameter| {
         DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
     });

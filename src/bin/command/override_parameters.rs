@@ -91,7 +91,7 @@ pub(crate) struct Opt {
     includes: Vec<String>,
 }
 
-pub(crate) fn override_parameters(
+pub(crate) async fn override_parameters(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -105,7 +105,7 @@ pub(crate) fn override_parameters(
     // Retrieve the parameters currently set on the stack. This will return a list of parameters
     // where the previous value will be used in a change set.
     let stack = Stack::new(&opt.stack_name);
-    let mut stack_parameters = stack.get_parameters_as_previous_value(&cfn)?;
+    let mut stack_parameters = stack.get_parameters_as_previous_value(&cfn).await?;
 
     // We now update the retrieved parameters, overriding them as specified on the command-line.
     if let Some(parameter_path) = &opt.parameter_path {
@@ -140,8 +140,9 @@ pub(crate) fn override_parameters(
     } else {
         // Unless otherwise requested, we will update the deployment-metadata parameter
         if !global_opt.dont_update_deployment_metadata {
-            if let Some(previous_metadata_parameter) =
-                stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?
+            if let Some(previous_metadata_parameter) = stack
+                .get_parameter(&cfn, &global_opt.deployment_metadata_parameter)
+                .await?
             {
                 let metadata =
                     generate_deployment_metadata(Some(previous_metadata_parameter), None)?;
@@ -162,12 +163,14 @@ pub(crate) fn override_parameters(
             }
         }
 
-        stack.create_change_set(
-            &cfn,
-            &opt.change_set_name,
-            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
-            &stack_parameters,
-        )?;
+        stack
+            .create_change_set(
+                &cfn,
+                &opt.change_set_name,
+                opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+                &stack_parameters,
+            )
+            .await?;
 
         Ok(AwsxOutput {
             human_readable: format!(

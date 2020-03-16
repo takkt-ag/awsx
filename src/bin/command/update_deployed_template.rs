@@ -107,7 +107,7 @@ pub(crate) struct Opt {
     force_create: bool,
 }
 
-pub(crate) fn update_stack(
+pub(crate) async fn update_stack(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -132,7 +132,7 @@ pub(crate) fn update_stack(
     // Retrieve the parameters defined on the template, as well as the current parameters defined on
     // the stack.
     let mut template_parameters = template.get_parameters_as_previous_value();
-    let stack_parameters = stack.get_parameters_as_previous_value(&cfn)?;
+    let stack_parameters = stack.get_parameters_as_previous_value(&cfn).await?;
 
     // Identify newly added parameters, which are parameters defined on the template, but not on the
     // stack. (Parameters that are defined on the stack but not on the template, so the other way
@@ -185,8 +185,9 @@ pub(crate) fn update_stack(
     // Unless otherwise requested, we will update the deployment-metadata parameter
     if !global_opt.dont_update_deployment_metadata {
         if template_parameters.contains_key(&global_opt.deployment_metadata_parameter) {
-            let previous_metadata_parameter =
-                stack.get_parameter(&cfn, &global_opt.deployment_metadata_parameter)?;
+            let previous_metadata_parameter = stack
+                .get_parameter(&cfn, &global_opt.deployment_metadata_parameter)
+                .await?;
             let previous_metadata =
                 previous_metadata_parameter
                     .clone()
@@ -238,15 +239,17 @@ pub(crate) fn update_stack(
     }
 
     // Create the change set for the new template, including the new parameters.
-    template.create_change_set(
-        &cfn,
-        &opt.change_set_name,
-        &opt.stack_name,
-        &template_parameters,
-        opt.role_arn.as_ref().map(|role_arn| &**role_arn),
-        s3_upload,
-        false,
-    )?;
+    template
+        .create_change_set(
+            &cfn,
+            &opt.change_set_name,
+            &opt.stack_name,
+            &template_parameters,
+            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+            s3_upload,
+            false,
+        )
+        .await?;
 
     Ok(AwsxOutput {
         human_readable: format!(

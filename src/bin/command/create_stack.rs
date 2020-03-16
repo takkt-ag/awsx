@@ -74,7 +74,7 @@ pub(crate) struct Opt {
     force_create: bool,
 }
 
-pub(crate) fn create_stack(
+pub(crate) async fn create_stack(
     opt: &Opt,
     global_opt: &GlobalOpt,
     provider: AwsxProvider,
@@ -152,15 +152,17 @@ pub(crate) fn create_stack(
     }
 
     // Create the change set for the new template, including the new parameters.
-    template.create_change_set(
-        &cfn,
-        &opt.change_set_name,
-        &opt.stack_name,
-        &template_parameters,
-        opt.role_arn.as_ref().map(|role_arn| &**role_arn),
-        s3_upload,
-        true,
-    )?;
+    template
+        .create_change_set(
+            &cfn,
+            &opt.change_set_name,
+            &opt.stack_name,
+            &template_parameters,
+            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+            s3_upload,
+            true,
+        )
+        .await?;
 
     Ok(AwsxOutput {
         human_readable: format!(
