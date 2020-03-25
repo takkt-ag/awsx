@@ -79,7 +79,7 @@ impl Template {
         let mut contents_md5 = Md5::new();
         let mut bufreader = BufReader::new(self.contents.as_slice());
         io::copy(&mut bufreader, &mut contents_md5)?;
-        Ok(format!("{:x}", contents_md5.result()))
+        Ok(format!("{:x}", contents_md5.finalize()))
     }
 
     /// Create the change set input for the loaded template and a given list of parameters.

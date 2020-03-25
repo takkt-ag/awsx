@@ -4,8 +4,8 @@ This page lists the licenses of the projects used in awsx.
 
 ## Overview of licenses
 
-- [Apache License 2.0](#Apache-2.0) (155)
-- [MIT License](#MIT) (50)
+- [Apache License 2.0](#Apache-2.0) (157)
+- [MIT License](#MIT) (53)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (5)
 - [BSD 2-Clause &quot;Simplified&quot; License](#BSD-2-Clause) (1)
 - [Creative Commons Zero v1.0 Universal](#CC0-1.0) (1)
@@ -16,8 +16,9 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [standback 0.2.1]( https://github.com/jhpratt/standback )
-- [time 0.2.9]( https://github.com/time-rs/time )
+- [standback 0.2.9]( https://github.com/jhpratt/standback )
+- [time-macros-impl 0.1.1]( https://github.com/time-rs/time )
+- [time 0.2.16]( https://github.com/time-rs/time )
 
 <pre>
 
@@ -231,10 +232,9 @@ This page lists the licenses of the projects used in awsx.
 
 - [awsx 0.1.0]( https://crates.io/crates/awsx )
 - [encode_unicode 0.3.6]( https://github.com/tormol/encode_unicode )
-- [pin-project-internal 0.4.8]( https://github.com/taiki-e/pin-project )
-- [pin-project-lite 0.1.4]( https://github.com/taiki-e/pin-project-lite )
-- [pin-project 0.4.8]( https://github.com/taiki-e/pin-project )
-- [syn-mid 0.5.0]( https://github.com/taiki-e/syn-mid )
+- [pin-project-internal 0.4.23]( https://github.com/taiki-e/pin-project )
+- [pin-project-lite 0.1.7]( https://github.com/taiki-e/pin-project-lite )
+- [pin-project 0.4.23]( https://github.com/taiki-e/pin-project )
 
 <pre>
 
@@ -446,9 +446,9 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [ryu 1.0.3]( https://github.com/dtolnay/ryu )
-- [structopt-derive 0.4.4]( https://github.com/TeXitoi/structopt )
-- [structopt 0.3.11]( https://github.com/TeXitoi/structopt )
+- [ryu 1.0.5]( https://github.com/dtolnay/ryu )
+- [structopt-derive 0.4.9]( https://github.com/TeXitoi/structopt )
+- [structopt 0.3.16]( https://github.com/TeXitoi/structopt )
 
 <pre>
                                  Apache License
@@ -659,7 +659,7 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [winapi 0.3.8]( https://github.com/retep998/winapi-rs )
+- [winapi 0.3.9]( https://github.com/retep998/winapi-rs )
 
 <pre>
                                  Apache License
@@ -870,6 +870,7 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
+- [crc32fast 1.2.0]( https://github.com/srijs/rust-crc32fast )
 - [foreign-types-shared 0.1.1]( https://github.com/sfackler/foreign-types )
 - [foreign-types 0.3.2]( https://github.com/sfackler/foreign-types )
 - [hex 0.4.2]( https://github.com/KokaKiwi/rust-hex )
@@ -1085,15 +1086,15 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [futures-channel 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-core 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-executor 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-io 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-macro 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-sink 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-task 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures-util 0.3.4]( https://github.com/rust-lang/futures-rs )
-- [futures 0.3.4]( https://github.com/rust-lang/futures-rs )
+- [futures-channel 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-core 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-executor 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-io 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-macro 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-sink 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-task 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures-util 0.3.5]( https://github.com/rust-lang/futures-rs )
+- [futures 0.3.5]( https://github.com/rust-lang/futures-rs )
 
 <pre>
                               Apache License
@@ -1727,7 +1728,7 @@ limitations under the License.
 
 #### Used by
 
-- [http 0.2.0]( https://github.com/hyperium/http )
+- [http 0.2.1]( https://github.com/hyperium/http )
 
 <pre>
                               Apache License
@@ -1938,7 +1939,7 @@ limitations under the License.
 
 #### Used by
 
-- [pin-utils 0.1.0-alpha.4]( https://github.com/rust-lang-nursery/pin-utils )
+- [pin-utils 0.1.0]( https://github.com/rust-lang-nursery/pin-utils )
 
 <pre>
                               Apache License
@@ -2149,7 +2150,7 @@ limitations under the License.
 
 #### Used by
 
-- [ppv-lite86 0.2.6]( https://github.com/cryptocorrosion/cryptocorrosion )
+- [ppv-lite86 0.2.9]( https://github.com/cryptocorrosion/cryptocorrosion )
 
 <pre>
                               Apache License
@@ -2360,7 +2361,7 @@ limitations under the License.
 
 #### Used by
 
-- [proc-macro-error-attr 0.4.11]( https://gitlab.com/CreepySkeleton/proc-macro-error )
+- [proc-macro-error-attr 1.0.4]( https://gitlab.com/CreepySkeleton/proc-macro-error )
 
 <pre>
                               Apache License
@@ -2571,88 +2572,88 @@ limitations under the License.
 
 #### Used by
 
-- [arc-swap 0.4.4]( https://github.com/vorner/arc-swap )
+- [addr2line 0.13.0]( https://github.com/gimli-rs/addr2line )
+- [arc-swap 0.4.7]( https://github.com/vorner/arc-swap )
 - [arrayvec 0.5.1]( https://github.com/bluss/arrayvec )
-- [async-trait 0.1.24]( https://github.com/dtolnay/async-trait )
+- [async-trait 0.1.38]( https://github.com/dtolnay/async-trait )
 - [autocfg 1.0.0]( https://github.com/cuviper/autocfg )
-- [backtrace-sys 0.1.34]( https://github.com/alexcrichton/backtrace-rs )
-- [backtrace 0.3.45]( https://github.com/rust-lang/backtrace-rs )
+- [backtrace 0.3.50]( https://github.com/rust-lang/backtrace-rs )
 - [base64 0.11.0]( https://github.com/marshallpierce/rust-base64 )
-- [base64 0.12.0]( https://github.com/marshallpierce/rust-base64 )
+- [base64 0.12.3]( https://github.com/marshallpierce/rust-base64 )
 - [bitflags 1.2.1]( https://github.com/bitflags/bitflags )
-- [bstr 0.2.12]( https://github.com/BurntSushi/bstr )
-- [bumpalo 3.2.0]( https://github.com/fitzgen/bumpalo )
-- [cc 1.0.50]( https://github.com/alexcrichton/cc-rs )
+- [bstr 0.2.13]( https://github.com/BurntSushi/bstr )
+- [bumpalo 3.4.0]( https://github.com/fitzgen/bumpalo )
+- [cc 1.0.59]( https://github.com/alexcrichton/cc-rs )
 - [cfg-if 0.1.10]( https://github.com/alexcrichton/cfg-if )
 - [core-foundation-sys 0.7.0]( https://github.com/servo/core-foundation-rs )
 - [core-foundation 0.7.0]( https://github.com/servo/core-foundation-rs )
 - [crossbeam-utils 0.7.2]( https://github.com/crossbeam-rs/crossbeam )
-- [dtoa 0.4.5]( https://github.com/dtolnay/dtoa )
-- [either 1.5.3]( https://github.com/bluss/either )
-- [failure 0.1.7]( https://github.com/rust-lang-nursery/failure )
-- [fnv 1.0.6]( https://github.com/servo/rust-fnv )
-- [git2 0.13.0]( https://github.com/rust-lang/git2-rs )
+- [dtoa 0.4.6]( https://github.com/dtolnay/dtoa )
+- [either 1.6.0]( https://github.com/bluss/either )
+- [failure 0.1.8]( https://github.com/rust-lang-nursery/failure )
+- [fnv 1.0.7]( https://github.com/servo/rust-fnv )
+- [gimli 0.22.0]( https://github.com/gimli-rs/gimli )
+- [git2 0.13.9]( https://github.com/rust-lang/git2-rs )
+- [hashbrown 0.8.2]( https://github.com/rust-lang/hashbrown )
 - [heck 0.3.1]( https://github.com/withoutboats/heck )
-- [hermit-abi 0.1.8]( https://github.com/hermitcore/rusty-hermit )
+- [hermit-abi 0.1.15]( https://github.com/hermitcore/libhermit-rs )
 - [httparse 1.3.4]( https://github.com/seanmonstar/httparse )
-- [hyper-tls 0.4.1]( https://github.com/hyperium/hyper-tls )
+- [hyper-tls 0.4.3]( https://github.com/hyperium/hyper-tls )
 - [idna 0.2.0]( https://github.com/servo/rust-url/ )
-- [indexmap 1.3.2]( https://github.com/bluss/indexmap )
+- [indexmap 1.5.1]( https://github.com/bluss/indexmap )
 - [itertools 0.9.0]( https://github.com/bluss/rust-itertools )
-- [itoa 0.4.5]( https://github.com/dtolnay/itoa )
+- [itoa 0.4.6]( https://github.com/dtolnay/itoa )
 - [jobserver 0.1.21]( https://github.com/alexcrichton/jobserver-rs )
 - [lazy_static 1.4.0]( https://github.com/rust-lang-nursery/lazy-static.rs )
-- [libc 0.2.67]( https://github.com/rust-lang/libc )
-- [libgit2-sys 0.12.0+0.99.0]( https://github.com/rust-lang/git2-rs )
-- [libz-sys 1.0.25]( https://github.com/alexcrichton/libz-sys )
-- [log 0.4.8]( https://github.com/rust-lang/log )
-- [mio-named-pipes 0.1.6]( https://github.com/alexcrichton/mio-named-pipes )
-- [mio-uds 0.6.7]( https://github.com/alexcrichton/mio-uds )
+- [libc 0.2.76]( https://github.com/rust-lang/libc )
+- [libgit2-sys 0.12.11+1.0.1]( https://github.com/rust-lang/git2-rs )
+- [libz-sys 1.1.0]( https://github.com/rust-lang/libz-sys )
+- [mio-uds 0.6.8]( https://github.com/deprecrated/mio-uds )
 - [miow 0.2.1]( https://github.com/alexcrichton/miow )
-- [miow 0.3.3]( https://github.com/alexcrichton/miow )
-- [net2 0.2.33]( https://github.com/rust-lang-nursery/net2-rs )
-- [num-integer 0.1.42]( https://github.com/rust-num/num-integer )
-- [num-traits 0.2.11]( https://github.com/rust-num/num-traits )
+- [net2 0.2.34]( https://github.com/deprecrated/net2-rs )
+- [num-integer 0.1.43]( https://github.com/rust-num/num-integer )
+- [num-traits 0.2.12]( https://github.com/rust-num/num-traits )
+- [object 0.20.0]( https://github.com/gimli-rs/object )
+- [once_cell 1.4.1]( https://github.com/matklad/once_cell )
 - [percent-encoding 2.1.0]( https://github.com/servo/rust-url/ )
-- [pkg-config 0.3.17]( https://github.com/rust-lang/pkg-config-rs )
-- [proc-macro-hack 0.5.11]( https://github.com/dtolnay/proc-macro-hack )
-- [proc-macro2 1.0.9]( https://github.com/alexcrichton/proc-macro2 )
-- [quote 1.0.3]( https://github.com/dtolnay/quote )
-- [regex-syntax 0.6.17]( https://github.com/rust-lang/regex )
-- [regex 1.3.5]( https://github.com/rust-lang/regex )
+- [pkg-config 0.3.18]( https://github.com/rust-lang/pkg-config-rs )
+- [proc-macro-hack 0.5.18]( https://github.com/dtolnay/proc-macro-hack )
+- [proc-macro-nested 0.1.6]( https://github.com/dtolnay/proc-macro-hack )
+- [proc-macro2 1.0.19]( https://github.com/alexcrichton/proc-macro2 )
+- [quote 1.0.7]( https://github.com/dtolnay/quote )
+- [regex-syntax 0.6.18]( https://github.com/rust-lang/regex )
+- [regex 1.3.9]( https://github.com/rust-lang/regex )
 - [rust-argon2 0.7.0]( https://github.com/sru-systems/rust-argon2 )
 - [rustc-demangle 0.1.16]( https://github.com/alexcrichton/rustc-demangle )
 - [rustc_version 0.2.3]( https://github.com/Kimundi/rustc-version-rs )
-- [rustversion 1.0.2]( https://github.com/dtolnay/rustversion )
 - [semver-parser 0.7.0]( https://github.com/steveklabnik/semver-parser )
 - [semver 0.9.0]( https://github.com/steveklabnik/semver )
-- [serde 1.0.104]( https://github.com/serde-rs/serde )
-- [serde_derive 1.0.104]( https://github.com/serde-rs/serde )
-- [serde_json 1.0.48]( https://github.com/serde-rs/json )
-- [serde_yaml 0.8.11]( https://github.com/dtolnay/serde-yaml )
-- [signal-hook-registry 1.2.0]( https://github.com/vorner/signal-hook )
-- [smallvec 1.2.0]( https://github.com/servo/rust-smallvec )
-- [socket2 0.3.11]( https://github.com/alexcrichton/socket2-rs )
-- [syn 1.0.16]( https://github.com/dtolnay/syn )
+- [serde 1.0.115]( https://github.com/serde-rs/serde )
+- [serde_derive 1.0.115]( https://github.com/serde-rs/serde )
+- [serde_json 1.0.57]( https://github.com/serde-rs/json )
+- [serde_yaml 0.8.13]( https://github.com/dtolnay/serde-yaml )
+- [signal-hook-registry 1.2.1]( https://github.com/vorner/signal-hook )
+- [socket2 0.3.12]( https://github.com/alexcrichton/socket2-rs )
+- [syn 1.0.38]( https://github.com/dtolnay/syn )
 - [tempfile 3.1.0]( https://github.com/Stebalien/tempfile )
 - [term 0.5.2]( https://github.com/Stebalien/term )
 - [thread_local 1.0.1]( https://github.com/Amanieu/thread_local-rs )
-- [time 0.1.42]( https://github.com/rust-lang/time )
+- [time 0.1.43]( https://github.com/time-rs/time )
 - [unicode-bidi 0.3.4]( https://github.com/servo/unicode-bidi )
-- [unicode-normalization 0.1.12]( https://github.com/unicode-rs/unicode-normalization )
+- [unicode-normalization 0.1.13]( https://github.com/unicode-rs/unicode-normalization )
 - [unicode-segmentation 1.6.0]( https://github.com/unicode-rs/unicode-segmentation )
-- [unicode-width 0.1.7]( https://github.com/unicode-rs/unicode-width )
-- [unicode-xid 0.2.0]( https://github.com/unicode-rs/unicode-xid )
+- [unicode-width 0.1.8]( https://github.com/unicode-rs/unicode-width )
+- [unicode-xid 0.2.1]( https://github.com/unicode-rs/unicode-xid )
 - [url 2.1.1]( https://github.com/servo/rust-url )
 - [uuid 0.8.1]( https://github.com/uuid-rs/uuid )
-- [version_check 0.9.1]( https://github.com/SergioBenitez/version_check )
+- [version_check 0.9.2]( https://github.com/SergioBenitez/version_check )
 - [wasi 0.9.0+wasi-snapshot-preview1]( https://github.com/bytecodealliance/wasi )
-- [wasm-bindgen-backend 0.2.59]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/backend )
-- [wasm-bindgen-macro-support 0.2.59]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro-support )
-- [wasm-bindgen-macro 0.2.59]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro )
-- [wasm-bindgen-shared 0.2.59]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/shared )
-- [wasm-bindgen 0.2.59]( https://github.com/rustwasm/wasm-bindgen )
-- [yaml-rust 0.4.3]( https://github.com/chyh1990/yaml-rust )
+- [wasm-bindgen-backend 0.2.67]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/backend )
+- [wasm-bindgen-macro-support 0.2.67]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro-support )
+- [wasm-bindgen-macro 0.2.67]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/macro )
+- [wasm-bindgen-shared 0.2.67]( https://github.com/rustwasm/wasm-bindgen/tree/master/crates/shared )
+- [wasm-bindgen 0.2.67]( https://github.com/rustwasm/wasm-bindgen )
+- [yaml-rust 0.4.4]( https://github.com/chyh1990/yaml-rust )
 
 <pre>
                               Apache License
@@ -2863,7 +2864,8 @@ limitations under the License.
 
 #### Used by
 
-- [linked-hash-map 0.5.2]( https://github.com/contain-rs/linked-hash-map )
+- [linked-hash-map 0.5.3]( https://github.com/contain-rs/linked-hash-map )
+- [vec_map 0.8.2]( https://github.com/contain-rs/vec-map )
 
 <pre>
                               Apache License
@@ -3074,16 +3076,14 @@ limitations under the License.
 
 #### Used by
 
-- [block-buffer 0.7.3]( https://github.com/RustCrypto/utils )
-- [block-padding 0.1.5]( https://github.com/RustCrypto/utils )
-- [byte-tools 0.3.1]( https://github.com/RustCrypto/utils )
-- [crypto-mac 0.7.0]( https://github.com/RustCrypto/traits )
-- [digest 0.8.1]( https://github.com/RustCrypto/traits )
-- [fake-simd 0.1.2]( https://github.com/RustCrypto/utils )
-- [hmac 0.7.1]( https://github.com/RustCrypto/MACs )
-- [md-5 0.8.0]( https://github.com/RustCrypto/hashes )
-- [opaque-debug 0.2.3]( https://github.com/RustCrypto/utils )
-- [sha2 0.8.1]( https://github.com/RustCrypto/hashes )
+- [block-buffer 0.9.0]( https://github.com/RustCrypto/utils )
+- [cpuid-bool 0.1.2]( https://github.com/RustCrypto/utils )
+- [crypto-mac 0.8.0]( https://github.com/RustCrypto/traits )
+- [digest 0.9.0]( https://github.com/RustCrypto/traits )
+- [hmac 0.8.1]( https://github.com/RustCrypto/MACs )
+- [md-5 0.9.1]( https://github.com/RustCrypto/hashes )
+- [opaque-debug 0.3.0]( https://github.com/RustCrypto/utils )
+- [sha2 0.9.1]( https://github.com/RustCrypto/hashes )
 
 <pre>
                               Apache License
@@ -3509,7 +3509,218 @@ limitations under the License.
 
 #### Used by
 
-- [proc-macro-error 0.4.11]( https://gitlab.com/CreepySkeleton/proc-macro-error )
+- [adler 0.2.3]( https://github.com/jonas-schievink/adler.git )
+
+<pre>
+                              Apache License
+                        Version 2.0, January 2004
+                     https://www.apache.org/licenses/LICENSE-2.0
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+   &quot;License&quot; shall mean the terms and conditions for use, reproduction,
+   and distribution as defined by Sections 1 through 9 of this document.
+
+   &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
+   the copyright owner that is granting the License.
+
+   &quot;Legal Entity&quot; shall mean the union of the acting entity and all
+   other entities that control, are controlled by, or are under common
+   control with that entity. For the purposes of this definition,
+   &quot;control&quot; means (i) the power, direct or indirect, to cause the
+   direction or management of such entity, whether by contract or
+   otherwise, or (ii) ownership of fifty percent (50%) or more of the
+   outstanding shares, or (iii) beneficial ownership of such entity.
+
+   &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
+   exercising permissions granted by this License.
+
+   &quot;Source&quot; form shall mean the preferred form for making modifications,
+   including but not limited to software source code, documentation
+   source, and configuration files.
+
+   &quot;Object&quot; form shall mean any form resulting from mechanical
+   transformation or translation of a Source form, including but
+   not limited to compiled object code, generated documentation,
+   and conversions to other media types.
+
+   &quot;Work&quot; shall mean the work of authorship, whether in Source or
+   Object form, made available under the License, as indicated by a
+   copyright notice that is included in or attached to the work
+   (an example is provided in the Appendix below).
+
+   &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
+   form, that is based on (or derived from) the Work and for which the
+   editorial revisions, annotations, elaborations, or other modifications
+   represent, as a whole, an original work of authorship. For the purposes
+   of this License, Derivative Works shall not include works that remain
+   separable from, or merely link (or bind by name) to the interfaces of,
+   the Work and Derivative Works thereof.
+
+   &quot;Contribution&quot; shall mean any work of authorship, including
+   the original version of the Work and any modifications or additions
+   to that Work or Derivative Works thereof, that is intentionally
+   submitted to Licensor for inclusion in the Work by the copyright owner
+   or by an individual or Legal Entity authorized to submit on behalf of
+   the copyright owner. For the purposes of this definition, &quot;submitted&quot;
+   means any form of electronic, verbal, or written communication sent
+   to the Licensor or its representatives, including but not limited to
+   communication on electronic mailing lists, source code control systems,
+   and issue tracking systems that are managed by, or on behalf of, the
+   Licensor for the purpose of discussing and improving the Work, but
+   excluding communication that is conspicuously marked or otherwise
+   designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
+
+   &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
+   on behalf of whom a Contribution has been received by Licensor and
+   subsequently incorporated within the Work.
+
+2. Grant of Copyright License. Subject to the terms and conditions of
+   this License, each Contributor hereby grants to You a perpetual,
+   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+   copyright license to reproduce, prepare Derivative Works of,
+   publicly display, publicly perform, sublicense, and distribute the
+   Work and such Derivative Works in Source or Object form.
+
+3. Grant of Patent License. Subject to the terms and conditions of
+   this License, each Contributor hereby grants to You a perpetual,
+   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+   (except as stated in this section) patent license to make, have made,
+   use, offer to sell, sell, import, and otherwise transfer the Work,
+   where such license applies only to those patent claims licensable
+   by such Contributor that are necessarily infringed by their
+   Contribution(s) alone or by combination of their Contribution(s)
+   with the Work to which such Contribution(s) was submitted. If You
+   institute patent litigation against any entity (including a
+   cross-claim or counterclaim in a lawsuit) alleging that the Work
+   or a Contribution incorporated within the Work constitutes direct
+   or contributory patent infringement, then any patent licenses
+   granted to You under this License for that Work shall terminate
+   as of the date such litigation is filed.
+
+4. Redistribution. You may reproduce and distribute copies of the
+   Work or Derivative Works thereof in any medium, with or without
+   modifications, and in Source or Object form, provided that You
+   meet the following conditions:
+
+   (a) You must give any other recipients of the Work or
+       Derivative Works a copy of this License; and
+
+   (b) You must cause any modified files to carry prominent notices
+       stating that You changed the files; and
+
+   (c) You must retain, in the Source form of any Derivative Works
+       that You distribute, all copyright, patent, trademark, and
+       attribution notices from the Source form of the Work,
+       excluding those notices that do not pertain to any part of
+       the Derivative Works; and
+
+   (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
+       distribution, then any Derivative Works that You distribute must
+       include a readable copy of the attribution notices contained
+       within such NOTICE file, excluding those notices that do not
+       pertain to any part of the Derivative Works, in at least one
+       of the following places: within a NOTICE text file distributed
+       as part of the Derivative Works; within the Source form or
+       documentation, if provided along with the Derivative Works; or,
+       within a display generated by the Derivative Works, if and
+       wherever such third-party notices normally appear. The contents
+       of the NOTICE file are for informational purposes only and
+       do not modify the License. You may add Your own attribution
+       notices within Derivative Works that You distribute, alongside
+       or as an addendum to the NOTICE text from the Work, provided
+       that such additional attribution notices cannot be construed
+       as modifying the License.
+
+   You may add Your own copyright statement to Your modifications and
+   may provide additional or different license terms and conditions
+   for use, reproduction, or distribution of Your modifications, or
+   for any such Derivative Works as a whole, provided Your use,
+   reproduction, and distribution of the Work otherwise complies with
+   the conditions stated in this License.
+
+5. Submission of Contributions. Unless You explicitly state otherwise,
+   any Contribution intentionally submitted for inclusion in the Work
+   by You to the Licensor shall be under the terms and conditions of
+   this License, without any additional terms or conditions.
+   Notwithstanding the above, nothing herein shall supersede or modify
+   the terms of any separate license agreement you may have executed
+   with Licensor regarding such Contributions.
+
+6. Trademarks. This License does not grant permission to use the trade
+   names, trademarks, service marks, or product names of the Licensor,
+   except as required for reasonable and customary use in describing the
+   origin of the Work and reproducing the content of the NOTICE file.
+
+7. Disclaimer of Warranty. Unless required by applicable law or
+   agreed to in writing, Licensor provides the Work (and each
+   Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+   implied, including, without limitation, any warranties or conditions
+   of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+   PARTICULAR PURPOSE. You are solely responsible for determining the
+   appropriateness of using or redistributing the Work and assume any
+   risks associated with Your exercise of permissions under this License.
+
+8. Limitation of Liability. In no event and under no legal theory,
+   whether in tort (including negligence), contract, or otherwise,
+   unless required by applicable law (such as deliberate and grossly
+   negligent acts) or agreed to in writing, shall any Contributor be
+   liable to You for damages, including any direct, indirect, special,
+   incidental, or consequential damages of any character arising as a
+   result of this License or out of the use or inability to use the
+   Work (including but not limited to damages for loss of goodwill,
+   work stoppage, computer failure or malfunction, or any and all
+   other commercial damages or losses), even if such Contributor
+   has been advised of the possibility of such damages.
+
+9. Accepting Warranty or Additional Liability. While redistributing
+   the Work or Derivative Works thereof, You may choose to offer,
+   and charge a fee for, acceptance of support, warranty, indemnity,
+   or other liability obligations and/or rights consistent with this
+   License. However, in accepting such obligations, You may act only
+   on Your own behalf and on Your sole responsibility, not on behalf
+   of any other Contributor, and only if You agree to indemnify,
+   defend, and hold each Contributor harmless for any liability
+   incurred by, or claims asserted against, such Contributor by reason
+   of your accepting any such warranty or additional liability.
+
+END OF TERMS AND CONDITIONS
+
+APPENDIX: How to apply the Apache License to your work.
+
+   To apply the Apache License to your work, attach the following
+   boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
+   replaced with your own identifying information. (Don&#x27;t include
+   the brackets!)  The text should be enclosed in the appropriate
+   comment syntax for the file format. We also recommend that a
+   file or class name and description of purpose be included on the
+   same &quot;printed page&quot; as the copyright notice for easier
+   identification within third-party archives.
+
+Copyright [yyyy] [name of copyright owner]
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+</pre>
+
+### <a name="Apache-2.0"></a>Apache License 2.0
+
+#### Used by
+
+- [proc-macro-error 1.0.4]( https://gitlab.com/CreepySkeleton/proc-macro-error )
 
 <pre>
                               Apache License
@@ -3700,7 +3911,7 @@ APPENDIX: How to apply the Apache License to your work.
    same &quot;printed page&quot; as the copyright notice for easier
    identification within third-party archives.
 
-Copyright 2019 CreepySkeleton &lt;creepy-skeleton@yandex.ru&gt;
+Copyright 2019-2020 CreepySkeleton &lt;creepy-skeleton@yandex.ru&gt;
 
 Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
@@ -3720,6 +3931,9 @@ limitations under the License.
 
 #### Used by
 
+- [log 0.4.11]( https://github.com/rust-lang/log )
+- [mio-named-pipes 0.1.7]( https://github.com/bbqsrc/mio-named-pipes )
+- [miow 0.3.5]( https://github.com/yoshuawuyts/miow )
 - [openssl-probe 0.1.2]( https://github.com/alexcrichton/openssl-probe )
 
 <pre>
@@ -3931,218 +4145,7 @@ limitations under the License.
 
 #### Used by
 
-- [vec_map 0.8.1]( https://github.com/contain-rs/vec-map )
-
-<pre>
-                              Apache License
-                        Version 2.0, January 2004
-                     http://www.apache.org/licenses/
-
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
-
-1. Definitions.
-
-   &quot;License&quot; shall mean the terms and conditions for use, reproduction,
-   and distribution as defined by Sections 1 through 9 of this document.
-
-   &quot;Licensor&quot; shall mean the copyright owner or entity authorized by
-   the copyright owner that is granting the License.
-
-   &quot;Legal Entity&quot; shall mean the union of the acting entity and all
-   other entities that control, are controlled by, or are under common
-   control with that entity. For the purposes of this definition,
-   &quot;control&quot; means (i) the power, direct or indirect, to cause the
-   direction or management of such entity, whether by contract or
-   otherwise, or (ii) ownership of fifty percent (50%) or more of the
-   outstanding shares, or (iii) beneficial ownership of such entity.
-
-   &quot;You&quot; (or &quot;Your&quot;) shall mean an individual or Legal Entity
-   exercising permissions granted by this License.
-
-   &quot;Source&quot; form shall mean the preferred form for making modifications,
-   including but not limited to software source code, documentation
-   source, and configuration files.
-
-   &quot;Object&quot; form shall mean any form resulting from mechanical
-   transformation or translation of a Source form, including but
-   not limited to compiled object code, generated documentation,
-   and conversions to other media types.
-
-   &quot;Work&quot; shall mean the work of authorship, whether in Source or
-   Object form, made available under the License, as indicated by a
-   copyright notice that is included in or attached to the work
-   (an example is provided in the Appendix below).
-
-   &quot;Derivative Works&quot; shall mean any work, whether in Source or Object
-   form, that is based on (or derived from) the Work and for which the
-   editorial revisions, annotations, elaborations, or other modifications
-   represent, as a whole, an original work of authorship. For the purposes
-   of this License, Derivative Works shall not include works that remain
-   separable from, or merely link (or bind by name) to the interfaces of,
-   the Work and Derivative Works thereof.
-
-   &quot;Contribution&quot; shall mean any work of authorship, including
-   the original version of the Work and any modifications or additions
-   to that Work or Derivative Works thereof, that is intentionally
-   submitted to Licensor for inclusion in the Work by the copyright owner
-   or by an individual or Legal Entity authorized to submit on behalf of
-   the copyright owner. For the purposes of this definition, &quot;submitted&quot;
-   means any form of electronic, verbal, or written communication sent
-   to the Licensor or its representatives, including but not limited to
-   communication on electronic mailing lists, source code control systems,
-   and issue tracking systems that are managed by, or on behalf of, the
-   Licensor for the purpose of discussing and improving the Work, but
-   excluding communication that is conspicuously marked or otherwise
-   designated in writing by the copyright owner as &quot;Not a Contribution.&quot;
-
-   &quot;Contributor&quot; shall mean Licensor and any individual or Legal Entity
-   on behalf of whom a Contribution has been received by Licensor and
-   subsequently incorporated within the Work.
-
-2. Grant of Copyright License. Subject to the terms and conditions of
-   this License, each Contributor hereby grants to You a perpetual,
-   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-   copyright license to reproduce, prepare Derivative Works of,
-   publicly display, publicly perform, sublicense, and distribute the
-   Work and such Derivative Works in Source or Object form.
-
-3. Grant of Patent License. Subject to the terms and conditions of
-   this License, each Contributor hereby grants to You a perpetual,
-   worldwide, non-exclusive, no-charge, royalty-free, irrevocable
-   (except as stated in this section) patent license to make, have made,
-   use, offer to sell, sell, import, and otherwise transfer the Work,
-   where such license applies only to those patent claims licensable
-   by such Contributor that are necessarily infringed by their
-   Contribution(s) alone or by combination of their Contribution(s)
-   with the Work to which such Contribution(s) was submitted. If You
-   institute patent litigation against any entity (including a
-   cross-claim or counterclaim in a lawsuit) alleging that the Work
-   or a Contribution incorporated within the Work constitutes direct
-   or contributory patent infringement, then any patent licenses
-   granted to You under this License for that Work shall terminate
-   as of the date such litigation is filed.
-
-4. Redistribution. You may reproduce and distribute copies of the
-   Work or Derivative Works thereof in any medium, with or without
-   modifications, and in Source or Object form, provided that You
-   meet the following conditions:
-
-   (a) You must give any other recipients of the Work or
-       Derivative Works a copy of this License; and
-
-   (b) You must cause any modified files to carry prominent notices
-       stating that You changed the files; and
-
-   (c) You must retain, in the Source form of any Derivative Works
-       that You distribute, all copyright, patent, trademark, and
-       attribution notices from the Source form of the Work,
-       excluding those notices that do not pertain to any part of
-       the Derivative Works; and
-
-   (d) If the Work includes a &quot;NOTICE&quot; text file as part of its
-       distribution, then any Derivative Works that You distribute must
-       include a readable copy of the attribution notices contained
-       within such NOTICE file, excluding those notices that do not
-       pertain to any part of the Derivative Works, in at least one
-       of the following places: within a NOTICE text file distributed
-       as part of the Derivative Works; within the Source form or
-       documentation, if provided along with the Derivative Works; or,
-       within a display generated by the Derivative Works, if and
-       wherever such third-party notices normally appear. The contents
-       of the NOTICE file are for informational purposes only and
-       do not modify the License. You may add Your own attribution
-       notices within Derivative Works that You distribute, alongside
-       or as an addendum to the NOTICE text from the Work, provided
-       that such additional attribution notices cannot be construed
-       as modifying the License.
-
-   You may add Your own copyright statement to Your modifications and
-   may provide additional or different license terms and conditions
-   for use, reproduction, or distribution of Your modifications, or
-   for any such Derivative Works as a whole, provided Your use,
-   reproduction, and distribution of the Work otherwise complies with
-   the conditions stated in this License.
-
-5. Submission of Contributions. Unless You explicitly state otherwise,
-   any Contribution intentionally submitted for inclusion in the Work
-   by You to the Licensor shall be under the terms and conditions of
-   this License, without any additional terms or conditions.
-   Notwithstanding the above, nothing herein shall supersede or modify
-   the terms of any separate license agreement you may have executed
-   with Licensor regarding such Contributions.
-
-6. Trademarks. This License does not grant permission to use the trade
-   names, trademarks, service marks, or product names of the Licensor,
-   except as required for reasonable and customary use in describing the
-   origin of the Work and reproducing the content of the NOTICE file.
-
-7. Disclaimer of Warranty. Unless required by applicable law or
-   agreed to in writing, Licensor provides the Work (and each
-   Contributor provides its Contributions) on an &quot;AS IS&quot; BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-   implied, including, without limitation, any warranties or conditions
-   of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
-   PARTICULAR PURPOSE. You are solely responsible for determining the
-   appropriateness of using or redistributing the Work and assume any
-   risks associated with Your exercise of permissions under this License.
-
-8. Limitation of Liability. In no event and under no legal theory,
-   whether in tort (including negligence), contract, or otherwise,
-   unless required by applicable law (such as deliberate and grossly
-   negligent acts) or agreed to in writing, shall any Contributor be
-   liable to You for damages, including any direct, indirect, special,
-   incidental, or consequential damages of any character arising as a
-   result of this License or out of the use or inability to use the
-   Work (including but not limited to damages for loss of goodwill,
-   work stoppage, computer failure or malfunction, or any and all
-   other commercial damages or losses), even if such Contributor
-   has been advised of the possibility of such damages.
-
-9. Accepting Warranty or Additional Liability. While redistributing
-   the Work or Derivative Works thereof, You may choose to offer,
-   and charge a fee for, acceptance of support, warranty, indemnity,
-   or other liability obligations and/or rights consistent with this
-   License. However, in accepting such obligations, You may act only
-   on Your own behalf and on Your sole responsibility, not on behalf
-   of any other Contributor, and only if You agree to indemnify,
-   defend, and hold each Contributor harmless for any liability
-   incurred by, or claims asserted against, such Contributor by reason
-   of your accepting any such warranty or additional liability.
-
-END OF TERMS AND CONDITIONS
-
-APPENDIX: How to apply the Apache License to your work.
-
-   To apply the Apache License to your work, attach the following
-   boilerplate notice, with the fields enclosed by brackets &quot;[]&quot;
-   replaced with your own identifying information. (Don&#x27;t include
-   the brackets!)  The text should be enclosed in the appropriate
-   comment syntax for the file format. We also recommend that a
-   file or class name and description of purpose be included on the
-   same &quot;printed page&quot; as the copyright notice for easier
-   identification within third-party archives.
-
-Copyright [yyyy] [name of copyright owner]
-
-Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-</pre>
-
-### <a name="Apache-2.0"></a>Apache License 2.0
-
-#### Used by
-
-- [remove_dir_all 0.5.2]( https://github.com/XAMPPRocky/remove_dir_all.git )
+- [remove_dir_all 0.5.3]( https://github.com/XAMPPRocky/remove_dir_all.git )
 
 <pre>
                               Apache License
@@ -4343,24 +4346,23 @@ limitations under the License.
 
 #### Used by
 
-- [dirs-sys 0.3.4]( https://github.com/soc/dirs-sys-rs )
+- [dirs-sys 0.3.5]( https://github.com/dirs-dev/dirs-sys-rs )
 - [dirs 1.0.5]( https://github.com/soc/dirs-rs )
 - [dirs 2.0.2]( https://github.com/soc/dirs-rs )
-- [failure_derive 0.1.7]( https://github.com/rust-lang-nursery/failure )
+- [failure_derive 0.1.8]( https://github.com/rust-lang-nursery/failure )
 - [md5 0.7.0]( https://github.com/stainless-steel/md5 )
-- [openssl 0.10.28]( https://github.com/sfackler/rust-openssl )
-- [proc-macro-nested 0.1.3]( https://github.com/dtolnay/proc-macro-hack )
-- [security-framework-sys 0.4.1]( https://github.com/kornelski/rust-security-framework )
-- [security-framework 0.4.1]( https://github.com/kornelski/rust-security-framework )
+- [openssl 0.10.30]( https://github.com/sfackler/rust-openssl )
+- [security-framework-sys 0.4.3]( https://github.com/kornelski/rust-security-framework )
+- [security-framework 0.4.4]( https://github.com/kornelski/rust-security-framework )
 - [serde_urlencoded 0.6.1]( https://github.com/nox/serde_urlencoded )
 - [shlex 0.1.1]( https://github.com/comex/rust-shlex )
 - [stdweb-derive 0.5.3]( https://github.com/koute/stdweb )
 - [stdweb-internal-macros 0.2.9]( https://github.com/koute/stdweb )
 - [stdweb-internal-runtime 0.1.5]( https://github.com/koute/stdweb )
-- [time-macros-impl 0.1.0]( https://github.com/time-rs/time )
 - [time-macros 0.1.0]( https://github.com/time-rs/time )
-- [typenum 1.11.2]( https://github.com/paholg/typenum )
-- [vcpkg 0.2.8]( https://github.com/mcgoo/vcpkg-rs )
+- [tinyvec 0.3.4]( https://github.com/Lokathor/tinyvec )
+- [typenum 1.12.0]( https://github.com/paholg/typenum )
+- [vcpkg 0.2.10]( https://github.com/mcgoo/vcpkg-rs )
 - [winapi-i686-pc-windows-gnu 0.4.0]( https://github.com/retep998/winapi-rs )
 - [winapi-x86_64-pc-windows-gnu 0.4.0]( https://github.com/retep998/winapi-rs )
 - [zeroize 1.1.0]( https://github.com/iqlusioninc/crates/tree/develop/zeroize )
@@ -4446,7 +4448,7 @@ limitations under the License.
 
 #### Used by
 
-- [chrono 0.4.11]( https://github.com/chronotope/chrono )
+- [chrono 0.4.15]( https://github.com/chronotope/chrono )
 
 <pre>
 Rust-chrono is dual-licensed under The MIT License [1] and
@@ -4848,7 +4850,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #### Used by
 
-- [subtle 1.0.0]( https://github.com/dalek-cryptography/subtle )
+- [subtle 2.2.3]( https://github.com/dalek-cryptography/subtle )
 
 <pre>
 Copyright (c) 2016-2017 Isis Agora Lovecruft, Henry de Valence. All rights reserved.
@@ -5038,7 +5040,7 @@ express Statement of Purpose.
 
 #### Used by
 
-- [openssl-sys 0.9.54]( https://github.com/sfackler/rust-openssl )
+- [openssl-sys 0.9.58]( https://github.com/sfackler/rust-openssl )
 
 <pre>
 Copyright (c) 2014 Alex Crichton
@@ -5073,7 +5075,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [mio 0.6.21]( https://github.com/carllerche/mio )
+- [mio 0.6.22]( https://github.com/tokio-rs/mio )
 
 <pre>
 Copyright (c) 2014 Carl Lerche and other MIO contributors
@@ -5137,7 +5139,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [hyper 0.13.3]( https://github.com/hyperium/hyper )
+- [hyper 0.13.7]( https://github.com/hyperium/hyper )
 
 <pre>
 Copyright (c) 2014-2018 Sean McArthur
@@ -5167,7 +5169,7 @@ THE SOFTWARE.
 
 #### Used by
 
-- [schannel 0.1.17]( https://github.com/steffengy/schannel-rs )
+- [schannel 0.1.19]( https://github.com/steffengy/schannel-rs )
 
 <pre>
 Copyright (c) 2015 steffengy
@@ -5214,7 +5216,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [redox_syscall 0.1.56]( https://gitlab.redox-os.org/redox-os/syscall )
+- [redox_syscall 0.1.57]( https://gitlab.redox-os.org/redox-os/syscall )
 
 <pre>
 Copyright (c) 2017 Redox OS Developers
@@ -5246,7 +5248,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [h2 0.2.2]( https://github.com/hyperium/h2 )
+- [h2 0.2.6]( https://github.com/hyperium/h2 )
 
 <pre>
 Copyright (c) 2017 h2 authors
@@ -5281,7 +5283,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [bytes 0.5.4]( https://github.com/tokio-rs/bytes )
+- [bytes 0.5.6]( https://github.com/tokio-rs/bytes )
 
 <pre>
 Copyright (c) 2018 Carl Lerche
@@ -5316,7 +5318,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [try-lock 0.2.2]( https://github.com/seanmonstar/try-lock )
+- [try-lock 0.2.3]( https://github.com/seanmonstar/try-lock )
 
 <pre>
 Copyright (c) 2018 Sean McArthur
@@ -5447,9 +5449,11 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [tokio-tls 0.3.0]( https://github.com/tokio-rs/tokio )
-- [tokio-util 0.2.0]( https://github.com/tokio-rs/tokio )
-- [tokio 0.2.13]( https://github.com/tokio-rs/tokio )
+- [tokio-tls 0.3.1]( https://github.com/tokio-rs/tokio )
+- [tokio-util 0.3.1]( https://github.com/tokio-rs/tokio )
+- [tokio 0.2.22]( https://github.com/tokio-rs/tokio )
+- [tracing-core 0.1.14]( https://github.com/tokio-rs/tracing )
+- [tracing 0.1.19]( https://github.com/tokio-rs/tracing )
 
 <pre>
 Copyright (c) 2019 Tokio Contributors
@@ -5519,7 +5523,7 @@ DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [synstructure 0.12.3]( https://github.com/mystor/synstructure )
+- [synstructure 0.12.4]( https://github.com/mystor/synstructure )
 
 <pre>
 Copyright 2016 Nika Layzell
@@ -5567,17 +5571,48 @@ SOFTWARE.
 
 #### Used by
 
+- [miniz_oxide 0.4.0]( https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide )
+
+<pre>
+MIT License
+
+Copyright (c) 2017 Frommi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+</pre>
+
+### <a name="MIT"></a>MIT License
+
+#### Used by
+
 - [blake2b_simd 0.5.10]( https://github.com/oconnor663/blake2_simd )
 - [kernel32-sys 0.2.2]( https://github.com/retep998/winapi-rs )
-- [rusoto_autoscaling 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_cloudformation 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_cloudfront 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_ec2 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_elbv2 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_rds 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_s3 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_signature 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_sts 0.43.0]( https://github.com/rusoto/rusoto )
+- [rusoto_autoscaling 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_cloudformation 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_cloudfront 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_ec2 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_elbv2 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_rds 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_s3 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_signature 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_sts 0.45.0]( https://github.com/rusoto/rusoto )
 - [tokio-macros 0.2.5]( https://github.com/tokio-rs/tokio )
 - [winapi-build 0.1.1]( https://github.com/retep998/winapi-rs )
 - [ws2_32-sys 0.2.1]( https://github.com/retep998/winapi-rs )
@@ -5639,7 +5674,7 @@ SOFTWARE.
 
 #### Used by
 
-- [xml-rs 0.8.0]( https://github.com/netvl/xml-rs )
+- [xml-rs 0.8.3]( https://github.com/netvl/xml-rs )
 
 <pre>
 The MIT License (MIT)
@@ -5670,7 +5705,7 @@ SOFTWARE.
 
 #### Used by
 
-- [aho-corasick 0.7.10]( https://github.com/BurntSushi/aho-corasick )
+- [aho-corasick 0.7.13]( https://github.com/BurntSushi/aho-corasick )
 - [byteorder 1.3.4]( https://github.com/BurntSushi/byteorder )
 - [csv-core 0.1.10]( https://github.com/BurntSushi/rust-csv )
 - [csv 1.1.3]( https://github.com/BurntSushi/rust-csv )
@@ -5770,7 +5805,7 @@ THE SOFTWARE.
 
 #### Used by
 
-- [clap 2.33.0]( https://github.com/clap-rs/clap )
+- [clap 2.33.3]( https://github.com/clap-rs/clap )
 
 <pre>
 The MIT License (MIT)
@@ -5833,8 +5868,8 @@ SOFTWARE.
 
 #### Used by
 
-- [rusoto_core 0.43.0]( https://github.com/rusoto/rusoto )
-- [rusoto_credential 0.43.0]( https://github.com/rusoto/rusoto )
+- [rusoto_core 0.45.0]( https://github.com/rusoto/rusoto )
+- [rusoto_credential 0.45.0]( https://github.com/rusoto/rusoto )
 
 <pre>
 The MIT License (MIT)
@@ -5926,7 +5961,7 @@ SOFTWARE.
 
 #### Used by
 
-- [generic-array 0.12.3]( https://github.com/fizyk20/generic-array.git )
+- [generic-array 0.14.4]( https://github.com/fizyk20/generic-array.git )
 
 <pre>
 The MIT License (MIT)
