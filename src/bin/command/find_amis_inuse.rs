@@ -92,10 +92,6 @@ async fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, 
     while {
         let output = ec2
             .describe_launch_templates(DescribeLaunchTemplatesRequest {
-                filters: Some(vec![rusoto_ec2::Filter {
-                    name: Some("is-default-version".to_owned()),
-                    values: Some(vec!["true".to_owned()]),
-                }]),
                 next_token: continuation_token.clone(),
                 ..Default::default()
             })
