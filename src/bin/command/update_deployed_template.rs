@@ -95,6 +95,17 @@ pub(crate) struct Opt {
     )]
     includes: Vec<String>,
     #[structopt(
+        long = "only-new-parameters",
+        help = "Only use newly added parameters from any given parameters",
+        long_help = "By default, specifying parameters (either directly or through a path) will \
+                     include all the parameters provided/defined, even if they are already defined \
+                     on the destination stack. When updating a deployed template/stack this is not \
+                     desired, which is why changeset creation fails if not forced in such cases. \
+                     This option provides a convenience that whatever parameters are specified, \
+                     only those are used that are actually new."
+    )]
+    only_new_parameters: bool,
+    #[structopt(
         long = "force-create",
         help = "Force change set creation",
         long_help = "Force change set creation, even if the parameters supplied do not cover the \
@@ -141,7 +152,7 @@ pub(crate) async fn update_stack(
     let new_parameters = template_parameters.clone() - stack_parameters;
 
     // Get the user provided parameters.
-    let provided_parameters: Parameters = if let Some(parameter_path) = &opt.parameter_path {
+    let mut provided_parameters: Parameters = if let Some(parameter_path) = &opt.parameter_path {
         let file = File::open(parameter_path)?;
         let reader = BufReader::new(file);
         let parameters: Parameters = {
@@ -156,6 +167,14 @@ pub(crate) async fn update_stack(
     } else {
         (&opt.parameters).into()
     };
+
+    if opt.only_new_parameters {
+        provided_parameters = provided_parameters
+            .values()
+            .filter(|parameter| new_parameters.contains_key(parameter.key()))
+            .collect::<Vec<_>>()
+            .into();
+    }
 
     // We need to ensure that the user has provided exactly the parameters that have been added.
     if !new_parameters
