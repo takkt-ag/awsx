@@ -5,7 +5,7 @@ This page lists the licenses of the projects used in awsx.
 ## Overview of licenses
 
 - [Apache License 2.0](#Apache-2.0) (160)
-- [MIT License](#MIT) (51)
+- [MIT License](#MIT) (52)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (5)
 
 ## All license text
@@ -870,7 +870,7 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [crc32fast 1.2.0]( https://github.com/srijs/rust-crc32fast )
+- [crc32fast 1.2.1]( https://github.com/srijs/rust-crc32fast )
 - [foreign-types-shared 0.1.1]( https://github.com/sfackler/foreign-types )
 - [foreign-types 0.3.2]( https://github.com/sfackler/foreign-types )
 - [hex 0.4.2]( https://github.com/KokaKiwi/rust-hex )
@@ -2603,7 +2603,7 @@ limitations under the License.
 - [itoa 0.4.6]( https://github.com/dtolnay/itoa )
 - [jobserver 0.1.21]( https://github.com/alexcrichton/jobserver-rs )
 - [lazy_static 1.4.0]( https://github.com/rust-lang-nursery/lazy-static.rs )
-- [libc 0.2.79]( https://github.com/rust-lang/libc )
+- [libc 0.2.80]( https://github.com/rust-lang/libc )
 - [libgit2-sys 0.12.14+1.1.0]( https://github.com/rust-lang/git2-rs )
 - [libz-sys 1.1.2]( https://github.com/rust-lang/libz-sys )
 - [mio-uds 0.6.8]( https://github.com/deprecrated/mio-uds )
@@ -2621,7 +2621,7 @@ limitations under the License.
 - [quote 1.0.7]( https://github.com/dtolnay/quote )
 - [regex-syntax 0.6.20]( https://github.com/rust-lang/regex )
 - [regex 1.4.1]( https://github.com/rust-lang/regex )
-- [rustc-demangle 0.1.17]( https://github.com/alexcrichton/rustc-demangle )
+- [rustc-demangle 0.1.18]( https://github.com/alexcrichton/rustc-demangle )
 - [rustc_version 0.2.3]( https://github.com/Kimundi/rustc-version-rs )
 - [semver-parser 0.7.0]( https://github.com/steveklabnik/semver-parser )
 - [semver 0.9.0]( https://github.com/steveklabnik/semver )
@@ -2631,7 +2631,7 @@ limitations under the License.
 - [serde_yaml 0.8.13]( https://github.com/dtolnay/serde-yaml )
 - [signal-hook-registry 1.2.1]( https://github.com/vorner/signal-hook )
 - [socket2 0.3.15]( https://github.com/alexcrichton/socket2-rs )
-- [syn 1.0.45]( https://github.com/dtolnay/syn )
+- [syn 1.0.48]( https://github.com/dtolnay/syn )
 - [tempfile 3.1.0]( https://github.com/Stebalien/tempfile )
 - [term 0.5.2]( https://github.com/Stebalien/term )
 - [thread_local 1.0.1]( https://github.com/Amanieu/thread_local-rs )
@@ -4563,7 +4563,7 @@ limitations under the License.
 - [miniz_oxide 0.4.3]( https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide )
 - [openssl 0.10.30]( https://github.com/sfackler/rust-openssl )
 - [pin-project-internal 1.0.1]( https://github.com/taiki-e/pin-project )
-- [pin-project-lite 0.1.10]( https://github.com/taiki-e/pin-project-lite )
+- [pin-project-lite 0.1.11]( https://github.com/taiki-e/pin-project-lite )
 - [pin-project 1.0.1]( https://github.com/taiki-e/pin-project )
 - [security-framework-sys 0.4.3]( https://github.com/kornelski/rust-security-framework )
 - [security-framework 0.4.4]( https://github.com/kornelski/rust-security-framework )
@@ -5292,7 +5292,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #### Used by
 
-- [h2 0.2.6]( https://github.com/hyperium/h2 )
+- [h2 0.2.7]( https://github.com/hyperium/h2 )
 
 <pre>
 Copyright (c) 2017 h2 authors
@@ -5626,6 +5626,7 @@ SOFTWARE.
 - [rusoto_signature 0.45.0]( https://github.com/rusoto/rusoto )
 - [rusoto_sts 0.45.0]( https://github.com/rusoto/rusoto )
 - [tokio-macros 0.2.5]( https://github.com/tokio-rs/tokio )
+- [tracing-futures 0.2.4]( https://github.com/tokio-rs/tracing )
 - [winapi-build 0.1.1]( https://github.com/retep998/winapi-rs )
 - [ws2_32-sys 0.2.1]( https://github.com/retep998/winapi-rs )
 
