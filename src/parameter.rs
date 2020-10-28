@@ -450,7 +450,7 @@ impl Parameters {
     ) -> Option<ParametersDifference<'a>> {
         let mut left: Vec<&'a Parameter> = Vec::new();
         let mut equal: Vec<&'a Parameter> = Vec::new();
-        let mut unequal: Vec<&'a Parameter> = Vec::new();
+        let mut unequal: Vec<(&'a Parameter, &'a Parameter)> = Vec::new();
         let mut right: Vec<&'a Parameter> = Vec::new();
 
         // Identify parameters available on `this` but not available on `other`.
@@ -468,9 +468,12 @@ impl Parameters {
             other
                 .get(key)
                 .map(|other_parameter| {
-                    other_parameter.is_previous_value() || parameter == other_parameter
+                    (
+                        other_parameter.is_previous_value() || parameter == other_parameter,
+                        other_parameter,
+                    )
                 })
-                .and_then(|are_equal| {
+                .and_then(|(are_equal, other_parameter)| {
                     if are_equal {
                         // If the left parameter has a value, we push it into `equal`, otherwise we
                         // push `other_parameter`, which might have a value, or not. This ensures
@@ -483,7 +486,7 @@ impl Parameters {
                         }
                         None
                     } else {
-                        Some(parameter)
+                        Some((parameter, other_parameter))
                     }
                 })
         }));
@@ -521,7 +524,7 @@ pub struct ParametersDifference<'a> {
     /// Parameters that are equal across the two parameter sets
     pub equal: Vec<&'a Parameter>,
     /// Parameters that are unequal across the two parameter sets
-    pub unequal: Vec<&'a Parameter>,
+    pub unequal: Vec<(&'a Parameter, &'a Parameter)>,
     /// Parameters that are only available in the *right* parameter set
     pub right: Vec<&'a Parameter>,
 }

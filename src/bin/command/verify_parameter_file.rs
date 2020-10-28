@@ -14,9 +14,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-use awsx::{error::Error, parameter::Parameters, stack::Stack};
+use awsx::{
+    error::Error,
+    parameter::{Parameter, Parameters},
+    stack::Stack,
+};
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
+use serde::Serialize;
 use serde_json::json;
 use std::fs::File;
 use std::io::BufReader;
@@ -35,6 +40,23 @@ pub(crate) struct Opt {
                      AWS CLI expects."
     )]
     parameter_path: String,
+}
+
+#[derive(Debug, Serialize)]
+struct UnequalParameterDifference<'a> {
+    stack: &'a Parameter,
+    template: &'a Parameter,
+}
+
+impl<'a> UnequalParameterDifference<'a> {
+    fn from(unequal_parameters: Vec<(&'a Parameter, &'a Parameter)>) -> Vec<Self> {
+        // By convention, the "left" parameter in our case is the stack, whereas the "right"
+        // parameter is the used parameter-file.
+        unequal_parameters
+            .into_iter()
+            .map(|(stack, template)| UnequalParameterDifference { stack, template })
+            .collect()
+    }
 }
 
 pub(crate) async fn verify_parameter_file(
@@ -90,7 +112,7 @@ pub(crate) async fn verify_parameter_file(
                 "parameters": {
                     "only_on_stack": differences.left,
                     "equal_between_both": differences.equal,
-                    "unequal_between_both": differences.unequal,
+                    "unequal_between_both": UnequalParameterDifference::from(differences.unequal),
                     "only_in_template": differences.right,
                 },
             }),
