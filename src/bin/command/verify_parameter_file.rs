@@ -18,6 +18,7 @@ use awsx::{
     error::Error,
     parameter::{Parameter, Parameters},
     stack::Stack,
+    template::Template,
 };
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
@@ -31,10 +32,27 @@ use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
-    #[structopt(long = "stack-name", help = "Name of the stack")]
-    stack_name: String,
+    #[structopt(
+        long = "stack-name",
+        required_unless = "template-path",
+        conflicts_with = "template-path",
+        help = "Name of the stack",
+        long_help = "Name of the stack to compare the parameter-file against. You cannot specify \
+                     this if --template-path has been specified."
+    )]
+    stack_name: Option<String>,
+    #[structopt(
+        long = "template-path",
+        required_unless = "stack-name",
+        conflicts_with = "stack-name",
+        help = "Path to the template",
+        long_help = "Path to the template-file to compare the parameter-file against. You cannot \
+                     specify this if --stack-name has been specified."
+    )]
+    template_path: Option<String>,
     #[structopt(
         long = "parameter-path",
+        required = true,
         help = "Path to a JSON parameter file",
         long_help = "Path to a JSON parameter file. This file should be structured the same as the \
                      AWS CLI expects."
@@ -69,26 +87,35 @@ pub(crate) async fn verify_parameter_file(
     let reader = BufReader::new(file);
     let file_parameters: Parameters = serde_json::from_reader(reader).unwrap();
 
-    // Create AWS clients
-    let cfn = CloudFormationClient::new_with(
-        HttpClient::new()?,
-        provider.clone(),
-        global_opt.aws_region.clone().unwrap_or_default(),
-    );
-
-    // Retrieve stack parameters
-    let stack = Stack::new(&opt.stack_name);
-    let stack_parameters = stack.get_parameters(&cfn).await?;
+    let defined_parameters = if let Some(stack_name) = &opt.stack_name {
+        // Create AWS clients
+        let cfn = CloudFormationClient::new_with(
+            HttpClient::new()?,
+            provider.clone(),
+            global_opt.aws_region.clone().unwrap_or_default(),
+        );
+        // Retrieve stack parameters
+        let stack = Stack::new(stack_name);
+        stack.get_parameters(&cfn).await?
+    } else if let Some(template_path) = &opt.template_path {
+        // Load the template
+        let template = Template::new(template_path)?;
+        // Retrieve the parameters defined on the template.
+        template.get_parameters().to_owned()
+    } else {
+        // clap should catch this situation before this code-path is ever reached.
+        unreachable!();
+    };
 
     // Compare
-    let differences = stack_parameters.loose_difference(&file_parameters);
+    let differences = defined_parameters.loose_difference(&file_parameters);
     if let Some(differences) = differences {
         let mut table = prettytable::Table::new();
         table.set_format(*prettytable::format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
         table.set_titles(row![
-            "Only in stack",
+            "Only on stack or template",
             "Unequal between both",
-            "Only in template"
+            "Only in parameter file",
         ]);
         for parameter in &differences.left {
             table.add_row(row![parameter.key(), "", ""]);
@@ -110,10 +137,10 @@ pub(crate) async fn verify_parameter_file(
             structured: json!({
                 "success": false,
                 "parameters": {
-                    "only_on_stack": differences.left,
+                    "only_on_stack_or_template": differences.left,
                     "equal_between_both": differences.equal,
                     "unequal_between_both": UnequalParameterDifference::from(differences.unequal),
-                    "only_in_template": differences.right,
+                    "only_in_parameter_file": differences.right,
                 },
             }),
             successful: false,
@@ -125,10 +152,10 @@ pub(crate) async fn verify_parameter_file(
             structured: json!({
                 "success": true,
                 "parameters": {
-                    "only_on_stack": [],
-                    "equal_between_both": stack_parameters,
+                    "only_on_stack_or_template": [],
+                    "equal_between_both": defined_parameters,
                     "unequal_between_both": [],
-                    "only_in_template": [],
+                    "only_in_parameter_file": [],
                 },
             }),
             successful: true,
