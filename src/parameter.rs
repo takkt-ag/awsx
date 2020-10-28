@@ -141,6 +141,61 @@ impl Parameter {
         }
     }
 
+    /// Applies a default value to the current parameter, i.e. it turns a [`PreviousValue`] variant
+    /// into a [`WithValue`] variant with the provided default value, but it keeps an existing
+    /// [`WithValue`] unchanged. This method returns a new parameter.
+    ///
+    /// [`PreviousValue`]: #variant.PreviousValue
+    /// [`WithValue`]: #variant.WithValue
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// # use awsx::parameter::Parameter;
+    /// let with_value = Parameter::WithValue {
+    ///     key: "MyParameter".to_owned(),
+    ///     value: "Existing value".to_owned(),
+    /// };
+    /// let previous_value = Parameter::PreviousValue {
+    ///     key: "MyParameter".to_owned(),
+    /// };
+    /// assert_eq!(
+    ///     with_value,
+    ///     with_value.with_default_value("new value".to_owned()),
+    /// );
+    /// assert_eq!(
+    ///     Parameter::WithValue {
+    ///         key: "MyParameter".to_owned(),
+    ///         value: "new value".to_owned(),
+    ///     },
+    ///     previous_value.with_default_value("new value".to_owned()),
+    /// );
+    /// ```
+    pub fn with_default_value(&self, default: String) -> Self {
+        let mut new = self.clone();
+        new.set_default_value(default);
+        new
+    }
+
+    /// Applies a default value to the current parameter, i.e. it turns a [`PreviousValue`] variant
+    /// into a [`WithValue`] variant with the provided default value, but it keeps an existing
+    /// [`WithValue`] unchanged. This method changes the existing parameter in-place.
+    ///
+    /// [`PreviousValue`]: #variant.PreviousValue
+    /// [`WithValue`]: #variant.WithValue
+    pub fn set_default_value(&mut self, default: String) {
+        use Parameter::*;
+        match self {
+            WithValue { .. } => {}
+            PreviousValue { key, .. } => {
+                *self = WithValue {
+                    key: key.to_owned(),
+                    value: default,
+                }
+            }
+        }
+    }
+
     /// Return a reference to the parameters key.
     ///
     /// This is a convenience function that abstracts matching over all variants, where `key` is a
@@ -387,6 +442,84 @@ impl Parameters {
         let mut this = self.0.clone();
         this.extend(other.into_parameters().0);
         Parameters(this)
+    }
+
+    /// Set values for all parameters in the current collection based on the provided defaults,
+    /// without modifying any pre-existing values or adding parameters that did not exist.
+    ///
+    /// ```
+    /// # use awsx::parameter::{Parameter, Parameters};
+    /// let mut parameters = Parameters::new(vec![
+    ///     Parameter::WithValue {
+    ///         key: "FirstParameter".to_owned(),
+    ///         value: "Initial value".to_owned(),
+    ///     },
+    ///     Parameter::PreviousValue {
+    ///         key: "SecondParameter".to_owned(),
+    ///     },
+    ///     Parameter::PreviousValue {
+    ///         key: "ThirdParameter".to_owned(),
+    ///     },
+    /// ]);
+    /// let defaults = Parameters::new(vec![
+    ///     Parameter::WithValue {
+    ///         key: "FirstParameter".to_owned(),
+    ///         value: "Updated value".to_owned(),
+    ///     },
+    ///     Parameter::WithValue {
+    ///         key: "SecondParameter".to_owned(),
+    ///         value: "New value".to_owned(),
+    ///     },
+    ///     Parameter::WithValue {
+    ///         key: "ThirdParameter".to_owned(),
+    ///         value: "New value".to_owned(),
+    ///     },
+    ///     Parameter::WithValue {
+    ///         key: "UnknownParameter".to_owned(),
+    ///         value: "New value".to_owned(),
+    ///     },
+    /// ]);
+    /// parameters.apply_defaults(defaults);
+    ///
+    /// assert_eq!(
+    ///     parameters,
+    ///     vec![
+    ///         Parameter::WithValue {
+    ///             key: "FirstParameter".to_owned(),
+    ///             value: "Initial value".to_owned(),
+    ///         },
+    ///         Parameter::WithValue {
+    ///             key: "SecondParameter".to_owned(),
+    ///             value: "New value".to_owned(),
+    ///         },
+    ///         Parameter::WithValue {
+    ///             key: "ThirdParameter".to_owned(),
+    ///             value: "New value".to_owned(),
+    ///         },
+    ///     ].into()
+    /// );
+    /// ```
+    pub fn apply_defaults<P: IntoParameters>(&mut self, defaults: P) {
+        for (key, parameter) in defaults.into_parameters().0 {
+            if let Parameter::WithValue { value, .. } = parameter {
+                self.0
+                    .entry(key)
+                    .and_modify(|parameter| parameter.set_default_value(value));
+            }
+        }
+    }
+
+    /// Set values for all parameters in the current collection based on the provided defaults,
+    /// without modifying any pre-existing values or adding parameters that did not exist.
+    ///
+    /// In contrast to [`apply_defaults`], this does not mutate the existing collection, but rather
+    /// returns a new copy.
+    ///
+    /// [`apply_defaults`]: #method.apply_defaults
+    pub fn with_defaults<P: IntoParameters>(&self, defaults: P) -> Parameters {
+        let mut this = self.clone();
+        this.apply_defaults(defaults);
+        this
     }
 
     /// Check if the other parameters are loosely equal to self.

@@ -30,8 +30,8 @@ use structopt::StructOpt;
 
 use crate::{
     util::{
-        apply_excludes_includes, generate_deployment_metadata, verify_changes_compatible,
-        DeploymentMetadata,
+        apply_defaults, apply_excludes_includes, generate_deployment_metadata,
+        verify_changes_compatible, DeploymentMetadata,
     },
     AwsxOutput, AwsxProvider, Opt as GlobalOpt,
 };
@@ -71,6 +71,15 @@ pub(crate) struct Opt {
                      --parameters.)"
     )]
     parameter_path: Option<String>,
+    #[structopt(
+        long = "parameter-defaults-path",
+        help = "Path to a JSON parameter file with defaults",
+        long_help = "Path to a JSON parameter file, from which values will be taken if not \
+                     specified in the regular parameter file. This file should be structured the \
+                     same as the AWS CLI expects. If the provided path does not exist, no error is \
+                     thrown, instead it will be simply ignored."
+    )]
+    parameter_defaults_path: Option<String>,
     #[structopt(
         long = "exclude",
         conflicts_with = "parameters",
@@ -167,6 +176,9 @@ pub(crate) async fn update_stack(
     } else {
         (&opt.parameters).into()
     };
+
+    // Apply defaults if provided
+    provided_parameters = apply_defaults(provided_parameters, &opt.parameter_defaults_path)?;
 
     if opt.only_new_parameters {
         provided_parameters = provided_parameters

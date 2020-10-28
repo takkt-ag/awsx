@@ -28,7 +28,7 @@ use std::fs::File;
 use std::io::BufReader;
 use structopt::StructOpt;
 
-use crate::{AwsxOutput, AwsxProvider, Opt as GlobalOpt};
+use crate::{util::apply_defaults, AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
@@ -58,6 +58,15 @@ pub(crate) struct Opt {
                      AWS CLI expects."
     )]
     parameter_path: String,
+    #[structopt(
+        long = "parameter-defaults-path",
+        help = "Path to a JSON parameter file with defaults",
+        long_help = "Path to a JSON parameter file, from which values will be taken if not \
+                     specified in the regular parameter file. This file should be structured the \
+                     same as the AWS CLI expects. If the provided path does not exist, no error is \
+                     thrown, instead it will be simply ignored."
+    )]
+    parameter_defaults_path: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -85,7 +94,10 @@ pub(crate) async fn verify_parameter_file(
     // Load parameter file
     let file = File::open(&opt.parameter_path)?;
     let reader = BufReader::new(file);
-    let file_parameters: Parameters = serde_json::from_reader(reader).unwrap();
+    let mut file_parameters: Parameters = serde_json::from_reader(reader).unwrap();
+
+    // Apply defaults if provided
+    file_parameters = apply_defaults(file_parameters, &opt.parameter_defaults_path)?;
 
     let defined_parameters = if let Some(stack_name) = &opt.stack_name {
         // Create AWS clients

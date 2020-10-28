@@ -23,7 +23,7 @@ use failure::format_err;
 use git2::{Config, Oid, Repository};
 use regex::RegexSet;
 use serde_derive::{Deserialize, Serialize};
-use std::{convert::TryFrom, fmt};
+use std::{convert::TryFrom, fmt, fs::File, io::BufReader, path::Path};
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub(crate) struct DeploymentMetadata {
@@ -77,6 +77,22 @@ pub(crate) fn apply_excludes_includes(
             .collect::<Vec<_>>()
             .into()
     }
+
+    Ok(parameters)
+}
+
+pub(crate) fn apply_defaults(
+    mut parameters: Parameters,
+    parameter_defaults_path: &Option<String>,
+) -> Result<Parameters, Error> {
+    if let Some(parameter_defaults_path) = parameter_defaults_path {
+        if Path::new(parameter_defaults_path).exists() {
+            let defaults_file = File::open(parameter_defaults_path)?;
+            let reader = BufReader::new(defaults_file);
+            let default_parameters: Parameters = serde_json::from_reader(reader).unwrap();
+            parameters.apply_defaults(default_parameters);
+        }
+    };
 
     Ok(parameters)
 }
