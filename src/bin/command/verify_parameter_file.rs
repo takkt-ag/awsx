@@ -72,7 +72,7 @@ pub(crate) async fn verify_parameter_file(
             table.add_row(row![parameter.key(), "", ""]);
         }
         for parameter in &differences.unequal {
-            table.add_row(row!["", parameter.key(), ""]);
+            table.add_row(row!["", parameter.0.key(), ""]);
         }
         for parameter in &differences.right {
             table.add_row(row!["", "", parameter.key()]);
@@ -89,6 +89,7 @@ pub(crate) async fn verify_parameter_file(
                 "success": false,
                 "parameters": {
                     "only_on_stack": differences.left,
+                    "equal_between_both": differences.equal,
                     "unequal_between_both": differences.unequal,
                     "only_in_template": differences.right,
                 },
@@ -103,6 +104,7 @@ pub(crate) async fn verify_parameter_file(
                 "success": true,
                 "parameters": {
                     "only_on_stack": [],
+                    "equal_between_both": stack_parameters,
                     "unequal_between_both": [],
                     "only_in_template": [],
                 },

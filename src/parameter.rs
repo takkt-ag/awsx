@@ -449,6 +449,7 @@ impl Parameters {
         other: &'a Parameters,
     ) -> Option<ParametersDifference<'a>> {
         let mut left: Vec<&'a Parameter> = Vec::new();
+        let mut equal: Vec<&'a Parameter> = Vec::new();
         let mut unequal: Vec<&'a Parameter> = Vec::new();
         let mut right: Vec<&'a Parameter> = Vec::new();
 
@@ -469,7 +470,22 @@ impl Parameters {
                 .map(|other_parameter| {
                     other_parameter.is_previous_value() || parameter == other_parameter
                 })
-                .and_then(|equal| if equal { None } else { Some(parameter) })
+                .and_then(|are_equal| {
+                    if are_equal {
+                        // If the left parameter has a value, we push it into `equal`, otherwise we
+                        // push `other_parameter`, which might have a value, or not. This ensures
+                        // that when either parameter has a value, the parameter in `equal` will
+                        // have the value.
+                        if let Parameter::WithValue { .. } = &parameter {
+                            equal.push(parameter);
+                        } else {
+                            equal.push(other_parameter);
+                        }
+                        None
+                    } else {
+                        Some(parameter)
+                    }
+                })
         }));
 
         // Identify parameters not available on `this` but available on `other`.
@@ -487,6 +503,7 @@ impl Parameters {
         } else {
             Some(ParametersDifference {
                 left,
+                equal,
                 unequal,
                 right,
             })
@@ -501,6 +518,8 @@ impl Parameters {
 pub struct ParametersDifference<'a> {
     /// Parameters that are only available in the *left* parameter set
     pub left: Vec<&'a Parameter>,
+    /// Parameters that are equal across the two parameter sets
+    pub equal: Vec<&'a Parameter>,
     /// Parameters that are unequal across the two parameter sets
     pub unequal: Vec<&'a Parameter>,
     /// Parameters that are only available in the *right* parameter set
