@@ -179,6 +179,10 @@ pub(crate) async fn update_stack(
 
     // Apply defaults if provided
     provided_parameters = apply_defaults(provided_parameters, &opt.parameter_defaults_path)?;
+    // Apply defaults from template parameters. This ensures that any defaults specified in the
+    // template itself will be honored and passed onto CloudFormation, unless they were specified
+    // explicitly before.
+    provided_parameters.apply_defaults(template_parameters.clone());
 
     if opt.only_new_parameters {
         provided_parameters = provided_parameters
