@@ -159,9 +159,14 @@ pub(crate) async fn update_stack(
     // around, are simply ignored, since they do not need to be set and will simply be removed
     // once the change-set is deployed.)
     let new_parameters = template_parameters.clone() - &stack_parameters;
+    // Retrieve the template default values for the newly defined parameters.
+    let template_defaults = template.get_parameters().to_owned() - &stack_parameters;
 
-    // Get the user provided parameters.
-    let mut provided_parameters: Parameters = if let Some(parameter_path) = &opt.parameter_path {
+    // We track all provided parameters in this variable.
+    let mut provided_parameters = new_parameters.clone();
+
+    // Get and merge in the user provided parameters.
+    provided_parameters.merge(if let Some(parameter_path) = &opt.parameter_path {
         let file = File::open(parameter_path)?;
         let reader = BufReader::new(file);
         let parameters: Parameters = {
@@ -175,15 +180,16 @@ pub(crate) async fn update_stack(
         apply_excludes_includes(parameters, &opt.excludes, &opt.includes)?
     } else {
         (&opt.parameters).into()
-    };
+    });
 
-    // Apply defaults if provided
+    // Apply defaults if provided.
     provided_parameters = apply_defaults(provided_parameters, &opt.parameter_defaults_path)?;
     // Apply defaults from template parameters. This ensures that any defaults specified in the
-    // template itself will be honored and passed onto CloudFormation, unless they were specified
-    // explicitly before.
-    provided_parameters.apply_defaults(template_parameters.clone());
+    // template itself will be honored and passed onto CloudFormation.
+    provided_parameters.apply_defaults(template_defaults);
 
+    // If requested, remove any parameters that are not new (i.e. don't accidentally overwrite a
+    // parameter).
     if opt.only_new_parameters {
         provided_parameters = provided_parameters
             .values()
