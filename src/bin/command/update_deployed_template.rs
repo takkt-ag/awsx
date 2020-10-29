@@ -158,7 +158,7 @@ pub(crate) async fn update_stack(
     // stack. (Parameters that are defined on the stack but not on the template, so the other way
     // around, are simply ignored, since they do not need to be set and will simply be removed
     // once the change-set is deployed.)
-    let new_parameters = template_parameters.clone() - stack_parameters;
+    let new_parameters = template_parameters.clone() - &stack_parameters;
 
     // Get the user provided parameters.
     let mut provided_parameters: Parameters = if let Some(parameter_path) = &opt.parameter_path {

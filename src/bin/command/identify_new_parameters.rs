@@ -57,7 +57,7 @@ pub(crate) async fn identify_new_parameters(
     // stack. (Parameters that are defined on the stack but not on the template, so the other way
     // around, are simply ignored, since they do not need to be set and will simply be removed
     // once the change-set is deployed.)
-    let new_parameters = template_parameters.clone() - stack_parameters;
+    let new_parameters = template_parameters.clone() - &stack_parameters;
 
     if new_parameters.is_empty() {
         Ok(AwsxOutput {

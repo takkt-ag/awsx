@@ -729,10 +729,10 @@ impl<'de> de::Deserialize<'de> for Parameters {
     }
 }
 
-impl ops::Sub for Parameters {
+impl ops::Sub<&Parameters> for Parameters {
     type Output = Parameters;
 
-    fn sub(mut self, rhs: Self) -> Self::Output {
+    fn sub(mut self, rhs: &Parameters) -> Self::Output {
         rhs.0.keys().for_each(|key| {
             self.0.remove(key);
         });
@@ -1160,7 +1160,7 @@ mod tests {
         let right_parameters: Parameters =
             vec![parameter2.clone(), parameter3.clone(), parameter4.clone()].into();
 
-        let parameters = left_parameters - right_parameters;
+        let parameters = left_parameters - &right_parameters;
 
         assert!(!parameters.is_empty());
         assert_eq!(parameters.len(), 1);
