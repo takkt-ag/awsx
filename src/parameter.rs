@@ -756,6 +756,12 @@ impl IntoParameters for Parameters {
     }
 }
 
+impl IntoParameters for &Parameters {
+    fn into_parameters(self) -> Parameters {
+        self.to_owned()
+    }
+}
+
 impl IntoParameters for Vec<Parameter> {
     fn into_parameters(self) -> Parameters {
         self.into()
