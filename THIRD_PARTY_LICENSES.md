@@ -4,7 +4,7 @@ This page lists the licenses of the projects used in awsx.
 
 ## Overview of licenses
 
-- [Apache License 2.0](#Apache-2.0) (160)
+- [Apache License 2.0](#Apache-2.0) (159)
 - [MIT License](#MIT) (52)
 - [BSD 3-Clause &quot;New&quot; or &quot;Revised&quot; License](#BSD-3-Clause) (5)
 
@@ -1086,15 +1086,15 @@ This page lists the licenses of the projects used in awsx.
 
 #### Used by
 
-- [futures-channel 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-core 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-executor 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-io 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-macro 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-sink 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-task 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures-util 0.3.7]( https://github.com/rust-lang/futures-rs )
-- [futures 0.3.7]( https://github.com/rust-lang/futures-rs )
+- [futures-channel 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-core 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-executor 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-io 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-macro 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-sink 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-task 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures-util 0.3.9]( https://github.com/rust-lang/futures-rs )
+- [futures 0.3.9]( https://github.com/rust-lang/futures-rs )
 
 <pre>
                               Apache License
@@ -2574,7 +2574,7 @@ limitations under the License.
 
 - [addr2line 0.13.0]( https://github.com/gimli-rs/addr2line )
 - [arc-swap 0.4.7]( https://github.com/vorner/arc-swap )
-- [async-trait 0.1.41]( https://github.com/dtolnay/async-trait )
+- [async-trait 0.1.42]( https://github.com/dtolnay/async-trait )
 - [autocfg 1.0.1]( https://github.com/cuviper/autocfg )
 - [backtrace 0.3.53]( https://github.com/rust-lang/backtrace-rs )
 - [base64 0.12.3]( https://github.com/marshallpierce/rust-base64 )
@@ -2615,12 +2615,12 @@ limitations under the License.
 - [once_cell 1.4.1]( https://github.com/matklad/once_cell )
 - [percent-encoding 2.1.0]( https://github.com/servo/rust-url/ )
 - [pkg-config 0.3.19]( https://github.com/rust-lang/pkg-config-rs )
-- [proc-macro-hack 0.5.18]( https://github.com/dtolnay/proc-macro-hack )
+- [proc-macro-hack 0.5.19]( https://github.com/dtolnay/proc-macro-hack )
 - [proc-macro-nested 0.1.6]( https://github.com/dtolnay/proc-macro-hack )
 - [proc-macro2 1.0.24]( https://github.com/alexcrichton/proc-macro2 )
 - [quote 1.0.7]( https://github.com/dtolnay/quote )
-- [regex-syntax 0.6.20]( https://github.com/rust-lang/regex )
-- [regex 1.4.1]( https://github.com/rust-lang/regex )
+- [regex-syntax 0.6.21]( https://github.com/rust-lang/regex )
+- [regex 1.4.2]( https://github.com/rust-lang/regex )
 - [rustc-demangle 0.1.18]( https://github.com/alexcrichton/rustc-demangle )
 - [rustc_version 0.2.3]( https://github.com/Kimundi/rustc-version-rs )
 - [semver-parser 0.7.0]( https://github.com/steveklabnik/semver-parser )
@@ -4562,9 +4562,8 @@ limitations under the License.
 - [md5 0.7.0]( https://github.com/stainless-steel/md5 )
 - [miniz_oxide 0.4.3]( https://github.com/Frommi/miniz_oxide/tree/master/miniz_oxide )
 - [openssl 0.10.30]( https://github.com/sfackler/rust-openssl )
-- [pin-project-internal 1.0.1]( https://github.com/taiki-e/pin-project )
 - [pin-project-lite 0.1.11]( https://github.com/taiki-e/pin-project-lite )
-- [pin-project 1.0.1]( https://github.com/taiki-e/pin-project )
+- [pin-project-lite 0.2.1]( https://github.com/taiki-e/pin-project-lite )
 - [security-framework-sys 0.4.3]( https://github.com/kornelski/rust-security-framework )
 - [security-framework 0.4.4]( https://github.com/kornelski/rust-security-framework )
 - [serde_urlencoded 0.6.1]( https://github.com/nox/serde_urlencoded )
@@ -5495,7 +5494,7 @@ DEALINGS IN THE SOFTWARE.
 
 - [tokio-tls 0.3.1]( https://github.com/tokio-rs/tokio )
 - [tokio-util 0.3.1]( https://github.com/tokio-rs/tokio )
-- [tokio 0.2.22]( https://github.com/tokio-rs/tokio )
+- [tokio 0.2.24]( https://github.com/tokio-rs/tokio )
 - [tracing-core 0.1.17]( https://github.com/tokio-rs/tracing )
 - [tracing 0.1.21]( https://github.com/tokio-rs/tracing )
 
@@ -5625,7 +5624,7 @@ SOFTWARE.
 - [rusoto_s3 0.45.0]( https://github.com/rusoto/rusoto )
 - [rusoto_signature 0.45.0]( https://github.com/rusoto/rusoto )
 - [rusoto_sts 0.45.0]( https://github.com/rusoto/rusoto )
-- [tokio-macros 0.2.5]( https://github.com/tokio-rs/tokio )
+- [tokio-macros 0.2.6]( https://github.com/tokio-rs/tokio )
 - [tracing-futures 0.2.4]( https://github.com/tokio-rs/tracing )
 - [winapi-build 0.1.1]( https://github.com/retep998/winapi-rs )
 - [ws2_32-sys 0.2.1]( https://github.com/retep998/winapi-rs )
