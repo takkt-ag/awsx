@@ -65,6 +65,7 @@ SUBCOMMANDS:
     find-amis-inuse                 Identify all AMI-IDs that are being used
     find-auto-scaling-group         Find an auto scaling group based on its tags
     find-cloudfront-distribution    Find a CloudFront distribution based on its tags
+    find-db-cluster-snapshot        Find a DB cluster snapshot based on its tags
     find-db-snapshot                Find a DB snapshot based on its tags
     find-target-group               Find a target group based on its tags
     help                            Prints this message or the help of the given subcommand(s)
@@ -206,6 +207,40 @@ OPTIONS:
 IAM permissions required:
 - cloudfront:ListDistributions
 - cloudfront:ListTagsForResource
+```
+
+### awsx find-db-cluster-snapshot
+
+```
+awsx-find-db-cluster-snapshot 0.1.0
+KAISER+KRAFT EUROPA GmbH
+Find a DB cluster snapshot based on its tags
+
+USAGE:
+    awsx find-db-cluster-snapshot [OPTIONS]
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+        --db-cluster-identifier <db-cluster-identifier>    
+            Filter for DB snapshots assigned from a specific DB cluster
+
+        --snapshot-type <snapshot-type>                    
+            Filter DB snapshots by their type
+
+        --tags <tags>...                                   
+            Filter for DB snapshots by their tags. Specify multiple `Key=Value` pairs, separated by spaces, where each
+            key-value-pair corresponds to a tag assigned to the DB snapshot.
+
+IAM permissions required:
+- rds:DescribeDBClusterSnapshots
+- rds:ListTagsForResource
 ```
 
 ### awsx find-db-snapshot
@@ -377,48 +412,58 @@ USAGE:
     awsx update-deployed-template [FLAGS] [OPTIONS] --change-set-name <change-set-name> --stack-name <stack-name> --template-path <template-path>
 
 FLAGS:
-        --force-create    
+        --force-create           
             Force change set creation, even if the parameters supplied do not cover the newly required parameters
             exactly, or if the stack you are trying to deploy is not a direct child of the already deployed stack. This
             means that if you force change set creation, the created change set might contain parameter changes in
             addition to the template changes, and it might overwrite changes that are not part of the template you are
             trying to deploy.
-    -h, --help            
+    -h, --help                   
             Prints help information
 
-    -V, --version         
+        --only-new-parameters    
+            By default, specifying parameters (either directly or through a path) will include all the parameters
+            provided/defined, even if they are already defined on the destination stack. When updating a deployed
+            template/stack this is not desired, which is why changeset creation fails if not forced in such cases. This
+            option provides a convenience that whatever parameters are specified, only those are used that are actually
+            new.
+    -V, --version                
             Prints version information
 
 
 OPTIONS:
-        --change-set-name <change-set-name>    
+        --change-set-name <change-set-name>                    
             Name for the new change set
 
-        --exclude <excludes>...                
+        --exclude <excludes>...                                
             Exclude parameters based on the patterns provided. All patterns will be compiled into a regex-set, which
             will be used to match each parameter key. If a parameter key matches any of the exclude-patterns, the
             parameter will not be applied.
-        --include <includes>...                
+        --include <includes>...                                
             Include parameters based on the patterns provided. All patterns will be compiled into a regex-set, which
             will be used to match each parameter key. Every parameter key that doesn't match any of the include-patterns
             will not be applied.
             (Excludes are applied before includes, and you cannot include a parameter that was previously excluded.)
-        --parameter-path <parameter-path>      
+        --parameter-defaults-path <parameter-defaults-path>    
+            Path to a JSON parameter file, from which values will be taken if not specified in the regular parameter
+            file. This file should be structured the same as the AWS CLI expects. If the provided path does not exist,
+            no error is thrown, instead it will be simply ignored.
+        --parameter-path <parameter-path>                      
             Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects. The file can
             only contain parameters newly added to the template, unless the existing parameters are defined as
             `UsePreviousValue=true`.
             (If you specify this parameter, you cannot specify --parameters.)
-    -p, --parameters <parameters>...           
+    -p, --parameters <parameters>...                           
             New parameters required by template. Specify as multiple `Key=Value` pairs, where each key has to correspond
             to a parameter newly added to the template, i.e. the parameter can not be already defined on the stack.
             (If you specify this parameter, you cannot specify --parameter-path, --exclude or --include.)
-        --role-arn <role-arn>                  
+        --role-arn <role-arn>
             IAM Role that AWS CloudFormation assumes when executing the change set
 
-        --stack-name <stack-name>              
+        --stack-name <stack-name>                              
             Name of the stack to update
 
-        --template-path <template-path>        
+        --template-path <template-path>                        
             Path to the new template
 
 
@@ -468,7 +513,7 @@ parameters defined as `UsePreviousValue`, they will be considered equal to whate
 subcommand does not create a change set, and performs only read-only actions.
 
 USAGE:
-    awsx verify-parameter-file --parameter-path <parameter-path> --stack-name <stack-name>
+    awsx verify-parameter-file [OPTIONS] --parameter-path <parameter-path> --stack-name <stack-name> --template-path <template-path>
 
 FLAGS:
     -h, --help       
@@ -479,12 +524,19 @@ FLAGS:
 
 
 OPTIONS:
-        --parameter-path <parameter-path>    
+        --parameter-defaults-path <parameter-defaults-path>    
+            Path to a JSON parameter file, from which values will be taken if not specified in the regular parameter
+            file. This file should be structured the same as the AWS CLI expects. If the provided path does not exist,
+            no error is thrown, instead it will be simply ignored.
+        --parameter-path <parameter-path>                      
             Path to a JSON parameter file. This file should be structured the same as the AWS CLI expects.
 
-        --stack-name <stack-name>            
-            Name of the stack
-
+        --stack-name <stack-name>                              
+            Name of the stack to compare the parameter-file against. You cannot specify this if --template-path has been
+            specified.
+        --template-path <template-path>                        
+            Path to the template-file to compare the parameter-file against. You cannot specify this if --stack-name has
+            been specified.
 
 IAM permissions required:
 - cloudformation:DescribeStacks
