@@ -32,8 +32,9 @@ mod util;
 
 use command::{
     create_stack, find_amis_inuse, find_auto_scaling_group, find_cloudfront_distribution,
-    find_db_snapshot, find_target_group, identify_new_parameters, override_parameters,
-    update_deployed_template, verify_changes_compatible, verify_parameter_file,
+    find_db_cluster_snapshot, find_db_snapshot, find_target_group, identify_new_parameters,
+    override_parameters, update_deployed_template, verify_changes_compatible,
+    verify_parameter_file,
 };
 
 #[derive(Debug, StructOpt)]
@@ -162,6 +163,15 @@ enum Command {
                       - cloudfront:ListTagsForResource"
     )]
     FindCloudfrontDistribution(find_cloudfront_distribution::Opt),
+    #[structopt(
+        name = "find-db-cluster-snapshot",
+        author,
+        about = "Find a DB cluster snapshot based on its tags",
+        after_help = "IAM permissions required:\n\
+                      - rds:DescribeDBClusterSnapshots\n\
+                      - rds:ListTagsForResource"
+    )]
+    FindDBClusterSnapshot(find_db_cluster_snapshot::Opt),
     #[structopt(
         name = "find-db-snapshot",
         author,
@@ -297,6 +307,9 @@ async fn main() {
         FindCloudfrontDistribution(ref command_opt) => {
             find_cloudfront_distribution::find_cloudfront_distribution(command_opt, &opt, provider)
                 .await
+        }
+        FindDBClusterSnapshot(ref command_opt) => {
+            find_db_cluster_snapshot::find_db_cluster_snapshot(command_opt, &opt, provider).await
         }
         FindDBSnapshot(ref command_opt) => {
             find_db_snapshot::find_db_snapshot(command_opt, &opt, provider).await

@@ -18,6 +18,7 @@ pub(crate) mod create_stack;
 pub(crate) mod find_amis_inuse;
 pub(crate) mod find_auto_scaling_group;
 pub(crate) mod find_cloudfront_distribution;
+pub(crate) mod find_db_cluster_snapshot;
 pub(crate) mod find_db_snapshot;
 pub(crate) mod find_target_group;
 pub(crate) mod identify_new_parameters;
