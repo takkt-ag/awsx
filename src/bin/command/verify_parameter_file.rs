@@ -30,6 +30,8 @@ use structopt::StructOpt;
 
 use crate::{util::apply_defaults, AwsxOutput, AwsxProvider, Opt as GlobalOpt};
 
+const NO_ECHO_PARAMETER_VALUE: &str = "****";
+
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
     #[structopt(
@@ -81,6 +83,13 @@ impl<'a> UnequalParameterDifference<'a> {
         // parameter is the used parameter-file.
         unequal_parameters
             .into_iter()
+            .filter(|(stack, ..)| match stack {
+                // If the stack's parameter value is equal to the "magic" value for `NoEcho`
+                // parameters, we don't want to include it in the unequal parameter list, since we
+                // can't compare a value we have to a `NoEcho` parameter.
+                Parameter::WithValue { value, .. } if value == NO_ECHO_PARAMETER_VALUE => false,
+                _ => true,
+            })
             .map(|(stack, template)| UnequalParameterDifference { stack, template })
             .collect()
     }
