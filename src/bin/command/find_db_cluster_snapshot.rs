@@ -115,11 +115,8 @@ pub(crate) async fn find_db_cluster_snapshot(
                         })
                         .await;
                     if let Ok(tags) = tags {
-                        if let Some(tag_list) = tags.tag_list {
-                            Some((db_cluster_snapshot, tag_list))
-                        } else {
-                            None
-                        }
+                        tags.tag_list
+                            .map(|tag_list| (db_cluster_snapshot, tag_list))
                     } else {
                         None
                     }

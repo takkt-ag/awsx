@@ -158,7 +158,7 @@ pub(crate) async fn create_stack(
             &opt.change_set_name,
             &opt.stack_name,
             &template_parameters,
-            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+            opt.role_arn.as_deref(),
             s3_upload,
             true,
         )

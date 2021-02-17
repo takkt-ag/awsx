@@ -18,8 +18,7 @@
 
 use indexmap::IndexMap;
 use itertools::Itertools;
-use serde::{de, ser};
-use serde_derive::{Deserialize, Serialize};
+use serde::{de, ser, Deserialize, Serialize};
 use std::ops;
 use std::str::FromStr;
 
@@ -73,10 +72,7 @@ impl Parameter {
 
     /// Check if a parameter is defined to use the previous value.
     pub fn is_previous_value(&self) -> bool {
-        match self {
-            Parameter::PreviousValue { .. } => true,
-            _ => false,
-        }
+        matches!(self, Parameter::PreviousValue { .. })
     }
 
     /// Convert the parameter type as returned by Rusoto CloudFormation into our Parameter type.
@@ -203,8 +199,8 @@ impl Parameter {
     pub fn key(&self) -> &str {
         use Parameter::*;
         match self {
-            WithValue { key, .. } => &key,
-            PreviousValue { key, .. } => &key,
+            WithValue { key, .. } => key,
+            PreviousValue { key, .. } => key,
         }
     }
 }
@@ -260,8 +256,6 @@ fn serialize_parameter_previousvalue<S>(key: &str, serializer: S) -> Result<S::O
 where
     S: ser::Serializer,
 {
-    use serde::Serialize;
-
     #[derive(Serialize)]
     #[serde(untagged)]
     enum Parameter<'a> {
@@ -1066,7 +1060,7 @@ mod tests {
             key: "MyKey".to_owned(),
             value: "different value".to_owned(),
         };
-        let non_empty = Parameters::new(vec![with_value.clone(), duplicate_key.clone()]);
+        let non_empty = Parameters::new(vec![with_value, duplicate_key.clone()]);
         assert!(!non_empty.is_empty());
         assert_eq!(non_empty.len(), 1);
         assert_eq!(&duplicate_key, non_empty.get("MyKey").unwrap());
@@ -1081,7 +1075,7 @@ mod tests {
         let parameter2 = Parameter::PreviousValue {
             key: "Parameter2".to_owned(),
         };
-        let mut parameters = Parameters::new(vec![parameter1.clone(), parameter2.clone()]);
+        let mut parameters = Parameters::new(vec![parameter1, parameter2]);
 
         let parameter1 = Parameter::PreviousValue {
             key: "Parameter1".to_owned(),
@@ -1093,7 +1087,7 @@ mod tests {
         let parameter3 = Parameter::PreviousValue {
             key: "Parameter3".to_owned(),
         };
-        let new_parameters = vec![parameter1.clone(), parameter2.clone(), parameter3.clone()];
+        let new_parameters = vec![parameter1.clone(), parameter2.clone(), parameter3];
 
         // Verify that `update` and `updated` returned the same result.
         let parameters_updated = parameters.clone().updated(new_parameters.clone());
@@ -1117,7 +1111,7 @@ mod tests {
         let parameter2 = Parameter::PreviousValue {
             key: "Parameter2".to_owned(),
         };
-        let mut parameters = Parameters::new(vec![parameter1.clone(), parameter2.clone()]);
+        let mut parameters = Parameters::new(vec![parameter1, parameter2]);
 
         let parameter1 = Parameter::PreviousValue {
             key: "Parameter1".to_owned(),
@@ -1163,8 +1157,7 @@ mod tests {
 
         let left_parameters: Parameters =
             vec![parameter1.clone(), parameter2.clone(), parameter3.clone()].into();
-        let right_parameters: Parameters =
-            vec![parameter2.clone(), parameter3.clone(), parameter4.clone()].into();
+        let right_parameters: Parameters = vec![parameter2, parameter3, parameter4].into();
 
         let parameters = left_parameters - &right_parameters;
 

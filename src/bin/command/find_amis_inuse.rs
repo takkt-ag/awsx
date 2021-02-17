@@ -45,7 +45,7 @@ async fn amis_inuse_by_ec2(ec2: &dyn Ec2) -> Result<HashSet<String>, Error> {
         instances.extend(
             output
                 .reservations
-                .unwrap_or_else(|| vec![])
+                .unwrap_or_default()
                 .into_iter()
                 .filter_map(|reservation| reservation.instances)
                 .flatten(),
@@ -100,7 +100,7 @@ async fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, 
         launch_templates.extend(
             output
                 .launch_templates
-                .unwrap_or_else(|| vec![])
+                .unwrap_or_default()
                 .into_iter()
                 .filter(|launch_template| launch_template.launch_template_id.is_some()),
         );
@@ -120,8 +120,7 @@ async fn amis_inuse_by_launchtemplate(ec2: &dyn Ec2) -> Result<HashSet<String>, 
                 })
                 .await?;
             continuation_token = output.next_token;
-            launch_template_versions
-                .extend(output.launch_template_versions.unwrap_or_else(|| vec![]));
+            launch_template_versions.extend(output.launch_template_versions.unwrap_or_default());
 
             continuation_token.is_some()
         } {}

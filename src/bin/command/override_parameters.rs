@@ -167,7 +167,7 @@ pub(crate) async fn override_parameters(
             .create_change_set(
                 &cfn,
                 &opt.change_set_name,
-                opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+                opt.role_arn.as_deref(),
                 &stack_parameters,
             )
             .await?;

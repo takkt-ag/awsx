@@ -57,7 +57,7 @@ pub(crate) async fn verify_changes_compatible(
         .get_parameter(&cfn, &global_opt.deployment_metadata_parameter)
         .await?;
     let previous_metadata = previous_metadata_parameter.and_then(|previous_metadata_parameter| {
-        DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
+        DeploymentMetadata::try_from(previous_metadata_parameter).ok()
     });
 
     match previous_metadata {

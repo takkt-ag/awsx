@@ -233,7 +233,7 @@ pub(crate) async fn update_stack(
                 previous_metadata_parameter
                     .clone()
                     .and_then(|previous_metadata_parameter| {
-                        DeploymentMetadata::try_from(previous_metadata_parameter.clone()).ok()
+                        DeploymentMetadata::try_from(previous_metadata_parameter).ok()
                     });
             let metadata = generate_deployment_metadata(
                 previous_metadata_parameter,
@@ -286,7 +286,7 @@ pub(crate) async fn update_stack(
             &opt.change_set_name,
             &opt.stack_name,
             &template_parameters,
-            opt.role_arn.as_ref().map(|role_arn| &**role_arn),
+            opt.role_arn.as_deref(),
             s3_upload,
             false,
         )

@@ -118,12 +118,7 @@ impl ProvideAwsCredentials for AwsxInnerProvider {
     async fn credentials(&self) -> Result<AwsCredentials, CredentialsError> {
         match self.credentials {
             Some(ref credentials) => Ok(credentials.clone()),
-            _ => {
-                DefaultCredentialsProvider::new()
-                    .unwrap()
-                    .credentials()
-                    .await
-            }
+            _ => self.default_credentials_provider.credentials().await,
         }
     }
 }

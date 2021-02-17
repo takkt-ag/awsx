@@ -112,13 +112,7 @@ pub(crate) async fn find_cloudfront_distribution(
         .try_collect::<Vec<_>>()
         .await?
         .into_iter()
-        .filter_map(|(distribution, tags)| {
-            if let Some(tags) = tags {
-                Some((distribution, tags))
-            } else {
-                None
-            }
-        })
+        .filter_map(|(distribution, tags)| tags.map(|tags| (distribution, tags)))
         .filter(|(_, resource_tags)| {
             opt.tags.iter().all(|needle| {
                 resource_tags.iter().any(|haystack| {

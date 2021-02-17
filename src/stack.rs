@@ -70,10 +70,10 @@ impl Stack {
             .map(|parameters| {
                 parameters
                     .iter()
-                    .filter_map(|parameter| Parameter::from(parameter))
+                    .filter_map(Parameter::from)
                     .collect::<Vec<_>>()
             })
-            .unwrap_or_else(|| vec![])
+            .unwrap_or_default()
             .into())
     }
 

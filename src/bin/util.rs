@@ -22,7 +22,7 @@ use chrono::{Local, SecondsFormat};
 use failure::format_err;
 use git2::{Config, Oid, Repository};
 use regex::RegexSet;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::{convert::TryFrom, fmt, fs::File, io::BufReader, path::Path};
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]

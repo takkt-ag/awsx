@@ -18,7 +18,7 @@
 
 use md5::{Digest, Md5};
 use rusoto_cloudformation::{CloudFormation, CreateChangeSetInput, CreateChangeSetOutput};
-use serde_derive::Deserialize;
+use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
@@ -47,11 +47,11 @@ impl Template {
             .map(|(name, parameter)| {
                 if let Some(default) = parameter.default {
                     Parameter::WithValue {
-                        key: name.clone(),
+                        key: name,
                         value: default,
                     }
                 } else {
-                    Parameter::PreviousValue { key: name.clone() }
+                    Parameter::PreviousValue { key: name }
                 }
             })
             .collect::<Vec<_>>()
@@ -87,6 +87,7 @@ impl Template {
     /// This function will validate that the parameter list matches what the template expects, and
     /// will return an error if this isn't the case. If the stack doesn't exist but should be
     /// created, set `create_stack` to `true`.
+    #[allow(clippy::too_many_arguments)]
     pub async fn create_change_set(
         &self,
         cfn: &dyn CloudFormation,
@@ -97,7 +98,7 @@ impl Template {
         s3_upload: Option<(&S3Uploader, &str)>,
         create_stack: bool,
     ) -> Result<CreateChangeSetOutput, Error> {
-        if self.validate_parameters(&parameters) {
+        if self.validate_parameters(parameters) {
             let mut create_change_set_input = CreateChangeSetInput {
                 stack_name: stack_name.to_owned(),
                 change_set_name: name.to_owned(),
