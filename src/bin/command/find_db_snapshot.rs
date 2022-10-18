@@ -53,6 +53,45 @@ impl FromStr for Tag {
     }
 }
 
+mod serde_remote {
+    use serde::Serialize;
+
+    #[derive(Serialize)]
+    #[serde(remote = "rusoto_rds::DBSnapshot")]
+    struct DBSnapshotProxy {
+        pub allocated_storage: Option<i64>,
+        pub availability_zone: Option<String>,
+        pub db_instance_identifier: Option<String>,
+        pub db_snapshot_arn: Option<String>,
+        pub db_snapshot_identifier: Option<String>,
+        pub dbi_resource_id: Option<String>,
+        pub encrypted: Option<bool>,
+        pub engine: Option<String>,
+        pub engine_version: Option<String>,
+        pub iam_database_authentication_enabled: Option<bool>,
+        pub instance_create_time: Option<String>,
+        pub iops: Option<i64>,
+        pub kms_key_id: Option<String>,
+        pub license_model: Option<String>,
+        pub master_username: Option<String>,
+        pub option_group_name: Option<String>,
+        pub percent_progress: Option<i64>,
+        pub port: Option<i64>,
+        pub snapshot_create_time: Option<String>,
+        pub snapshot_type: Option<String>,
+        pub source_db_snapshot_identifier: Option<String>,
+        pub source_region: Option<String>,
+        pub status: Option<String>,
+        pub storage_type: Option<String>,
+        pub tde_credential_arn: Option<String>,
+        pub timezone: Option<String>,
+        pub vpc_id: Option<String>,
+    }
+
+    #[derive(Serialize)]
+    pub struct DBSnapshot(#[serde(with = "DBSnapshotProxy")] pub rusoto_rds::DBSnapshot);
+}
+
 #[derive(Debug, StructOpt)]
 pub(crate) struct Opt {
     #[structopt(
@@ -124,7 +163,7 @@ pub(crate) async fn find_db_snapshot(
             .collect::<Vec<_>>()
             .await;
 
-    let db_snapshot_arn = enriched_db_snapshots
+    let matching_db_snapshot = enriched_db_snapshots
         .into_iter()
         .filter(|(_, tag_list)| {
             opt.tags.iter().all(|needle| {
@@ -143,20 +182,26 @@ pub(crate) async fn find_db_snapshot(
             })
         })
         .map(|(db_snapshot, _)| db_snapshot)
-        .max_by_key(|db_snapshot| db_snapshot.snapshot_create_time.clone())
-        .and_then(|db_snapshot| db_snapshot.db_snapshot_arn);
+        .max_by_key(|db_snapshot| db_snapshot.snapshot_create_time.clone());
 
-    match db_snapshot_arn {
-        Some(db_snapshot_arn) => Ok(AwsxOutput {
-            human_readable: db_snapshot_arn.clone(),
-            structured: json!({
-                "success": true,
-                "message": "Found DB-snapshot matching given filters",
-                "db_snapshot_arn": &db_snapshot_arn,
-            }),
-            successful: true,
-        }),
-        None => Ok(AwsxOutput {
+    match matching_db_snapshot {
+        Some(db_snapshot) if db_snapshot.db_snapshot_arn.is_some() => {
+            let db_snapshot_arn = db_snapshot
+                .db_snapshot_arn
+                .as_ref()
+                .expect("DB snapshot ARN should exist");
+            Ok(AwsxOutput {
+                human_readable: db_snapshot_arn.to_owned(),
+                structured: json!({
+                    "success": true,
+                    "message": "Found DB-snapshot matching given filters",
+                    "db_snapshot_arn": db_snapshot_arn,
+                    "db_snapshot": serde_remote::DBSnapshot(db_snapshot),
+                }),
+                successful: true,
+            })
+        }
+        _ => Ok(AwsxOutput {
             human_readable: "Unable to find DB-snapshot matching given filters".to_owned(),
             structured: json!({
                 "success": false,
