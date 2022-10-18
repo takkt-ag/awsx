@@ -14,13 +14,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// Note: we use prettytable in the verify-parameter-file subcommand to help us in printing parameter
-// differences. Unfortunately selectively importing some of the macros is not possible, see:
-//     https://github.com/phsym/prettytable-rs/issues/99
-// As a "workaround" we use `extern crate` with the `#[macro_use]` annotation here.
-#[macro_use]
-extern crate prettytable;
-
 use awsx::{error::Error, provider::AwsxProvider};
 use rusoto_core::Region;
 use serde::{Serialize, Serializer};

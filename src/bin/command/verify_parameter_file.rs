@@ -20,6 +20,7 @@ use awsx::{
     stack::Stack,
     template::Template,
 };
+use prettytable::row;
 use rusoto_cloudformation::CloudFormationClient;
 use rusoto_core::HttpClient;
 use serde::Serialize;
