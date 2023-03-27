@@ -73,6 +73,41 @@ pub(crate) struct Opt {
     tags: Vec<Tag>,
 }
 
+mod serde_remote {
+    use serde::Serialize;
+
+    #[derive(Serialize)]
+    #[serde(remote = "rusoto_rds::DBClusterSnapshot")]
+    struct DBClusterSnapshotProxy {
+        pub allocated_storage: Option<i64>,
+        pub availability_zones: Option<Vec<String>>,
+        pub cluster_create_time: Option<String>,
+        pub db_cluster_identifier: Option<String>,
+        pub db_cluster_snapshot_arn: Option<String>,
+        pub db_cluster_snapshot_identifier: Option<String>,
+        pub engine: Option<String>,
+        pub engine_mode: Option<String>,
+        pub engine_version: Option<String>,
+        pub iam_database_authentication_enabled: Option<bool>,
+        pub kms_key_id: Option<String>,
+        pub license_model: Option<String>,
+        pub master_username: Option<String>,
+        pub percent_progress: Option<i64>,
+        pub port: Option<i64>,
+        pub snapshot_create_time: Option<String>,
+        pub snapshot_type: Option<String>,
+        pub source_db_cluster_snapshot_arn: Option<String>,
+        pub status: Option<String>,
+        pub storage_encrypted: Option<bool>,
+        pub vpc_id: Option<String>,
+    }
+
+    #[derive(Serialize)]
+    pub struct DBClusterSnapshot(
+        #[serde(with = "DBClusterSnapshotProxy")] pub rusoto_rds::DBClusterSnapshot,
+    );
+}
+
 pub(crate) async fn find_db_cluster_snapshot(
     opt: &Opt,
     global_opt: &GlobalOpt,
@@ -127,7 +162,7 @@ pub(crate) async fn find_db_cluster_snapshot(
             .collect::<Vec<_>>()
             .await;
 
-    let db_cluster_snapshot_arn = enriched_db_cluster_snapshots
+    let db_cluster_snapshot = enriched_db_cluster_snapshots
         .into_iter()
         .filter(|(_, tag_list)| {
             opt.tags.iter().all(|needle| {
@@ -146,20 +181,26 @@ pub(crate) async fn find_db_cluster_snapshot(
             })
         })
         .map(|(db_cluster_snapshot, _)| db_cluster_snapshot)
-        .max_by_key(|db_cluster_snapshot| db_cluster_snapshot.snapshot_create_time.clone())
-        .and_then(|db_cluster_snapshot| db_cluster_snapshot.db_cluster_snapshot_arn);
+        .max_by_key(|db_cluster_snapshot| db_cluster_snapshot.snapshot_create_time.clone());
 
-    match db_cluster_snapshot_arn {
-        Some(db_cluster_snapshot_arn) => Ok(AwsxOutput {
-            human_readable: db_cluster_snapshot_arn.clone(),
-            structured: json!({
-                "success": true,
-                "message": "Found DB cluster-snapshot matching given filters",
-                "db_cluster_snapshot_arn": &db_cluster_snapshot_arn,
-            }),
-            successful: true,
-        }),
-        None => Ok(AwsxOutput {
+    match db_cluster_snapshot {
+        Some(db_cluster_snapshot) if db_cluster_snapshot.db_cluster_snapshot_arn.is_some() => {
+            let db_cluster_snapshot_arn = db_cluster_snapshot
+                .db_cluster_snapshot_arn
+                .as_ref()
+                .expect("DB cluster snapshot ARN should exist");
+            Ok(AwsxOutput {
+                human_readable: db_cluster_snapshot_arn.to_owned(),
+                structured: json!({
+                    "success": true,
+                    "message": "Found DB cluster-snapshot matching given filters",
+                    "db_cluster_snapshot_arn": db_cluster_snapshot_arn,
+                    "db_cluster_snapshot": serde_remote::DBClusterSnapshot(db_cluster_snapshot)
+                }),
+                successful: true,
+            })
+        }
+        _ => Ok(AwsxOutput {
             human_readable: "Unable to find DB cluster-snapshot matching given filters".to_owned(),
             structured: json!({
                 "success": false,
