@@ -125,6 +125,11 @@ pub(crate) struct Opt {
                      that are not part of the template you are trying to deploy."
     )]
     force_create: bool,
+    #[structopt(
+        long = "include-nested-stacks",
+        help = "Create change-sets for nested stacks",
+    )]
+    include_nested_stacks: bool,
 }
 
 pub(crate) async fn update_stack(
@@ -289,6 +294,7 @@ pub(crate) async fn update_stack(
             opt.role_arn.as_deref(),
             s3_upload,
             false,
+            opt.include_nested_stacks,
         )
         .await?;
 

@@ -97,6 +97,7 @@ impl Template {
         role_arn: Option<&str>,
         s3_upload: Option<(&S3Uploader, &str)>,
         create_stack: bool,
+        include_nested_stacks: bool,
     ) -> Result<CreateChangeSetOutput, Error> {
         if self.validate_parameters(parameters) {
             let mut create_change_set_input = CreateChangeSetInput {
@@ -114,6 +115,11 @@ impl Template {
                 },
                 role_arn: role_arn.map(ToOwned::to_owned),
                 parameters: Some(parameters.into()),
+                include_nested_stacks: if include_nested_stacks {
+                    Some(true)
+                } else {
+                    None
+                },
                 ..Default::default()
             };
 
