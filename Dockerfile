@@ -14,8 +14,34 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+FROM rust:latest AS builder
+
+ARG RUST_ARCH="x86_64-unknown-linux-musl"
+ENV CC_x86_64_unknown_linux_musl=clang \
+    RUST_BACKTRACE=full
+
+RUN set -ex ;\
+    export DEBIAN_FRONTEND=noninteractive ;\
+    apt-get update ;\
+    apt-get install -y --no-install-recommends \
+      clang \
+      ;\
+    apt-get clean ;\
+    rm -rf /var/lib/apt/lists/* ;\
+    rustup target add "${RUST_ARCH}" ;\
+    :
+
+COPY . /app
+WORKDIR /app
+
+RUN set -ex ;\
+    cargo build --target "${RUST_ARCH}" --release ;\
+    cargo test --target "${RUST_ARCH}" --release -- --nocapture ;\
+    mv target/"${RUST_ARCH}"/release/awsx awsx ;\
+    :
+
 FROM scratch
 
-COPY awsx /awsx
+COPY --from=builder /app/awsx /awsx
 ENTRYPOINT ["/awsx"]
 CMD ["--help"]
