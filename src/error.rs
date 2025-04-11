@@ -16,6 +16,8 @@
 
 //! Errors within awsx
 
+#![allow(non_local_definitions)]
+
 use failure::Fail;
 
 /// Representation of an error within awsx.

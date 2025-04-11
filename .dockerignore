@@ -1,2 +1,9 @@
 *
-!awsx
+!src/
+!.dockerignore
+!.gitignore
+!Cargo.lock
+!Cargo.toml
+!LICENSE
+!README.md
+!THIRD_PARTY_LICENSES.md

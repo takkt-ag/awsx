@@ -1,0 +1,50 @@
+[licenses]
+confidence-threshold = 0.93
+allow = [
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+]
+
+exceptions = [
+    # ring uses code from multiple libraries but all with permissive licenses
+    # https://tldrlegal.com/license/openssl-license-(openssl)
+    { allow = ["ISC", "MIT", "OpenSSL"], name = "ring" },
+]
+
+[[licenses.clarify]]
+name = "ring"
+expression = "ISC AND MIT AND OpenSSL"
+license-files = [{ path = "LICENSE", hash = 0xbd0eed23 }]
+
+[[licenses.clarify]]
+name = "webpki"
+expression = "ISC"
+license-files = [{ path = "LICENSE", hash = 0x001c7e6c }] 
+
+[advisories]
+ignore = [
+    { id = "RUSTSEC-2019-0036", reason = "We currently do not have the capacity to migrate away from failure" },
+    { id = "RUSTSEC-2020-0036", reason = "We currently do not have the capacity to migrate away from failure" },
+    { id = "RUSTSEC-2021-0139", reason = "We currently do not have the capacity to migrate away from structopt" },
+    { id = "RUSTSEC-2021-0145", reason = "We currently do not have the capacity to migrate away from structopt" },
+    { id = "RUSTSEC-2022-0071", reason = "We currently do not have the capacity to migrate to the official AWS SDK" },
+    { id = "RUSTSEC-2024-0336", reason = "We currently do not have the capacity to migrate to the official AWS SDK" },
+    { id = "RUSTSEC-2024-0370", reason = "We currently do not have the capacity to migrate away from failure" },
+    { id = "RUSTSEC-2024-0375", reason = "We currently do not have the capacity to migrate away from structopt" },
+    { id = "RUSTSEC-2025-0009", reason = "We currently do not have the capacity to migrate to the official AWS SDK" },
+    { id = "RUSTSEC-2025-0010", reason = "We currently do not have the capacity to migrate to the official AWS SDK" },
+]
+
+[bans]
+wildcards = "deny"
+multiple-versions = "warn"
+
+[sources]
+unknown-registry = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+
+unknown-git = "deny"
+allow-git = []

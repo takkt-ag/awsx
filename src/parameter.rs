@@ -728,7 +728,7 @@ impl ops::Sub<&Parameters> for Parameters {
 
     fn sub(mut self, rhs: &Parameters) -> Self::Output {
         rhs.0.keys().for_each(|key| {
-            self.0.remove(key);
+            self.0.swap_remove(key);
         });
         self
     }

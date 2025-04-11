@@ -17,30 +17,30 @@ name = "awsx"
 path = "src/bin/main.rs"
 
 [dependencies]
-async-trait = "0.1.58"
+async-trait = "0.1.88"
 atty = "0.2.14"
-chrono = "0.4.24"
+chrono = "0.4.40"
 failure = "0.1.8"
-futures = "0.3.27"
-git2 = { version = "0.16.1", default-features = false }
-indexmap = "1.9.1"
-itertools = "0.10.5"
-md-5 = "0.10"
+futures = "0.3.31"
+git2 = { version = "0.20.1", default-features = false }
+indexmap = "2.9.0"
+itertools = "0.14.0"
+md-5 = "0.10.6"
 prettytable-rs = "0.10.0"
-regex = "1.5.6"
-rusoto_autoscaling = "0.48.0"
-rusoto_cloudformation = "0.48.0"
-rusoto_cloudfront = "0.48.0"
-rusoto_core = "0.48.0"
+regex = "1.11.1"
+rusoto_autoscaling = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_cloudformation = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_cloudfront = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_core = { version = "0.48.0", default-features = false, features = ["rustls"] }
 rusoto_credential = "0.48.0"
-rusoto_ec2 = "0.48.0"
-rusoto_elbv2 = "0.48.0"
-rusoto_rds = "0.48.0"
-rusoto_s3 = "0.48.0"
-rusoto_sts = "0.48.0"
-serde = { version = "1.0.158", features = ["derive"] }
-serde_json = "1.0.87"
-serde_yaml = "0.9.19"
+rusoto_ec2 = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_elbv2 = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_rds = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_s3 = { version = "0.48.0", default-features = false, features = ["rustls"] }
+rusoto_sts = { version = "0.48.0", default-features = false, features = ["rustls"] }
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+serde_yaml = "0.9.34+deprecated"
 structopt = "0.3.26"
-tokio = "1.21.2"
-uuid = { version = "1.1.2", features = ["v4"] }
+tokio = "1.44.2"
+uuid = { version = "1.16.0", features = ["v4"] }

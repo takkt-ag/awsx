@@ -61,7 +61,7 @@ impl Stack {
             .await?;
         let stack = response
             .stacks
-            .and_then(|stacks| stacks.get(0).cloned())
+            .and_then(|stacks| stacks.first().cloned())
             .ok_or_else(|| Error::InvalidStack(self.name.clone()))?;
 
         Ok(stack
