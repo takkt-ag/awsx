@@ -77,6 +77,25 @@ impl Stack {
             .into())
     }
 
+    /// Get the tags currently set on the stack.
+    pub async fn get_tags(
+        &self,
+        cfn: &dyn CloudFormation,
+    ) -> Result<Vec<rusoto_cloudformation::Tag>, Error> {
+        let response = cfn
+            .describe_stacks(rusoto_cloudformation::DescribeStacksInput {
+                stack_name: Some(self.name.clone()),
+                ..Default::default()
+            })
+            .await?;
+        Ok(response
+            .stacks
+            .and_then(|stacks| stacks.into_iter().next())
+            .ok_or_else(|| Error::InvalidStack(self.name.clone()))?
+            .tags
+            .unwrap_or_default())
+    }
+
     /// Get the current parameters for the stack, as previous values.
     ///
     /// This retrieves all parameters defined on the AWS CloudFormation stack and turns them into

@@ -72,6 +72,14 @@ pub(crate) struct Opt {
                      be invalid."
     )]
     force_create: bool,
+    #[structopt(
+        long = "tags",
+        help = "Tags to set on the stack",
+        long_help = "Tags to set on the stack, which CloudFormation propagates to all supported \
+                     resources, including nested stacks. Specify multiple `Key=Value` pairs, \
+                     separated by spaces."
+    )]
+    tags: Vec<awsx::tag::Tag>,
 }
 
 pub(crate) async fn create_stack(
@@ -161,6 +169,7 @@ pub(crate) async fn create_stack(
             opt.role_arn.as_deref(),
             s3_upload,
             true,
+            opt.tags.iter().cloned().map(Into::into).collect(),
         )
         .await?;
 
