@@ -87,6 +87,9 @@ impl Template {
     /// This function will validate that the parameter list matches what the template expects, and
     /// will return an error if this isn't the case. If the stack doesn't exist but should be
     /// created, set `create_stack` to `true`.
+    ///
+    /// If `tags` is non-empty, it will **replace** the tag set of the stack. To add to the
+    /// existing tags, merge them first (see [`crate::tag::merge_tags`]).
     #[allow(clippy::too_many_arguments)]
     pub async fn create_change_set(
         &self,
@@ -97,6 +100,7 @@ impl Template {
         role_arn: Option<&str>,
         s3_upload: Option<(&S3Uploader, &str)>,
         create_stack: bool,
+        tags: Vec<rusoto_cloudformation::Tag>,
     ) -> Result<CreateChangeSetOutput, Error> {
         if self.validate_parameters(parameters) {
             let mut create_change_set_input = CreateChangeSetInput {
@@ -114,6 +118,9 @@ impl Template {
                 },
                 role_arn: role_arn.map(ToOwned::to_owned),
                 parameters: Some(parameters.into()),
+                // Omitting the tags keeps the existing tags of the stack on UPDATE change sets,
+                // while an empty list would remove them.
+                tags: if tags.is_empty() { None } else { Some(tags) },
                 ..Default::default()
             };
 
