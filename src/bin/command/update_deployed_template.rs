@@ -284,7 +284,7 @@ pub(crate) async fn update_stack(
                 "WARNING: an update to the deployment-metadata parameter '{}' was requested, but \
                  the template that should be deployed does not have this parameter. The change-set \
                  will be created, although without any metadata.",
-                &global_opt.deployment_metadata_parameter,
+                global_opt.deployment_metadata_parameter,
             );
         }
     }

@@ -158,7 +158,7 @@ pub(crate) async fn override_parameters(
                     "WARNING: an update to the deployment-metadata parameter '{}' was requested, \
                      but the stack does not have this parameter. The change-set will be created, \
                      although without any metadata.",
-                    &global_opt.deployment_metadata_parameter,
+                    global_opt.deployment_metadata_parameter,
                 );
             }
         }

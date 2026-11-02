@@ -142,7 +142,7 @@ pub(crate) async fn find_db_snapshot(
     } {}
 
     let enriched_db_snapshots: Vec<(DBSnapshot, Vec<rusoto_rds::Tag>)> =
-        stream::iter(db_snapshots.into_iter())
+        stream::iter(db_snapshots)
             .filter_map(|db_snapshot| async {
                 if let Some(db_snapshot_arn) = &db_snapshot.db_snapshot_arn {
                     let tags = rds
