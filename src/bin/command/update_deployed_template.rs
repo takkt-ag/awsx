@@ -125,6 +125,16 @@ pub(crate) struct Opt {
                      that are not part of the template you are trying to deploy."
     )]
     force_create: bool,
+    #[structopt(
+        long = "tags",
+        help = "Tags to set on the stack",
+        long_help = "Tags to set on the stack, which CloudFormation propagates to all supported \
+                     resources, including nested stacks. Specify multiple `Key=Value` pairs, \
+                     separated by spaces. They are merged with the tags already set on the \
+                     stack; for existing keys the new value wins. If no tags are specified, the \
+                     existing tags are left untouched."
+    )]
+    tags: Vec<awsx::tag::Tag>,
 }
 
 pub(crate) async fn update_stack(
@@ -274,10 +284,18 @@ pub(crate) async fn update_stack(
                 "WARNING: an update to the deployment-metadata parameter '{}' was requested, but \
                  the template that should be deployed does not have this parameter. The change-set \
                  will be created, although without any metadata.",
-                &global_opt.deployment_metadata_parameter,
+                global_opt.deployment_metadata_parameter,
             );
         }
     }
+
+    // Tags passed to CloudFormation replace the tag set of the stack, so they have to be merged
+    // with the existing ones.
+    let tags = if opt.tags.is_empty() {
+        Vec::new()
+    } else {
+        awsx::tag::merge_tags(stack.get_tags(&cfn).await?, &opt.tags)
+    };
 
     // Create the change set for the new template, including the new parameters.
     template
@@ -289,6 +307,7 @@ pub(crate) async fn update_stack(
             opt.role_arn.as_deref(),
             s3_upload,
             false,
+            tags,
         )
         .await?;
 
