@@ -141,27 +141,26 @@ pub(crate) async fn find_db_snapshot(
         continuation_token.is_some()
     } {}
 
-    let enriched_db_snapshots: Vec<(DBSnapshot, Vec<rusoto_rds::Tag>)> =
-        stream::iter(db_snapshots)
-            .filter_map(|db_snapshot| async {
-                if let Some(db_snapshot_arn) = &db_snapshot.db_snapshot_arn {
-                    let tags = rds
-                        .list_tags_for_resource(ListTagsForResourceMessage {
-                            resource_name: db_snapshot_arn.clone(),
-                            ..Default::default()
-                        })
-                        .await;
-                    if let Ok(tags) = tags {
-                        tags.tag_list.map(|tag_list| (db_snapshot, tag_list))
-                    } else {
-                        None
-                    }
+    let enriched_db_snapshots: Vec<(DBSnapshot, Vec<rusoto_rds::Tag>)> = stream::iter(db_snapshots)
+        .filter_map(|db_snapshot| async {
+            if let Some(db_snapshot_arn) = &db_snapshot.db_snapshot_arn {
+                let tags = rds
+                    .list_tags_for_resource(ListTagsForResourceMessage {
+                        resource_name: db_snapshot_arn.clone(),
+                        ..Default::default()
+                    })
+                    .await;
+                if let Ok(tags) = tags {
+                    tags.tag_list.map(|tag_list| (db_snapshot, tag_list))
                 } else {
                     None
                 }
-            })
-            .collect::<Vec<_>>()
-            .await;
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>()
+        .await;
 
     let matching_db_snapshot = enriched_db_snapshots
         .into_iter()

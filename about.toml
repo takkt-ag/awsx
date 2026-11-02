@@ -6,7 +6,6 @@ accepted = [
     "Unicode-3.0",
 ]
 workarounds = ["ring"]
-no-clearly-defined = true
 
 [ring]
 accepted = ["OpenSSL"]
